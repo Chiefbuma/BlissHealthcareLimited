@@ -12,3 +12,4 @@ pygwalker==0.4.7
 streamlit==1.31.1
 streamlit_option_menu==0.3.12
 SQLAlchemy==1.4.23
+mysqlclient== 2.2.1

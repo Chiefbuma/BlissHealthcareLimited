@@ -30,11 +30,6 @@ def home():
 
         form_container = st.empty()
         with form_container :
-            
-            # Initialize connection.
-            conn = st.connection('mysql', type='sql')
-            
-            
             host = '127.0.0.1'
             port = 3306
             database = 'blisshealthcare'
@@ -50,10 +45,11 @@ def home():
                 password=password,
                 allow_local_infile=True
             )
-        
+            # Query to select all columns from the facilities table
+            query = "SELECT * FROM facilities"
 
             # Load data into a DataFrame
-            location_df  = conn.query('SELECT * FROM facilities;', ttl=600)
+            location_df = pd.read_sql(query, con=connection)
 
             cursor = connection.cursor()
 
