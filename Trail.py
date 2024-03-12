@@ -33,8 +33,8 @@ def home():
             host = '127.0.0.1'
             port = 3306
             database = 'blisshealthcare'
-            user = 'root'
-            password = 'buluma'
+            user = 'george'
+            password = 'thisisme'
 
             # Connect to the MySQL server
             connection = mysql.connector.connect(
