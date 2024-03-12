@@ -1,5 +1,6 @@
 import streamlit as st
 import mysql.connector
+import sqlalchemy
 
 # Streamlit app starts here
 st.title("MySQL Database Connection Example")
