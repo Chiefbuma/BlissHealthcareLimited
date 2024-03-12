@@ -15,8 +15,6 @@ import pandas as pd
 from datetime import datetime
 import streamlit_option_menu as option_menu
 import plotly.graph_objects as go
-import sqlalchemy
-
 
 
 # Set the page configuration
@@ -32,25 +30,40 @@ def home():
 
         form_container = st.empty()
         with form_container :
-            
-            conn=st.experimental_connection('mysql',type='sql')
-    
-            # Query to select all columns from the facilities table
-            location_df  = conn.query( "SELECT * FROM facilities")
+            host = '127.0.0.1'
+            port = 3306
+            database = 'blisshealthcare'
+            user = 'root'
+            password = 'buluma'
 
-    
+            # Connect to the MySQL server
+            connection = mysql.connector.connect(
+                host=host,
+                port=port,
+                database=database,
+                user=user,
+                password=password,
+                allow_local_infile=True
+            )
+            # Query to select all columns from the facilities table
+            query = "SELECT * FROM facilities"
+
+            # Load data into a DataFrame
+            location_df = pd.read_sql(query, con=connection)
+
+            cursor = connection.cursor()
 
             def create_usertable():
-                conn.query('CREATE TABLE IF NOT EXISTS usertable (staff_id INT PRIMARY KEY AUTO_INCREMENT, staffnumber INT, password TEXT, location TEXT, region TEXT)')
+                cursor.execute('CREATE TABLE IF NOT EXISTS usertable (staff_id INT PRIMARY KEY AUTO_INCREMENT, staffnumber INT, password TEXT, location TEXT, region TEXT)')
 
             def add_userdata(staffnumber, password, location, region):
-                conn.query('INSERT INTO usertable (staffnumber, password, location, region) VALUES (%s, %s, %s, %s)', (staffnumber, password, location, region))
-                conn.commit()
+                cursor.execute('INSERT INTO usertable (staffnumber, password, location, region) VALUES (%s, %s, %s, %s)', (staffnumber, password, location, region))
+                connection.commit()
 
             def get_facilities(staffnumber):
-                query = conn.query("SELECT * FROM usertable WHERE staffnumber = %s")
+                query = "SELECT * FROM usertable WHERE staffnumber = %s"
                 params = (staffnumber,)
-                Login_df = pd.read_sql(query, params=params, con=conn)
+                Login_df = pd.read_sql(query, params=params, con=connection)
                 return Login_df
 
             def login_user(staffnumber, password):
@@ -62,20 +75,20 @@ def home():
                     region = facilities_df['region'].iloc[0]
 
                     # Check if the credentials match
-                    staffquery=conn.query('SELECT * FROM usertable WHERE staffnumber = %s AND password = %s', (staffnumber, password))
-                    data = staffquery.fetchall()
+                    cursor.execute('SELECT * FROM usertable WHERE staffnumber = %s AND password = %s', (staffnumber, password))
+                    data = cursor.fetchall()
                     return data, location, region
                 else:
                     return None, None, None
 
             def view_all_users():
-                sqlquery=conn.query('SELECT * FROM usertable')
-                data = sqlquery.fetchall()
+                cursor.execute('SELECT * FROM usertable')
+                data = cursor.fetchall()
                 return data
 
             # Fetch locations from the database
-            locationquery=conn.query("SELECT Location FROM facilities")
-            locations = locationquery.fetchall()
+            cursor.execute("SELECT Location FROM facilities")
+            locations = cursor.fetchall()
             location_names = [location[0] for location in locations]
 
             # log in app
