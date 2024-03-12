@@ -1,4 +1,5 @@
 import streamlit as st
+import mysql.connector
 
 # Streamlit app starts here
 st.title("MySQL Database Connection Example")
