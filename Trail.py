@@ -2,10 +2,8 @@ import pandas as pd
 from sqlalchemy import create_engine
 import streamlit as st
 
-
 # Assuming Allmerged_df is your DataFrame
 # Export Allmerged_df to MySQL using SQLAlchemy
-st.write("Data loaded successfully")
 engine = create_engine(f"mysql+mysqlconnector://{'root'}:{'buluma'}@{'127.0.0.1'}:{3306}/{'blisshealthcare'}")
 
 try:
@@ -18,18 +16,14 @@ try:
     
     st.write(df)
     print("Data loaded successfully")
-<<<<<<< HEAD
     st.write(df)
-=======
-    st.write("Data loaded successfully")
->>>>>>> 37df381d64441adf67521110cf1995f86b6dd0ef
 
 except Exception as e:
     print(f"Error: {e}")
 
 finally:
     if 'connection' in locals() and connection is not None:
-        # Close the SQLAlchemy connection
-       
-        connection.close()
-        print("Connection closed")
+        # Do not close the SQLAlchemy connection
+        print("Connection not closed")
+
+# Streamlit will keep running until the user closes the app
