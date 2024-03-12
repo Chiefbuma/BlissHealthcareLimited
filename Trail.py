@@ -17,6 +17,7 @@ try:
     
     st.write(df)
     print("Data loaded successfully")
+    st.write("Data loaded successfully")
 
 except Exception as e:
     print(f"Error: {e}")
