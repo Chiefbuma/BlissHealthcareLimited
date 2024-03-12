@@ -30,7 +30,7 @@ def home():
 
         form_container = st.empty()
         with form_container :
-            host = '127.0.0.1'
+            host = 'localhost'
             port = 3306
             database = 'blisshealthcare'
             user = 'george'
