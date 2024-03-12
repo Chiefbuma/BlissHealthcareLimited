@@ -17,6 +17,7 @@ try:
     
     st.write(df)
     print("Data loaded successfully")
+    st.write(df)
 
 except Exception as e:
     print(f"Error: {e}")
@@ -24,5 +25,6 @@ except Exception as e:
 finally:
     if 'connection' in locals() and connection is not None:
         # Close the SQLAlchemy connection
+       
         connection.close()
         print("Connection closed")
