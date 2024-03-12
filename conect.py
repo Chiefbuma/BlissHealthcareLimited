@@ -5,9 +5,6 @@ from sqlalchemy import create_engine
 secrets = st.secrets("secrets.toml")
 mysql_url = secrets["connections"]["mysql"]["url"]
 
-secrets = st.secrets["secrets.toml"]
-
-
 # Create a SQLAlchemy engine
 engine = create_engine(mysql_url)
 
