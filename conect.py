@@ -5,7 +5,7 @@ import sqlalchemy
 # Streamlit app starts here
 st.title("MySQL Database Connection Example")
 
-conn= st.connection('mysql',type='sql')
+conn= st.connection('sql',type='sql')
 
 
 # Example: Query to select all columns from the facilities table
