@@ -4,3 +4,4 @@ mysql_connector_repackaged==0.3.1
 pandas==2.2.1
 streamlit==1.31.1
 SQLAlchemy==1.4.23
+mysqlclient==2.2.4
