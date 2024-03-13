@@ -16,6 +16,7 @@ from datetime import datetime
 import streamlit_option_menu as option_menu
 import plotly.graph_objects as go
 import os
+from sqlalchemy import create_engine
 
 
 # Set the page configuration
@@ -44,22 +45,22 @@ def home():
             )
 
 
-            # Connect to the MySQL server
-            connection = mysql.connector.connect(
-                host=host,
-                port=port,
-                database=database,
-                user=user,
-                password=password,
-                allow_local_infile=True
-            )
+                        # Export Allmerged_df to MySQL using SQLAlchemy
+            engine = create_engine(f"mysql+mysqlconnector://{user}:{password}@{host}:{3306}/{database}")
+            
+    
+
+            # Create a connection and a cursor
+            connection = engine.raw_connection()
+            cursor = connection.cursor()
+
             # Query to select all columns from the facilities table
             query = "SELECT * FROM facilities"
 
-            # Load data into a DataFrame
-            location_df = pd.read_sql(query, con=connection)
-
-            cursor = connection.cursor()
+            # Load data into a DataFrame using the cursor
+            cursor.execute(query)
+            location_df = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
+            
 
             def create_usertable():
                 cursor.execute('CREATE TABLE IF NOT EXISTS usertable (staff_id INT PRIMARY KEY AUTO_INCREMENT, staffnumber INT, password TEXT, location TEXT, region TEXT)')
