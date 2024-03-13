@@ -9,8 +9,6 @@ query = 'SELECT * FROM facilities;'
 df = conn.query(query, ttl=600)
 
 # Display the DataFrame.
-<<<<<<< HEAD
 st.write(df)
-=======
-st.write(df)
+
 
