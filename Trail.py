@@ -5,7 +5,7 @@ import streamlit as st
 
 # Assuming Allmerged_df is your DataFrame
 # Export Allmerged_df to MySQL using SQLAlchemy
-engine = create_engine(f"mysql+mysqlconnector://{'root'}:{'buluma'}@{'127.0.0.1'}:{3306}/{'blisshealthcare'}")
+engine = create_engine(f"mysql+mysqlconnector://{'root'}:{'buluma'}@{'localhost'}:{3306}/{'blisshealthcare'}")
 
 try:
     # Connect to the MySQL server using SQLAlchemy engine
