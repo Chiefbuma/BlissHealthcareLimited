@@ -2,7 +2,6 @@ import mysql.connector
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode
 from IPython.display import display
 import calendar
 import numpy as np
