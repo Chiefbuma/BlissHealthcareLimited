@@ -1,4 +1,3 @@
-
 import streamlit as st
 
 # Initialize connection.
@@ -10,5 +9,3 @@ df = conn.query(query, ttl=600)
 
 # Display the DataFrame.
 st.write(df)
-
-
