@@ -15,7 +15,6 @@ import pandas as pd
 from datetime import datetime
 import streamlit_option_menu as option_menu
 import plotly.graph_objects as go
-import os
 from sqlalchemy import create_engine
 
 
@@ -38,15 +37,9 @@ def home():
             user = st.secrets["db_username"]
             password = st.secrets["db_password"]
             
-                        # And the root-level secrets are also accessible as environment variables:
-            st.write(
-                "Has environment variables been set:",
-                os.environ["db_username"] == st.secrets["db_username"],
-            )
-
-
-                        # Export Allmerged_df to MySQL using SQLAlchemy
-            engine = create_engine(f"mysql+mysqlconnector://{user}:{password}@{host}:{3306}/{database}")
+            
+            # Export Allmerged_df to MySQL using SQLAlchemy
+            engine = create_engine(f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}")
             
     
 
@@ -72,7 +65,7 @@ def home():
             def get_facilities(staffnumber):
                 query = "SELECT * FROM usertable WHERE staffnumber = %s"
                 params = (staffnumber,)
-                Login_df = pd.read_sql(query, params=params, con=connection)
+                Login_df = pd.read_sql(query, params=params, con=engine)
                 return Login_df
 
             def login_user(staffnumber, password):
@@ -175,57 +168,30 @@ def home():
             
             return fraction_passed
 
-        # Replace these with your actual database credentials
-        host = '127.0.0.1'
-        port = 3306
-        database = 'blisshealthcare'
-        user = 'root'
-        password = 'buluma'
+                # Replace these with your actual database credentials
+        host = st.secrets["db_host"]
+        port = st.secrets["db_port"]
+        database = st.secrets["db_name"]
+        user = st.secrets["db_username"]
+        password = st.secrets["db_password"]
 
-        # Connect to the MySQL server
-        connection = mysql.connector.connect(
-            host=host,
-            port=port,
-            database=database,
-            user=user,
-            password=password,
-            allow_local_infile=True
-        )
+        # Create SQLAlchemy engine
+        engine = create_engine(f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}")
 
-        # Check if the connection is successful
-        if connection.is_connected():
-            
-            # Create a cursor object to execute SQL queries
-            cursor = connection.cursor()
-
-            # Execute queries to fetch data from the 'Allmerged_sales' table
-            query_sales = "SELECT * FROM Allmerged_sales"
-            cursor.execute(query_sales)
-            data_sales = cursor.fetchall()
-
-            # Get the column names from the cursor description
-            columns_sales = [i[0] for i in cursor.description]
-
-            # Create a Pandas DataFrame with the data
-            df_Allsales = pd.DataFrame(data_sales, columns=columns_sales)
-
-            df_Allsales['bill_date'] = pd.to_datetime(df_Allsales['bill_date'])
-            
+        # Check if the connection is successful (optional)
+        if engine.connect():
+            st.write("Connected to MySQL")
             
             # Execute queries to fetch data from the 'Allmerged_sales' table
             query_sales = "SELECT * FROM Allmerged_sales"
-            cursor.execute(query_sales)
-            data_sales = cursor.fetchall()
+            df_Allsales = pd.read_sql(query_sales, con=engine)
 
-            # Get the column names from the cursor description
-            columns_sales = [i[0] for i in cursor.description]
-
-            # Create a Pandas DataFrame with the data
-            df_Allsales = pd.DataFrame(data_sales, columns=columns_sales)
-
+            # Convert 'bill_date' column to datetime
             df_Allsales['bill_date'] = pd.to_datetime(df_Allsales['bill_date'])
-           
 
+    
+            df_Allsales['bill_date'] = pd.to_datetime(df_Allsales['bill_date'])
+        
             card_style3 = "border: 2px solid #000000; border-radius: 5px; padding: 5px; background-color:#ffffff; color:#000000; text-align: center; font-size: 15px;font-weight: bold;"
             
             st.markdown(f"<div style='{card_style3}'>{f'REVENUE AND FOOTFALLS DASHBOARD <br> {location}'}</div>", unsafe_allow_html=True)
@@ -1101,9 +1067,8 @@ def load_data(email_user, password_user, sharepoint_url, list_name):
 
 
 def maintenance():
-    st.session_state.is_authenticated=False
-
-
+    st.session_state.is_authenticated = False 
+    
     col1, col2 = st.columns([2,1])
     with col1:
         menu = ["Login", "Sign up", "Log Out"]
@@ -1111,28 +1076,31 @@ def maintenance():
 
         form_container = st.empty()
         with form_container :
-            host = '127.0.0.1'
-            port = 3306
-            database = 'blisshealthcare'
-            user = 'root'
-            password = 'buluma'
+            host = st.secrets["db_host"]
+            port = st.secrets["db_port"]
+            database = st.secrets["db_name"]
+            user = st.secrets["db_username"]
+            password = st.secrets["db_password"]
+            
+                        # And the root-level secrets are also accessible as environment variables:
+            
 
-            # Connect to the MySQL server
-            connection = mysql.connector.connect(
-                host=host,
-                port=port,
-                database=database,
-                user=user,
-                password=password,
-                allow_local_infile=True
-            )
+            # Export Allmerged_df to MySQL using SQLAlchemy
+            engine = create_engine(f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}")
+            
+    
+
+            # Create a connection and a cursor
+            connection = engine.raw_connection()
+            cursor = connection.cursor()
+
             # Query to select all columns from the facilities table
             query = "SELECT * FROM facilities"
 
-            # Load data into a DataFrame
-            location_df = pd.read_sql(query, con=connection)
-
-            cursor = connection.cursor()
+            # Load data into a DataFrame using the cursor
+            cursor.execute(query)
+            location_df = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
+            
 
             def create_usertable():
                 cursor.execute('CREATE TABLE IF NOT EXISTS usertable (staff_id INT PRIMARY KEY AUTO_INCREMENT, staffnumber INT, password TEXT, location TEXT, region TEXT)')
@@ -1144,7 +1112,7 @@ def maintenance():
             def get_facilities(staffnumber):
                 query = "SELECT * FROM usertable WHERE staffnumber = %s"
                 params = (staffnumber,)
-                Login_df = pd.read_sql(query, params=params, con=connection)
+                Login_df = pd.read_sql(query, params=params, con=engine)
                 return Login_df
 
             def login_user(staffnumber, password):
@@ -1172,7 +1140,7 @@ def maintenance():
             locations = cursor.fetchall()
             location_names = [location[0] for location in locations]
 
-                        # log in app
+            # log in app
             
             if choice == "Log Out":
                 st.subheader("Log Out")
@@ -1203,7 +1171,7 @@ def maintenance():
                             st.success("Logged In successfully")
                             st.write(f"Location: {location}, Region: {region}")
                             st.session_state.is_authenticated=True
-
+                            st.session_state["logged_in"] == "True"
                             form_container.empty()
 
                         else:
@@ -1225,7 +1193,6 @@ def maintenance():
                         st.session_state["logged_in"] == "True"
                         st.session_state.is_authenticated=True
                         form_container.empty()
-    
                      
     if st.session_state.is_authenticated:
         form_container.empty()                   
@@ -1398,29 +1365,31 @@ def region():
 
         form_container = st.empty()
         with form_container :
-            host = '127.0.0.1'
-            port = 3306
-            database = 'blisshealthcare'
-            user = 'root'
-            password = 'buluma'
+            host = st.secrets["db_host"]
+            port = st.secrets["db_port"]
+            database = st.secrets["db_name"]
+            user = st.secrets["db_username"]
+            password = st.secrets["db_password"]
+            
+                        # And the root-level secrets are also accessible as environment variables:
+            
 
-            # Connect to the MySQL server
-            connection = mysql.connector.connect(
-                host=host,
-                port=port,
-                database=database,
-                user=user,
-                password=password,
-                allow_local_infile=True
-            )
+            # Export Allmerged_df to MySQL using SQLAlchemy
+            engine = create_engine(f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}")
+            
+    
+
+            # Create a connection and a cursor
+            connection = engine.raw_connection()
+            cursor = connection.cursor()
+
             # Query to select all columns from the facilities table
             query = "SELECT * FROM facilities"
-            
-           
-            # Load data into a DataFrame
-            location_df = pd.read_sql(query, con=connection)
 
-            cursor = connection.cursor()
+            # Load data into a DataFrame using the cursor
+            cursor.execute(query)
+            location_df = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
+            
 
             def create_usertable():
                 cursor.execute('CREATE TABLE IF NOT EXISTS usertable (staff_id INT PRIMARY KEY AUTO_INCREMENT, staffnumber INT, password TEXT, location TEXT, region TEXT)')
@@ -1432,7 +1401,7 @@ def region():
             def get_facilities(staffnumber):
                 query = "SELECT * FROM usertable WHERE staffnumber = %s"
                 params = (staffnumber,)
-                Login_df = pd.read_sql(query, params=params, con=connection)
+                Login_df = pd.read_sql(query, params=params, con=engine)
                 return Login_df
 
             def login_user(staffnumber, password):
@@ -1455,11 +1424,7 @@ def region():
                 data = cursor.fetchall()
                 return data
 
-    
-
-
-
-            # Fetch locations from the database filtered by region
+            # Fetch locations from the database
             cursor.execute("SELECT Location FROM facilities")
             locations = cursor.fetchall()
             location_names = [location[0] for location in locations]
@@ -1517,7 +1482,6 @@ def region():
                         st.session_state["logged_in"] == "True"
                         st.session_state.is_authenticated=True
                         form_container.empty()
-    
                         
     if st.session_state.is_authenticated:
         form_container.empty()
