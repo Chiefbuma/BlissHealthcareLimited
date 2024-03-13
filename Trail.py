@@ -2,9 +2,16 @@ import pandas as pd
 from sqlalchemy import create_engine
 import streamlit as st
 
-# Assuming Allmerged_df is your DataFrame
+# Load database credentials from Streamlit Secrets
+secrets = st.secrets["database"]
+username = secrets["db_username"]
+password = secrets["db_password"]
+host = secrets["db_host"]
+port = secrets["db_port"]
+database_name = secrets["db_name"]
+
 # Export Allmerged_df to MySQL using SQLAlchemy
-engine = create_engine(f"mysql+mysqlconnector://{'root'}:{'buluma'}@{'127.0.0.1'}:{3306}/{'blisshealthcare'}")
+engine = create_engine(f"mysql+mysqlconnector://{username}:{password}@{host}:{port}/{database_name}")
 
 try:
     # Connect to the MySQL server using SQLAlchemy engine
