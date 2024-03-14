@@ -1,28 +1,12 @@
 import streamlit as st
-import pyodbc
-
-
+import pymssql
 
 # Initialize connection.
 # Uses st.cache_resource to only run once.
-
-def init_connection():
-    return pyodbc.connect(
-        "DRIVER={ODBC Driver 17 for SQL Server};SERVER="
-        + st.secrets["server"]
-        + ";DATABASE="
-        + st.secrets["database"]
-        + ";UID="
-        + st.secrets["username"]
-        + ";PWD="
-        + st.secrets["password"]
-    )
-
-conn = init_connection()
+conn = pymssql.connect(server='DESKTOP-7OABLEP\SQLEXPRESS', user='sa', password='buluma', database='mydb', port=1433)
 
 # Perform query.
 # Uses st.cache_data to only rerun when the query changes or after 10 min.
-
 def run_query(query):
     with conn.cursor() as cur:
         cur.execute(query)
