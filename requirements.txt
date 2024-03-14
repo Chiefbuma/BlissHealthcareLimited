@@ -1,5 +1,4 @@
 ipykernel==6.29.3
-
 ipython-genutils==0.2.0
 ipython-sql==0.5.0
 matplotlib-inline==0.1.6
@@ -16,4 +15,5 @@ plotly-express==0.4.1
 streamlit==1.32.1
 streamlit-auth==0.1.7.1
 wheel==0.41
+protobuf==4.21
 
