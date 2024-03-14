@@ -1,5 +1,5 @@
 ipykernel==6.29.3
-ipython==8.10.2
+ipython==8.22.2
 ipython-genutils==0.2.0
 ipython-sql==0.5.0
 matplotlib-inline==0.1.6
