@@ -18,12 +18,6 @@ import plotly.graph_objects as go
 import os
 from sqlalchemy import create_engine
 
-<<<<<<< HEAD
-=======
-# Initialize connection.
-# Uses st.cache_resource to only run once.
-conn = pymssql.connect(server='169.254.127.154', user='sa', password='buluma', database='mydb', port=1433)
->>>>>>> 6dcdaf53d010510f2b030e5d4d6ca5a715749a71
 
 # Set the page configuration
 st.set_page_config(page_title="My Streamlit App", layout="wide")
