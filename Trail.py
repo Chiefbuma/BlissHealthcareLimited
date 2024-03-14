@@ -3,7 +3,7 @@ import pymssql
 
 # Initialize connection.
 # Uses st.cache_resource to only run once.
-conn = pymssql.connect(server='169.254.225.106', user='sa', password='buluma', database='mydb', port=1433)
+conn = pymssql.connect(server='169.254.127.154', user='sa', password='buluma', database='mydb', port=1433)
 
 # Perform query.
 # Uses st.cache_data to only rerun when the query changes or after 10 min.
