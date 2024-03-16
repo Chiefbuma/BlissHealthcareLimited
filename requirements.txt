@@ -1,5 +1,5 @@
 
-st-supabase-connection==x.x.x
+st-supabase-connection==1.2.2
 st_login_form==0.2.2
 ipykernel==6.29.3
 ipython-genutils==0.2.0
