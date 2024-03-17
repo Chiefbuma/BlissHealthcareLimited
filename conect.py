@@ -136,11 +136,11 @@ def home():
                     staffnumber = st.text_input("Staffnumber")
                     password = st.text_input("Password", type='password')
                     load = st.form_submit_button("Login")
-                    
+                    st.session_state.logged_in = False
 
                     if load or st.session_state.logged_in:
                         st.session_state.logged_in = True
-                        result, location, region = login_user(staffnumber, password)
+                        result = login_user(staffnumber, password)
                         if result:
                             st.success("Logged In successfully")
                             st.write(f"Location: {location}, Region: {region}")
