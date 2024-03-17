@@ -138,9 +138,10 @@ def home():
                     load = st.form_submit_button("Login")
                     st.session_state.logged_in = False
 
-                    if load or st.session_state.logged_in:
+                    if st.form_submit_button:
+                        result, location, region = login_user(staffnumber, password)
                         st.session_state.logged_in = True
-                        result = login_user(staffnumber, password)
+                        result,location,region = login_user(staffnumber, password)
                         if result:
                             st.success("Logged In successfully")
                             st.write(f"Location: {location}, Region: {region}")
