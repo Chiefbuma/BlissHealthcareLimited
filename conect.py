@@ -87,7 +87,7 @@ def home():
            
             def login_user(staffnumber, password):
                 try:
-                    # Query the 'usertable' using Supabase client
+                    # Query the 'users' table using Supabase client
                     query = f"SELECT * FROM users WHERE staffnumber = {staffnumber} AND password = '{password}'"
                     result = supabase.query(query).execute()
 
@@ -101,10 +101,13 @@ def home():
                         # Return the result, location, and region
                         return result, location, region
                     else:
+                        # No facilities found for the staffnumber
                         return None, None, None
                 except Exception as e:
+                    # Log the error and return None for all values
                     print(f"Error logging in user: {e}")
                     return None, None, None
+
                 
             def view_all_users():
                 try:
