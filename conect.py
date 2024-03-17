@@ -156,12 +156,10 @@ def home():
                     staffnumber = st.text_input("Staffnumber")
                     password = st.text_input("Password", type='password')
                     location = st.selectbox("Select Location", location_names)
-                    selected_location = location_df[location_df['Location'] == location]
+                    selected_location_row = location_df[location_df['Location'] == location]
                     # Filter location_df based on selected_location
-                    filtered_df = location_df[location_df['Location'] == selected_location]
-                    # Get unique regions for the selected location
-                    unique_regions = filtered_df['Region'].unique()
-                    region = st.text_input("Region", value=unique_regions[0] if unique_regions else "")
+                    region_options = selected_location_row['Region'].tolist() if not selected_location_row.empty else []
+                    region = st.selectbox("Select Region", region_options)
                     if st.form_submit_button("Sign up"):
                         if add_userdata(staffnumber, password, location, region,supabase):
                             st.success("You have created a new account")
