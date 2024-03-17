@@ -89,10 +89,12 @@ def home():
                 try:
                     # Query the 'users' table using Supabase client
                     query = f"SELECT * FROM users WHERE staffnumber = {staffnumber} AND password = '{password}'"
+                    print("Query:", query)  # Print the query for debugging
                     result = supabase.query(query).execute()
 
                     # Fetch location and region based on staffnumber
                     facilities_df = get_facilities(staffnumber)
+                    print("Facilities DF:", facilities_df)  # Print the facilities dataframe for debugging
 
                     if facilities_df:
                         location = facilities_df[0]['location']
@@ -107,19 +109,6 @@ def home():
                     # Log the error and return None for all values
                     print(f"Error logging in user: {e}")
                     return None, None, None
-
-                
-            def view_all_users():
-                try:
-                    # Query the 'usertable' using Supabase client
-                    query = "SELECT * FROM users"
-                    result = supabase.query(query).execute()
-
-                    # Return the result
-                    return result
-                except Exception as e:
-                    print(f"Error fetching all users: {e}")
-                    return None
                 
                 
             response = supabase.from_('facilities').select('*').execute()
