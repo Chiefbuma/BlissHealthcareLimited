@@ -1,10 +1,8 @@
 
 st-supabase-connection==1.2.2
-st_login_form==0.2.2
 ipykernel==6.29.3
 ipython-genutils==0.2.0
 ipython-sql==0.5.0
-matplotlib-inline==0.1.6
 nbclient==0.9.0
 O365==2.0.33
 oauthlib==3.2.2
@@ -17,4 +15,5 @@ streamlit==1.32.1
 streamlit-auth==0.1.7.1
 wheel==0.41
 streamlit-option-menu==0.3.12
+streamlit_shadcn_ui=0.1.18
 
