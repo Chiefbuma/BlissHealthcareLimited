@@ -1,5 +1,4 @@
 import streamlit as st
-from st_login_form import login_form
 from st_supabase_connection import SupabaseConnection
 from supabase import create_client, Client
 import pandas as pd
@@ -181,7 +180,7 @@ def home():
             # Dropdown for selecting the year
             current_year = datetime.now().year
             
-           
+        
             selected_year = st.selectbox("Select Year:", ['2024', '2023'])
 
                 
@@ -214,7 +213,7 @@ def home():
                 
             st.session_state.logged_in= True
             # Dropdown for selecting the month
-           
+        
             with ck2:
                 selected_month = st.selectbox("Select Month:", df_Allsales['bill_date'].dt.month_name().unique(), index=datetime.now().month - 1)
                 # Filter the DataFrame based on the selected year and month
@@ -686,9 +685,6 @@ def home():
                 margin=dict(l=10, r=0, t=30, b=5)
                 )
 
-            
-            
-            
             # Create a new figure
             fig3 = go.Figure()
             
@@ -888,21 +884,21 @@ def home():
                     st.markdown("")  # Add a blank line for spacing
                     st.markdown(f"<div style='{card_style4}'>{f'MTD ARCHIEVEMENT<br> {formatted_arch_ff}'}</div>", unsafe_allow_html=True)
                     
-            with kolumn4:
+            with kolumn4:  
                     
                     st.plotly_chart(fig_request_by_type_ff, use_container_width=True)
             
             
-            with card_container(key="chart1"):
+            with card_container(key="MTDREVENUE"):
                 cols = st.columns(3)
                 with cols[0]:
                     # with ui.card():
                     #     ui.element()
-                    ui.card(title="Total Revenue", content="$45,231.89", description="+20.1% from last month", key="card1").render()
+                    ui.card(title="MTD Revenue", content={formatted_total_revenue}, description={f'{budget_performance_value} <br> from previous day'}, key="Revcard1").render()
                 with cols[1]:
-                    ui.card(title="Subscriptions", content="+2350", description="+180.1% from last month", key="card2").render()
+                    ui.card(title="MTD Budget", content="+2350", description="+180.1% from last month", key="Revcard2").render()
                 with cols[2]:
-                    ui.card(title="Sales", content="+12,234", description="+19% from last month", key="card3").render()
+                    ui.card(title="Performance Index", content="+12,234", description="+19% from last month", key="Revcard3").render()
             
                 st.plotly_chart(fig_request_by_type_ff, use_container_width=True)
             
