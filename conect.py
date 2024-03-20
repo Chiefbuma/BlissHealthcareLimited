@@ -19,8 +19,6 @@ from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
 
 
 # Set the page configuration
-
-
 st.set_page_config(page_title="My Streamlit App", layout="wide")
 
 def home():
@@ -95,7 +93,7 @@ def home():
                 response = supabase.from_('users').select('*').execute()
                 data = response.data
                 return data
-
+ 
             
             # log in app
             
@@ -892,15 +890,14 @@ def home():
             with card_container(key="MTDREVENUE"):
                 cols = st.columns(3)
                 with cols[0]:
-                    # with ui.card():
-                    #     ui.element()
-                    ui.card(title="MTD Revenue", content={formatted_total_revenue}, description={f'{budget_performance_value} <br> from previous day'}, key="Revcard1").render()
+                    ui.card(title="MTD Revenue", content=formatted_total_revenue, description=f'{budget_performance_value} <br> from previous day', key="Revcard1").render()
                 with cols[1]:
                     ui.card(title="MTD Budget", content="+2350", description="+180.1% from last month", key="Revcard2").render()
                 with cols[2]:
                     ui.card(title="Performance Index", content="+12,234", description="+19% from last month", key="Revcard3").render()
-            
-                st.plotly_chart(fig_request_by_type_ff, use_container_width=True)
+    
+            st.plotly_chart(fig_request_by_type_ff, use_container_width=True)
+
             
             
             
