@@ -4,7 +4,6 @@ from st_supabase_connection import SupabaseConnection
 from supabase import create_client, Client
 import pandas as pd
 from datetime import datetime, timedelta
-from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode
 import calendar
 import numpy as np
 import plotly.express as px
