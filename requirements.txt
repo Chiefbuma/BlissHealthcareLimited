@@ -1,5 +1,5 @@
-ipython==8.22.2
-ipython==8.12.3
+
+ipython==8.18.0
 mysql_connector_python==8.2.0
 mysql_connector_repackaged==0.3.1
 numpy==1.26.4
