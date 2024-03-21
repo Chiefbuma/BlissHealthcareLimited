@@ -1,9 +1,10 @@
+import _mysql_connector
 import streamlit as st
 from st_supabase_connection import SupabaseConnection
 from supabase import create_client, Client
 import pandas as pd
 from datetime import datetime, timedelta
-from IPython.display import display
+from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode
 import calendar
 import numpy as np
 import plotly.express as px
@@ -16,15 +17,17 @@ import supabase
 import streamlit_shadcn_ui as ui
 from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
+import mysql.connector
+from sqlalchemy import create_engine
+
 
 
 # Set the page configuration
 st.set_page_config(page_title="My Streamlit App", layout="wide")
 
 def home():
-    
     st.session_state.is_authenticated = False 
-   
+    
     col1, col2 = st.columns([2,1])
     with col1:
         menu = ["Login", "Sign up", "Log Out"]
@@ -32,69 +35,67 @@ def home():
 
         form_container = st.empty()
         with form_container :
-            @st.cache_resource
-            def init_connection():
-                url = "https://effdqrpabawzgqvugxup.supabase.co"
-                key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
-                return create_client(url, key)
+            host = '127.0.0.1'
+            port = 3306
+            database = 'blisshealthcare'
+            user = 'root'
+            password = 'buluma'
 
-            supabase = init_connection()
-            
-            response = supabase.table('facilities').select("*").execute()
-    
-            location_df = pd.DataFrame(response.data)
-            #st.write(location_df)
+            # Connect to the MySQL server
+            connection = mysql.connector.connect(
+                host=host,
+                port=port,
+                database=database,
+                user=user,
+                password=password,
+                allow_local_infile=True
+            )
+            # Query to select all columns from the facilities table
+            query = "SELECT * FROM facilities"
 
+            # Load data into a DataFrame
+            location_df = pd.read_sql(query, con=connection)
 
-            def get_facilities(staffnumber):
-                # Perform a Supabase query to fetch data from the 'users' table
-                response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                login_df = pd.DataFrame(response.data)
-                return login_df
+            cursor = connection.cursor()
+
+            def create_usertable():
+                cursor.execute('CREATE TABLE IF NOT EXISTS usertable (staff_id INT PRIMARY KEY AUTO_INCREMENT, staffnumber INT, password TEXT, location TEXT, region TEXT)')
 
             def add_userdata(staffnumber, password, location, region):
-                # Define the data to insert
-                data = {
-                    'staffnumber': staffnumber,
-                    'password': password,
-                    'location': location,
-                    'region': region
-                }
+                cursor.execute('INSERT INTO usertable (staffnumber, password, location, region) VALUES (%s, %s, %s, %s)', (staffnumber, password, location, region))
+                connection.commit()
 
-                # Insert the data into the 'userdata' table using Supabase
-                _, count = supabase.table('users').insert(data).execute()
+            def get_facilities(staffnumber):
+                query = "SELECT * FROM usertable WHERE staffnumber = %s"
+                params = (staffnumber,)
+                Login_df = pd.read_sql(query, params=params, con=connection)
+                return Login_df
 
-                # Return the count of rows affected by the insert operation
-                return count
-
-                # Return the count of rows affected by the insert operation
-                return count
-
-            location_names = location_df['Location'].unique().tolist()
-                # Create a dictionary mapping each location to its region
-
-            
-
-            def login_user(staffnumber,password):
-                # Perform a Supabase query to fetch user data based on staff number
-                response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                user_data = response.data
+            def login_user(staffnumber, password):
+                # Fetch location and region based on staffnumber
                 facilities_df = get_facilities(staffnumber)
+
                 if not facilities_df.empty:
                     location = facilities_df['location'].iloc[0]
                     region = facilities_df['region'].iloc[0]
 
                     # Check if the credentials match
-                    if password == facilities_df['password'].iloc[0]:
-                        return True, location, region
-                    return False, None, None
+                    cursor.execute('SELECT * FROM usertable WHERE staffnumber = %s AND password = %s', (staffnumber, password))
+                    data = cursor.fetchall()
+                    return data, location, region
+                else:
+                    return None, None, None
 
             def view_all_users():
-                response = supabase.from_('users').select('*').execute()
-                data = response.data
+                cursor.execute('SELECT * FROM usertable')
+                data = cursor.fetchall()
                 return data
- 
-            
+
+            # Fetch locations from the database
+            cursor.execute("SELECT Location FROM facilities")
+            locations = cursor.fetchall()
+            location_names = [location[0] for location in locations]
+
             # log in app
             
             if choice == "Log Out":
@@ -110,13 +111,17 @@ def home():
                     password = st.text_input("Password", type='password')
                     # Fetch location and region based on staffnumber
                     load=st.form_submit_button("Login")
-                    
+                    facilities_df = get_facilities(staffnumber)
+                    if not facilities_df.empty:
+                        location = facilities_df['location'].iloc[0]
+                        region = facilities_df['region'].iloc[0]
                     
                     if "logged_in" not in st.session_state:
                         st.session_state.logged_in= False
                         
                     if load or st.session_state.logged_in:
                         st.session_state.logged_in= True
+                        create_usertable() 
                         result, location, region = login_user(staffnumber, password)
                         if result:
                             st.success("Logged In successfully")
@@ -129,23 +134,26 @@ def home():
                             st.warning("Invalid credentials. Please try again.")
 
             elif choice == "Sign up":
-                with st.form("Sign-up Form"):  
+                with st.form("Sign-up Form"):
                     st.write("Sign-up Form")
-                    staffnumber = st.text_input('Staff Number', key='signup_staff_number')
+                    new_user = st.text_input("Staffnumber")
+                    new_password = st.text_input("Password", type='password')
                     location = st.selectbox("Select Location", location_names)
                     selected_location_row = location_df[location_df['Location'] == location]
                     region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
-                    password = st.text_input('Password', key='signup_password')
-                    signup_btn = st.form_submit_button('Sign Up')
-                    if signup_btn:
-                        add_userdata(staffnumber, password, location, region)
+
+                    if st.form_submit_button("Sign up"):
+                        create_usertable()
+                        add_userdata(new_user, new_password, location, region)
                         st.success("You have created a new account")
+                        st.session_state["logged_in"] == "True"
                         st.session_state.is_authenticated=True
                         form_container.empty()
+    
                         
     if st.session_state.is_authenticated:
+        st.session_state["logged_in"] == "True"
         form_container.empty()
-        ui.tabs(options=['MTD Revenue', 'MTD Footfalls', 'YTD report', 'Summary'], default_value='MTD Revenue', key="main_tabs")
         def fraction_of_days_in_month(given_date):
 
             # Convert the input date string to a datetime object
@@ -162,33 +170,40 @@ def home():
             fraction_passed = round(given_date.day / days_in_month, 2)
             
             return fraction_passed
-        
-        @st.cache_resource
-        def init_connection():
-            url = "https://effdqrpabawzgqvugxup.supabase.co"
-            key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
-            return create_client(url, key)
 
-        supabase = init_connection()
-        
+        # Replace these with your actual database credentials
+        host = '127.0.0.1'
+        port = 3306
+        database = 'blisshealthcare'
+        user = 'root'
+        password = 'buluma'
+
+        # Connect to the MySQL server
+        connection = mysql.connector.connect(
+            host=host,
+            port=port,
+            database=database,
+            user=user,
+            password=password,
+            allow_local_infile=True
+        )
+
         # Check if the connection is successful
-        if init_connection():
-
-            st.session_state.logged_in= True
-            # Dropdown for selecting the year
-            current_year = datetime.now().year
+        if connection.is_connected():
             
-        
-            selected_year = st.selectbox("Select Year:", ['2024', '2023'])
+            # Create a cursor object to execute SQL queries
+            cursor = connection.cursor()
 
-                
-            st.session_state.logged_in= True
-            # Dropdown for selecting the month
-            
-            response = supabase.from_('Allmerged_sales').select('*').eq('Year', selected_year).eq('location_name', location).execute()
+            # Execute queries to fetch data from the 'Allmerged_sales' table
+            query_sales = "SELECT * FROM Allmerged_sales"
+            cursor.execute(query_sales)
+            data_sales = cursor.fetchall()
 
-            
-            df_Allsales = pd.DataFrame(response.data)
+            # Get the column names from the cursor description
+            columns_sales = [i[0] for i in cursor.description]
+
+            # Create a Pandas DataFrame with the data
+            df_Allsales = pd.DataFrame(data_sales, columns=columns_sales)
 
             df_Allsales['bill_date'] = pd.to_datetime(df_Allsales['bill_date'])
 
@@ -1024,9 +1039,18 @@ def home():
 
 
             form_container.empty()
+            
+
+            form_container.empty()
+            # Close the cursor and connection
+            cursor.close()
+            connection.close()
+
+        else:
+            st.error("Connection to the database failed.")
 
             
-            
+
 @st.cache_resource()
 def load_data(email_user, password_user, sharepoint_url, list_name):
     try:
@@ -1046,24 +1070,36 @@ def load_data(email_user, password_user, sharepoint_url, list_name):
 
         # Specify column names to import
         selected_columns = ["Dateofreport",
-                            "Month",
-                            "Clinic2",
-                            "Region2",
                             "Typeofmaintenance",
-                            "Department",
-                            "Report",
                             "Details",
+                            "Month",
+                            "Approval",
                             "FacilityCoordinatorApproval",
                             "FacilitycoordinatorComments",
+                            "Approvedammount",
+                            "Receivedstatus",
+                            "ReceivedAmmount",
+                            "Maintenancestatus",
                             "ProjectsApproval",
                             "ProjectComments",
                             "AdminApproval",
                             "AdminComments",
-                            "Approvedammount",
-                            "Maintenancestatus",
                             "FinanceApproval",
                             "FinanceComment",
+                            "FacilityApproval",
                             "Approver",
+                            "Clinic2",
+                            "Report",
+                            "Region2",
+                            "CentreManager2",
+                            "Department",
+                            "EmailId",
+                            "Qty",
+                            "FacilityQty",
+                            "ProjectsQty",
+                            "AdminQty",
+                            "Laborcost",
+                            "MainItem",
                             "Days_x0020_Pending",
                             "Created"
                             ]
@@ -1079,10 +1115,9 @@ def load_data(email_user, password_user, sharepoint_url, list_name):
         st.error("Failed to load data from SharePoint. Please check your credentials and try again.")
         st.error(f"Error details: {e}")
         return None
-
-
+    
 def maintenance():
-    st.session_state.is_authenticated = False 
+    st.session_state.is_authenticated=False
     
     col1, col2 = st.columns([2,1])
     with col1:
@@ -1091,128 +1126,119 @@ def maintenance():
 
         form_container = st.empty()
         with form_container :
-            @st.cache_resource
-            def init_connection():
-                url = "https://effdqrpabawzgqvugxup.supabase.co"
-                key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
-                return create_client(url, key)
+            host = '127.0.0.1'
+            port = 3306
+            database = 'blisshealthcare'
+            user = 'root'
+            password = 'buluma'
 
-            supabase = init_connection()
-            
-            response = supabase.table('facilities').select("*").execute()
-    
-            location_df = pd.DataFrame(response.data)
-            #st.write(location_df)
+            # Connect to the MySQL server
+            connection = mysql.connector.connect(
+                host=host,
+                port=port,
+                database=database,
+                user=user,
+                password=password,
+                allow_local_infile=True
+            )
+            # Query to select all columns from the facilities table
+            query = "SELECT * FROM facilities"
 
+            # Load data into a DataFrame
+            location_df = pd.read_sql(query, con=connection)
 
-            def get_facilities(staffnumber):
-                # Perform a Supabase query to fetch data from the 'users' table
-                response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                login_df = pd.DataFrame(response.data)
-                return login_df
+            cursor = connection.cursor()
+
+            def create_usertable():
+                cursor.execute('CREATE TABLE IF NOT EXISTS usertable (staff_id INT PRIMARY KEY AUTO_INCREMENT, staffnumber INT, password TEXT, location TEXT, region TEXT)')
 
             def add_userdata(staffnumber, password, location, region):
-                # Define the data to insert
-                data = {
-                    'staffnumber': staffnumber,
-                    'password': password,
-                    'location': location,
-                    'region': region
-                }
+                cursor.execute('INSERT INTO usertable (staffnumber, password, location, region) VALUES (%s, %s, %s, %s)', (staffnumber, password, location, region))
+                connection.commit()
 
-                # Insert the data into the 'userdata' table using Supabase
-                _, count = supabase.table('users').insert(data).execute()
+            def get_facilities(staffnumber):
+                query = "SELECT * FROM usertable WHERE staffnumber = %s"
+                params = (staffnumber,)
+                Login_df = pd.read_sql(query, params=params, con=connection)
+                return Login_df
 
-                # Return the count of rows affected by the insert operation
-                return count
-
-                # Return the count of rows affected by the insert operation
-                return count
-
-            location_names = location_df['Location'].unique().tolist()
-                # Create a dictionary mapping each location to its region
-
-            
-
-            def login_user(staffnumber,password):
-                # Perform a Supabase query to fetch user data based on staff number
-                response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                user_data = response.data
+            def login_user(staffnumber, password):
+                # Fetch location and region based on staffnumber
                 facilities_df = get_facilities(staffnumber)
+
                 if not facilities_df.empty:
                     location = facilities_df['location'].iloc[0]
                     region = facilities_df['region'].iloc[0]
 
                     # Check if the credentials match
-                    if password == facilities_df['password'].iloc[0]:
-                        return True, location, region
-                    return False, None, None
+                    cursor.execute('SELECT * FROM usertable WHERE staffnumber = %s AND password = %s', (staffnumber, password))
+                    data = cursor.fetchall()
+                    return data, location, region
+                else:
+                    return None, None, None
 
             def view_all_users():
-                response = supabase.from_('users').select('*').execute()
-                data = response.data
+                cursor.execute('SELECT * FROM usertable')
+                data = cursor.fetchall()
                 return data
 
-            
+            # Fetch locations from the database
+            cursor.execute("SELECT Location FROM facilities")
+            locations = cursor.fetchall()
+            location_names = [location[0] for location in locations]
+
             # log in app
-            
             if choice == "Log Out":
                 st.subheader("Log Out")
 
             elif choice == "Login":
-                # Check if the user is logged in
-                
-
                 with st.form("Login Form"):
                     st.write("Login Form")
                     staffnumber = st.text_input("Staffnumber")
                     password = st.text_input("Password", type='password')
                     # Fetch location and region based on staffnumber
-                    load=st.form_submit_button("Login")
-                    
-                    
-                    if "logged_in" not in st.session_state:
-                        st.session_state.logged_in= False
-                        
-                    if load or st.session_state.logged_in:
-                        st.session_state.logged_in= True
+                    facilities_df = get_facilities(staffnumber)
+                    if not facilities_df.empty:
+                        location = facilities_df['location'].iloc[0]
+                        region = facilities_df['region'].iloc[0]
+                    if st.form_submit_button("Login"):
+                        create_usertable() 
+
                         result, location, region = login_user(staffnumber, password)
                         if result:
                             st.success("Logged In successfully")
                             st.write(f"Location: {location}, Region: {region}")
                             st.session_state.is_authenticated=True
-                            st.session_state["logged_in"] == "True"
                             form_container.empty()
 
                         else:
                             st.warning("Invalid credentials. Please try again.")
 
             elif choice == "Sign up":
-                with st.form("Sign-up Form"):  
+                with st.form("Sign-up Form"):
                     st.write("Sign-up Form")
-                    staffnumber = st.text_input('Staff Number', key='signup_staff_number')
+                    new_user = st.text_input("Staffnumber")
+                    new_password = st.text_input("Password", type='password')
                     location = st.selectbox("Select Location", location_names)
                     selected_location_row = location_df[location_df['Location'] == location]
                     region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
-                    password = st.text_input('Password', key='signup_password')
-                    signup_btn = st.form_submit_button('Sign Up')
-                    if signup_btn:
-                        add_userdata(staffnumber, password, location, region)
+
+                    if st.form_submit_button("Sign up"):
+                        create_usertable()
+                        add_userdata(new_user, new_password, location, region)
                         st.success("You have created a new account")
                         st.session_state.is_authenticated=True
                         form_container.empty()
                         
-    if st.session_state.is_authenticated:
-        form_container.empty()                   
+    if st.session_state.is_authenticated:                   
     
         sharepoint_url = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReports"
         list_name_maintenance_report = "Maintenance Report"
         list_name_maintenance_tracker = "Maintenance Tracker"
 
-        
         # Hardcoded email and password
         email_user = "biosafety@blisshealthcare.co.ke"
-        password_user = "NaSi#2024"
+        password_user = "WCzew834"
 
         # Authentication and connection to SharePoint
         Main_df = load_data(email_user, password_user, sharepoint_url, list_name_maintenance_report)
@@ -1220,6 +1246,17 @@ def maintenance():
         if Main_df is not None and Maintenance_tracker_df is not None:
             col1, col2, col3 = st.columns(3)
             
+            st.markdown("""<style>
+            div.st.container > button:first-child {
+                background-color: #00cc00;
+                color: white;
+                font-size: 20px;
+                height: 3em;
+                width: 30em;
+                border-radius: 10px;
+            }
+            </style>""", unsafe_allow_html=True)
+
             with col1:
                 Region = st.selectbox("Region:", options=[""] + list(Main_df["Region2"].unique()))
                 st.markdown("<style>div[data-baseweb='card'] {background-color: blue !important;}</style>", unsafe_allow_html=True)
@@ -1233,19 +1270,23 @@ def maintenance():
             else:
                 df_mainselected = Main_df.query("Clinic2 == @Location or Region2 == @Region or Maintenancestatus == @Status")
 
-            Total_requests = int(df_mainselected.shape[0])  # Count all rows in the filtered DataFrame
+            # Display Table
+            with st.expander("View Table"):
+                st.dataframe(df_mainselected, use_container_width=True)
+
+            Total_requests = float(df_mainselected.shape[0])  # Count all rows in the filtered DataFrame
 
             # Filter the DataFrame to include only rows where "Maintenancestatus" is "Pending"
             pending_requests_calc = df_mainselected[df_mainselected["Maintenancestatus"] == "Pending"]
 
             # Count the number of rows in the filtered DataFrame
-            pending_request = int(pending_requests_calc.shape[0])
+            pending_request = float(pending_requests_calc.shape[0])
 
             # Filter the DataFrame to include only rows where "Maintenancestatus" is "Closed"
             closed_requests_calc = df_mainselected[df_mainselected["Maintenancestatus"] == "Closed"]
 
             # Count the number of rows in the filtered DataFrame
-            closed_request = int(closed_requests_calc.shape[0])
+            closed_request = float(closed_requests_calc.shape[0])
 
             # Filter out rows with non-numeric values in "Days_x0020_Pending" column
             numeric_days_pending = df_mainselected["Days_x0020_Pending"].apply(pd.to_numeric, errors="coerce")
@@ -1253,116 +1294,58 @@ def maintenance():
             df_mainselected.dropna(subset=["Days_x0020_Pending"], inplace=True)
 
             # Calculate average days pending
-            Average_Days_pending = int(df_mainselected["Days_x0020_Pending"].mean())
-            
-            # Display Table
-            with st.expander("View Table"):
-                st.dataframe(df_mainselected, use_container_width=True)
-                
-           # Define the metrics
-            metrics = [
-                {"label": "Total", "value": Total_requests},
-                {"label": "Closed", "value": closed_request},
-                {"label": "Pending", "value": pending_request},
-                {"label": "TAT(days)", "value": Average_Days_pending}
-            ]
+            Average_Days_pending = float(df_mainselected["Days_x0020_Pending"].mean())
 
-            # Create the data cards
-            fig_data_cards = go.Figure()
+            c1, c2, c3, c4 = st.columns(4)
 
-            for i, metric in enumerate(metrics):
-                fig_data_cards.add_trace(go.Indicator(
-                    mode="number",
-                    value=metric["value"],
-                    number={'font': {'size': 25, 'color': 'white'}},
-                    domain={'row': i, 'column': 0},  # Set the row and column to stack vertically
-                    title={'text': metric["label"],'font': {'size': 20,'color': 'white'}},
-                    align="center"
-                ))
+            with c1:
+                st.info("Pending Approval")
+                st.metric(label="Pending Request", value=f"{pending_request:,.0f}")
+            with c2:
+                st.info("Approved")
+                st.metric(label="Closed Request", value=f"{closed_request:,.0f}")
+            with c3:
+                st.info("Total")
+                st.metric(label="Total Request", value=f"{Total_requests:,.0f}")
+            with c4:
+                st.info("Mean TAT")
+                st.metric(label="Pending Average Time", value=f"{Average_Days_pending:,.0f}")
 
-            # Update layout
-            fig_data_cards.update_layout(
-                grid={'rows': len(metrics), 'columns': 1, 'pattern': "independent"},
-                template="plotly_white",
-                height=100*len(metrics),  # Adjust the height based on the number of metrics
-                paper_bgcolor='rgba(0, 131, 184, 1)',  # Set background color to transparent
-                plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
-                uniformtext=dict(minsize=40, mode='hide'),
-                margin=dict(l=20, r=20, t=50, b=5)
-                
-                )
-
-            st.markdown(
-                """
-                <style>
-                .st-cd {
-                    border: 1px solid #e6e9ef;
-                    border-radius: 5px;
-                    padding: 10px;
-                    margin-bottom: 10px;
-                }
-                </style>
-                """,
-                unsafe_allow_html=True
-)
+            st.markdown("""---""")
             with st.container():
-                c1, c2, c3 = st.columns([0.5, 3, 1.5])
-                # Add content to the columns
-                with c1:
-                    # Display the figure
-                    st.plotly_chart(fig_data_cards, use_container_width=True) 
-                with c2:
-                    graph(df_mainselected)  # Call the graph function with df_mainselecte
-                with c3:
-                    graphy(df_mainselected)  # Call the graph function with df_mainselected
-                    st.markdown("""<div class='.st-cd'>•</div>""", unsafe_allow_html=True)
+                graph(df_mainselected)  # Call the graph function with df_mainselected
 
-
-              
 def graph(df_mainselected):
+    request_by_type = df_mainselected.groupby(by=["Report"]).size().reset_index(name='Count').sort_values(by="Count", ascending=True)
+    
+    fig_request_by_type = px.bar(request_by_type, x="Count", y="Report",
+                                orientation="h", title="<b> Number of Requests by Items </b>",
+                                color_discrete_sequence=["#0083b8"]*len(request_by_type), template="plotly_white")
+
+    fig_request_by_type.update_layout(plot_bgcolor="rgba(0,0,0,0)", xaxis=dict(showgrid=False))
+    
     
     request_by_report = df_mainselected.groupby(by=["Typeofmaintenance"]).size().reset_index(name='Count').sort_values(by="Count", ascending=True)
     
     fig_request_by_report = px.bar(request_by_report, x="Count", y="Typeofmaintenance",
-                                orientation="h", title="<b> Category of Works </b>",
+                                orientation="h", title="<b> Number of Requests by issue </b>",
                                 color_discrete_sequence=["#0083b8"]*len(request_by_report), template="plotly_white")
 
-    fig_request_by_report.update_layout(plot_bgcolor="rgba(0,255,0,0)", xaxis=dict(showgrid=True))
+    fig_request_by_report.update_layout(plot_bgcolor="rgba(0,0,0,0)", xaxis=dict(showgrid=True))
     
-    st.plotly_chart(fig_request_by_report, use_container_width=True)
+    c1, c2 = st.columns(2)
     
-def graphy(df_mainselected):
-    request_by_type = df_mainselected.groupby(by=["Report"]).size().reset_index(name='Count').sort_values(by="Count", ascending=False)
+    with c1:
+        st.plotly_chart(fig_request_by_report, use_container_width=True)
     
-    fig_request_by_type = go.Figure(data=[go.Table(
-        header=dict(values=["ITEM", "NO."],
-                    fill_color='rgba(0, 131, 184, 1)',
-                    align='left',
-                    font=dict(color='White', size=11),
-                    line_color='darkslategray',  # Border color
-                    line=dict(width=1)),  # Border width
-        cells=dict(values=[request_by_type["Report"], request_by_type["Count"]],
-                   fill_color=[
-                        ['rgba(0, 131, 184, 1)'],  # Blue for "Report" column
-                        ['white'] * len(request_by_type)  # White for "Count" column
-                    ],
-                   font_color=[
-                        ['white'],  # Blue for "Report" column
-                        ['black'] * len(request_by_type)  # White for "Count" column
-                    ],
-                   align='left',
-                   font=dict(color='black', size=11),
-                   line_color='darkslategray',  # Border color
-                   line=dict(width=1)))  # Border width
-    ])
+    with c2:
+        
+        st.plotly_chart(fig_request_by_type, use_container_width=True)
 
-    fig_request_by_type.update_layout(title="<b> Type of items </b>", template="plotly_white")
-    
-    st.plotly_chart(fig_request_by_type, use_container_width=True)
- 
- 
- 
-       
+
+
+
+
 def region():
     st.session_state.is_authenticated = False 
     
@@ -1373,69 +1356,67 @@ def region():
 
         form_container = st.empty()
         with form_container :
-            @st.cache_resource
-            def init_connection():
-                url = "https://effdqrpabawzgqvugxup.supabase.co"
-                key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
-                return create_client(url, key)
+            host = '127.0.0.1'
+            port = 3306
+            database = 'blisshealthcare'
+            user = 'root'
+            password = 'buluma'
 
-            supabase = init_connection()
-            
-            response = supabase.table('facilities').select("*").execute()
-    
-            location_df = pd.DataFrame(response.data)
-            #st.write(location_df)
+            # Connect to the MySQL server
+            connection = mysql.connector.connect(
+                host=host,
+                port=port,
+                database=database,
+                user=user,
+                password=password,
+                allow_local_infile=True
+            )
+            # Query to select all columns from the facilities table
+            query = "SELECT * FROM facilities"
 
+            # Load data into a DataFrame
+            location_df = pd.read_sql(query, con=connection)
 
-            def get_facilities(staffnumber):
-                # Perform a Supabase query to fetch data from the 'users' table
-                response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                login_df = pd.DataFrame(response.data)
-                return login_df
+            cursor = connection.cursor()
+
+            def create_usertable():
+                cursor.execute('CREATE TABLE IF NOT EXISTS usertable (staff_id INT PRIMARY KEY AUTO_INCREMENT, staffnumber INT, password TEXT, location TEXT, region TEXT)')
 
             def add_userdata(staffnumber, password, location, region):
-                # Define the data to insert
-                data = {
-                    'staffnumber': staffnumber,
-                    'password': password,
-                    'location': location,
-                    'region': region
-                }
+                cursor.execute('INSERT INTO usertable (staffnumber, password, location, region) VALUES (%s, %s, %s, %s)', (staffnumber, password, location, region))
+                connection.commit()
 
-                # Insert the data into the 'userdata' table using Supabase
-                _, count = supabase.table('users').insert(data).execute()
+            def get_facilities(staffnumber):
+                query = "SELECT * FROM usertable WHERE staffnumber = %s"
+                params = (staffnumber,)
+                Login_df = pd.read_sql(query, params=params, con=connection)
+                return Login_df
 
-                # Return the count of rows affected by the insert operation
-                return count
-
-                # Return the count of rows affected by the insert operation
-                return count
-
-            location_names = location_df['Location'].unique().tolist()
-                # Create a dictionary mapping each location to its region
-
-            
-
-            def login_user(staffnumber,password):
-                # Perform a Supabase query to fetch user data based on staff number
-                response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                user_data = response.data
+            def login_user(staffnumber, password):
+                # Fetch location and region based on staffnumber
                 facilities_df = get_facilities(staffnumber)
+
                 if not facilities_df.empty:
                     location = facilities_df['location'].iloc[0]
                     region = facilities_df['region'].iloc[0]
 
                     # Check if the credentials match
-                    if password == facilities_df['password'].iloc[0]:
-                        return True, location, region
-                    return False, None, None
+                    cursor.execute('SELECT * FROM usertable WHERE staffnumber = %s AND password = %s', (staffnumber, password))
+                    data = cursor.fetchall()
+                    return data, location, region
+                else:
+                    return None, None, None
 
             def view_all_users():
-                response = supabase.from_('users').select('*').execute()
-                data = response.data
+                cursor.execute('SELECT * FROM usertable')
+                data = cursor.fetchall()
                 return data
 
-            
+            # Fetch locations from the database
+            cursor.execute("SELECT Location FROM facilities")
+            locations = cursor.fetchall()
+            location_names = [location[0] for location in locations]
+
             # log in app
             
             if choice == "Log Out":
@@ -1451,13 +1432,17 @@ def region():
                     password = st.text_input("Password", type='password')
                     # Fetch location and region based on staffnumber
                     load=st.form_submit_button("Login")
-                    
+                    facilities_df = get_facilities(staffnumber)
+                    if not facilities_df.empty:
+                        location = facilities_df['location'].iloc[0]
+                        region = facilities_df['region'].iloc[0]
                     
                     if "logged_in" not in st.session_state:
                         st.session_state.logged_in= False
                         
                     if load or st.session_state.logged_in:
                         st.session_state.logged_in= True
+                        create_usertable() 
                         result, location, region = login_user(staffnumber, password)
                         if result:
                             st.success("Logged In successfully")
@@ -1470,23 +1455,26 @@ def region():
                             st.warning("Invalid credentials. Please try again.")
 
             elif choice == "Sign up":
-                with st.form("Sign-up Form"):  
+                with st.form("Sign-up Form"):
                     st.write("Sign-up Form")
-                    staffnumber = st.text_input('Staff Number', key='signup_staff_number')
+                    new_user = st.text_input("Staffnumber")
+                    new_password = st.text_input("Password", type='password')
                     location = st.selectbox("Select Location", location_names)
                     selected_location_row = location_df[location_df['Location'] == location]
                     region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
-                    password = st.text_input('Password', key='signup_password')
-                    signup_btn = st.form_submit_button('Sign Up')
-                    if signup_btn:
-                        add_userdata(staffnumber, password, location, region)
+
+                    if st.form_submit_button("Sign up"):
+                        create_usertable()
+                        add_userdata(new_user, new_password, location, region)
                         st.success("You have created a new account")
+                        st.session_state["logged_in"] == "True"
                         st.session_state.is_authenticated=True
                         form_container.empty()
+    
                         
     if st.session_state.is_authenticated:
+        st.session_state["logged_in"] == "True"
         form_container.empty()
-        
         def fraction_of_days_in_month(given_date):
 
             # Convert the input date string to a datetime object
@@ -1503,42 +1491,55 @@ def region():
             fraction_passed = round(given_date.day / days_in_month, 2)
             
             return fraction_passed
-        
-        @st.cache_resource
-        def init_connection():
-            url = "https://effdqrpabawzgqvugxup.supabase.co"
-            key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
-            return create_client(url, key)
 
-        supabase = init_connection()
-        
+        # Replace these with your actual database credentials
+        host = '127.0.0.1'
+        port = 3306
+        database = 'blisshealthcare'
+        user = 'root'
+        password = 'buluma'
+
+        # Connect to the MySQL server
+        connection = mysql.connector.connect(
+            host=host,
+            port=port,
+            database=database,
+            user=user,
+            password=password,
+            allow_local_infile=True
+        )
+
         # Check if the connection is successful
-        if init_connection():
+        if connection.is_connected():
+            
+            # Create a cursor object to execute SQL queries
+            cursor = connection.cursor()
+
+            # Execute queries to fetch data from the 'Allmerged_sales' table
+            query_regions = "SELECT * FROM facilities"
+            cursor.execute(query_regions)
+            data_region = cursor.fetchall()
+
+            # Get the column names from the cursor description
+            columns_regions = [i[0] for i in cursor.description]
+
+            # Create a Pandas DataFrame with the data
+            df_regions = pd.DataFrame(data_region, columns=columns_regions)
+
+            #st.write(df_regions)
             
 
-            st.session_state.logged_in= True
-            # Dropdown for selecting the year
-            current_year = datetime.now().year
-            
-           
-            selected_year = st.selectbox("Select Year:", ['2024', '2023'])
+            # Execute queries to fetch data from the 'Allmerged_sales' table
+            query_sales = "SELECT * FROM Allmerged_sales"
+            cursor.execute(query_sales)
+            data_sales = cursor.fetchall()
 
-                
-            st.session_state.logged_in= True
-            # Dropdown for selecting the month
-            
-            response = supabase.from_('Allmerged_sales').select('*').eq('Year', selected_year).eq('location_name', location).execute()
+            # Get the column names from the cursor description
+            columns_sales = [i[0] for i in cursor.description]
 
-            
-            Allregion_df = pd.DataFrame(response.data)
-            
-            
-            response2 = supabase.from_('facilities').select('*').execute()
+            # Create a Pandas DataFrame with the data
+            Allregion_df = pd.DataFrame(data_sales, columns=columns_sales)
 
-            
-            df_regions = pd.DataFrame( response2.data)
-
-            
             Allregion_df['bill_date'] = pd.to_datetime(Allregion_df['bill_date'])
            
             #st.write(df_Allsales)
@@ -1551,6 +1552,8 @@ def region():
 
             # Check the merged dataframe
             #st.write(df_Allsales)
+
+    
 
             card_style3 = "border: 2px solid #000000; border-radius: 5px; padding: 5px; background-color:#ffffff; color:#000000; text-align: center; font-size: 15px;font-weight: bold;"
             
@@ -2362,6 +2365,8 @@ def region():
 
         else:
             st.error("Connection to the database failed.")
+
+
 
 
 with st.sidebar:
