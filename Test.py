@@ -1,4 +1,4 @@
-import _mysql_connector
+
 import streamlit as st
 from st_supabase_connection import SupabaseConnection
 from supabase import create_client, Client
