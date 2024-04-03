@@ -23,8 +23,7 @@ def app():
         
     if 'is_Regionauthenticated' not in st.session_state:
         st.session_state.is_Regionauthenticated = False 
-        st.error('Please login first')
-
+ 
         # Initialize session state if it doesn't exist
 
    
