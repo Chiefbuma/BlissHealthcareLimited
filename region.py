@@ -374,7 +374,16 @@ def app():
                     ui.card(title="Last Updated:", content="31/03/2024", key="Revcard4").render()    
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
                 with st.expander("DEPARTMENTAL MTD REVENUE (CASH & FSS)"):
-                    st.write(Allperformance_df , use_container_width=True)
+                                    
+                    # Add a text input widget for search text
+                    search_text = st.text_input("Search text", "")
+                    
+                    # Filter the DataFrame based on the search text if it's not empty
+                    if search_text:
+                        filtered_df = Allperformance_df[Allperformance_df['location_name'].str.contains(search_text, case=False)]
+                    else:
+                        filtered_df = Allperformance_df
+                    st.write(filtered_df , use_container_width=True)
         
         
         # Use the expander widget
