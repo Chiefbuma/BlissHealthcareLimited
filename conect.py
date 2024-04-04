@@ -18,8 +18,6 @@ from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
 import main, region,medical
 
-# Set the page configuration
-st.set_page_config(page_title="Bliss Healthcare limited", layout="wide")
 
 
 class MultiApp:
