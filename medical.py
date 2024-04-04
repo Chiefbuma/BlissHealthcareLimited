@@ -183,20 +183,14 @@ def app():
             
             # # Define the metrics
             
-            Total_budget = performance_df['Total_Revenue_Budget'].sum()
-            formatted_Rev_budget = "{:,.0f}".format(Total_budget)
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
+            formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             
             
             #Total_budget_FF = performance_df['Budget_Footfall'].sum()
             #formatted_FF_budget = "{:,.0f}".format(Total_budget_FF)
-            
-            
-            fig3.add_trace(
-            go.Indicator(
-                title={'text': "MTD BUDGET",'font': {'size': 15,'color': 'green'}},
-                value= int(Total_budget)
-            )
-        )
+                        
+   
             # For example, let's say you want to add a trace for the "Projection" metric
             fig3.update_layout(
                 template="plotly_white",
@@ -213,8 +207,8 @@ def app():
             fig2 = go.Figure()
             
             # # Define the Reveneu metrics
-            Total_Revenue = performance_df['MTD_Actual_Revenue'].sum()
-            formatted_total_revenue = "{:,.0f}".format(Total_Revenue)
+            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
+            formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
             
             Arch_Rev = (performance_df['MTD_Actual_Revenue'].sum() / performance_df['MTD_Budget_Revenue'].sum()) * 100
             formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
@@ -227,12 +221,6 @@ def app():
             #formatted_arch_ff = "{:.0f}%".format( Arch_FF)
             
             
-            fig2.add_trace(
-            go.Indicator(
-                title={'text': "MTD REVENUE",'font': {'size': 15,'color': 'green'}},
-                value= int(Total_Revenue)
-            )
-        )
             # For example, let's say you want to add a trace for the "Projection" metric
             fig2.update_layout(
                 template="plotly_white",
@@ -246,14 +234,7 @@ def app():
                 )
             
             
-            # Create a new figure
-            fig5 = go.Figure()
-            fig5.add_trace(
-            go.Indicator(
-                title={'text': "MTD BUDGET",'font': {'size': 15,'color': 'green'}},
-                value= int(Total_budget)
-            )
-        )
+            
             # For example, let's say you want to add a trace for the "Projection" metric
             fig3.update_layout(
                 template="plotly_white",
@@ -356,7 +337,7 @@ def app():
 
                 cols = st.columns(4)
                 with cols[0]:
-                    ui.card(title="MTD Revenue", content=formatted_total_revenue, key="Revcard1").render()
+                    ui.card(title="MTD Revenue", content=formatted_Actual_revenue, key="Revcard1").render()
                 with cols[1]:
                     ui.card(title="MTD Budget", content=formatted_Rev_budget, key="Revcard2").render()
                 with cols[2]:
