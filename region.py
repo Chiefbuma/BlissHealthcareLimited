@@ -179,6 +179,13 @@ def app():
 
             performance_df = pd.DataFrame(response.data)
             
+            # Query the MTD_Revenue table with the filter for location_name and Month
+            response2 = supabase.from_('MTD_Region').select('*').eq('Region', region).eq('Month', current_month).execute()
+
+            Allperformance_df = pd.DataFrame(response2.data)
+            
+            
+            
             # Create a new figure
             fig3 = go.Figure()
             
@@ -367,12 +374,7 @@ def app():
                     ui.card(title="Last Updated:", content="31/03/2024", key="Revcard4").render()    
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
                 with st.expander("DEPARTMENTAL MTD REVENUE (CASH & FSS)"):
-                    st.vega_lite_chart(generate_sales_data(), {
-                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
-                    'encoding': {
-                        'x': {'field': 'Month', 'type': 'ordinal'},
-                        'y': {'field': 'Sales', 'type': 'quantitative', 'axis': {'grid': False}},
-                    },}, use_container_width=True)
+                    st.write(Allperformance_df , use_container_width=True)
         
         
         # Use the expander widget
