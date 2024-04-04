@@ -177,8 +177,7 @@ def app():
             # Query the MTD_Revenue table with the filter for location_name and Month
             response = supabase.from_('MTD_Region').select('*').eq('Region', region).eq('Month', current_month).execute()
 
-            performance_df = pd.DataFrame(response.data)    
-            
+            performance_df = pd.DataFrame(response.data)
             
             # Create a new figure
             fig3 = go.Figure()
@@ -188,8 +187,8 @@ def app():
             Total_budget = performance_df['Total_Revenue_Budget'].sum()
             formatted_Rev_budget = "{:,.0f}".format(Total_budget)
             
-            MTD_Reveue_budget = performance_df['MTD'].sum()
-            formatted_Rev_budget = "{:,.0f}".format(Total_budget)
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
+            formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             #Total_budget_FF = performance_df['Budget_Footfall'].sum()
             #formatted_FF_budget = "{:,.0f}".format(Total_budget_FF)
             
@@ -361,7 +360,7 @@ def app():
                 with cols[0]:
                     ui.card(title="MTD Revenue", content=formatted_total_revenue, key="Revcard1").render()
                 with cols[1]:
-                    ui.card(title="MTD Budget", content=formatted_Rev_budget, key="Revcard2").render()
+                    ui.card(title="MTD Budget", content= formatted_Rev_budget, key="Revcard2").render()
                 with cols[2]:
                     ui.card(title="MTD Archievement", content=formatted_arch_rev, key="Revcard3").render()
                 with cols[3]:
