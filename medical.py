@@ -165,17 +165,14 @@ def app():
         if init_connection():
         
             
-            
-            
-
             st.session_state.logged_in= True
             # Dropdown for selecting the year
-            current_year = datetime.now().year
+          
             
-            current_month = "April"
+            current_month =datetime.now().month
             
 
-             # Query the MTD_Revenue table with the filter for location_name and Month
+            # Query the MTD_Revenue table with the filter for location_name and Month
             response = supabase.from_('MTD_Revenue').select('*').eq('location_name', location).eq('Month', current_month).execute()
 
             performance_df = pd.DataFrame(response.data)
@@ -185,11 +182,6 @@ def app():
             LastUpdate_df = LastUpdate_df[['Last_Updated']]  # Assuming 'Last_Updated' is the column you want
             Lastdate = LastUpdate_df.iloc[0]['Last_Updated']
           
-
-
-
-
-            
             # Define the function to calculate the fraction of days passed in a month
             def fraction_of_days_in_month(date):
                 # Calculate the total number of days in the month
