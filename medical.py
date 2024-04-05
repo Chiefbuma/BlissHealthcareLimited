@@ -205,7 +205,7 @@ def app():
             
             # # Define the metrics
                         # Calculate the previous day
-            Lastdate = "2025-4-05"
+            Lastdate = LastUpdate_df.iloc[0]['Last_Updated']
             Lastdate_date = datetime.strptime(Lastdate, "%Y-%m-%d").date()
 
             # Calculate fraction of days passed for the selected month
