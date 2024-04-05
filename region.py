@@ -171,30 +171,59 @@ def app():
             st.session_state.Regionlogged_in= True
             # Dropdown for selecting the year
                       
-            current_month = "March"
-            #current_month =datetime.now().strftime('%B')
+            current_month = datetime.now().month
+            current_month_name = calendar.month_name[current_month]
 
             # Query the MTD_Revenue table with the filter for location_name and Month
-            response = supabase.from_('MTD_Region').select('*').eq('Region', region).eq('Month', current_month).execute()
+            response = supabase.from_('MTD_Region').select('*').eq('Region', region).eq('Month', current_month_name).execute()
 
             performance_df = pd.DataFrame(response.data)
+            
             
             # Query the MTD_Revenue table with the filter for location_name and Month
             response2 = supabase.from_('MTD_Region_All').select('*').eq('Region', region).eq('Month', current_month).execute()
 
             Allperformance_df = pd.DataFrame(response2.data)
             
+            Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
+            LastUpdate_df = pd.DataFrame(Lastdateresponse.data)
+            LastUpdate_df = LastUpdate_df[['Last_Updated']]  # Assuming 'Last_Updated' is the column you want
+            Lastdate = LastUpdate_df.iloc[0]['Last_Updated']
             
-            
+            # Define the function to calculate the fraction of days passed in a month
+            def fraction_of_days_in_month(date):
+                # Calculate the total number of days in the month
+                total_days_in_month = (date.replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+                
+                # Calculate the fraction of days passed
+                fraction_passed = (date.day - 1) / total_days_in_month.day
+                
+                return fraction_passed
+           
             # Create a new figure
             fig3 = go.Figure()
             
             # # Define the metrics
+                        # Calculate the previous day
+            Lastdate = LastUpdate_df.iloc[0]['Last_Updated']
+            Lastdate_date = datetime.strptime(Lastdate, "%Y-%m-%d").date()
             
-            Total_budget = performance_df['Total_Revenue_Budget'].sum()
+            
+            # Convert Lastdate to a datetime.date object
+            dateword = datetime.strptime(Lastdate, "%Y-%m-%d").date()
+
+            # Format the date as "Friday 24th 2024"
+            formatted_date = dateword.strftime("%A %dth %Y")
+
+            # Calculate fraction of days passed for the selected month
+            fraction_passed = fraction_of_days_in_month(Lastdate_date)
+            
+            # # Define the metrics
+            
+            Total_budget = performance_df['Total_Revenue_Budget'].sum()*fraction_passed
             formatted_Rev_budget = "{:,.0f}".format(Total_budget)
             
-            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()*fraction_passed 
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             #Total_budget_FF = performance_df['Budget_Footfall'].sum()
             #formatted_FF_budget = "{:,.0f}".format(Total_budget_FF)
@@ -222,10 +251,10 @@ def app():
             fig2 = go.Figure()
             
             # # Define the Reveneu metrics
-            Total_Revenue = performance_df['MTD_Actual_Revenue'].sum()
-            formatted_total_revenue = "{:,.0f}".format(Total_Revenue)
+            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
+            formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
             
-            Arch_Rev = (performance_df['MTD_Actual_Revenue'].sum() / performance_df['MTD_Budget_Revenue'].sum()) * 100
+            Arch_Rev = (formatted_Actual_revenue /formatted_Rev_budget) * 100
             formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
             
             
@@ -239,7 +268,7 @@ def app():
             fig2.add_trace(
             go.Indicator(
                 title={'text': "MTD REVENUE",'font': {'size': 15,'color': 'green'}},
-                value= int(Total_Revenue)
+                value= int(formatted_Actual_revenue )
             )
         )
             # For example, let's say you want to add a trace for the "Projection" metric
@@ -365,13 +394,13 @@ def app():
 
                 cols = st.columns(4)
                 with cols[0]:
-                    ui.card(title="MTD Revenue", content=formatted_total_revenue, key="Revcard1").render()
+                    ui.card(title="MTD Revenue", content=formatted_Actual_revenue , key="Revcard1").render()
                 with cols[1]:
                     ui.card(title="MTD Budget", content= formatted_Rev_budget, key="Revcard2").render()
                 with cols[2]:
                     ui.card(title="MTD Archievement", content=formatted_arch_rev, key="Revcard3").render()
                 with cols[3]:
-                    ui.card(title="Last Updated:", content="31/03/2024", key="Revcard4").render()    
+                    ui.card(title="Last Updated:", content=formatted_date, key="Revcard4").render()    
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
                 with st.expander("DEPARTMENTAL MTD REVENUE (CASH & FSS)"):
                                     
