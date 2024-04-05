@@ -218,8 +218,8 @@ def app():
             # Calculate fraction of days passed for the selected month
             fraction_passed = fraction_of_days_in_month(Lastdate_date)
             
-            # # Define the metrics
-            
+            #Define the metrics
+        
             Total_budget = performance_df['Total_Revenue_Budget'].sum()
             formatted_Rev_budget = "{:,.0f}".format(Total_budget)
             
@@ -321,13 +321,13 @@ def app():
                 #uniformtext=dict(minsize=40, mode='hide'),
                 #margin=dict(l=20, r=20, t=50, b=5)
                 
-            performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
+            performance_df["MTD_Budget_Revenue"] = (performance_df["MTD_Budget_Revenue"]*fraction_passed ).apply(lambda x: '{:,}'.format(x))
             performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x ))
+            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x*10))
             performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
             performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
             performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-            performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
+            performance_df["MTD_Budget_Footfall"] = (performance_df["MTD_Budget_Footfall"]*fraction_passed).apply(lambda x: '{:,}'.format(x))
             performance_df["%Arch_FF"] = performance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100 ))
             performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
