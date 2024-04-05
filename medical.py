@@ -238,7 +238,7 @@ def app():
             MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
             formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
             
-            Arch_Rev = (performance_df['MTD_Actual_Revenue'].sum() / performance_df['MTD_Budget_Revenue'].sum()) * 100
+            Arch_Rev = (MTD_Actual_Revenue /MTD_Revenue_budget) * 100
             formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
             
             
