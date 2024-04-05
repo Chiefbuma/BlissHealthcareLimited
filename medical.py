@@ -163,6 +163,10 @@ def app():
         
         # Check if the connection is successful
         if init_connection():
+        
+            
+            
+            
 
             st.session_state.logged_in= True
             # Dropdown for selecting the year
@@ -176,14 +180,35 @@ def app():
 
             performance_df = pd.DataFrame(response.data)
             
+            Lastdateresponse = supabase.from_('Last_Update').select('*')
             
+            LastUpdate_df = pd.DataFrame(Lastdateresponse)
+            
+            # Assuming Allsales_df is your DataFrame
+            LastUpdate_df['Last_Updated'] = pd.to_datetime(LastUpdate_df['Last_Updated'])
+            
+            
+            # Define the function to calculate the fraction of days passed in a month
+            def fraction_of_days_in_month(date):
+                # Calculate the total number of days in the month
+                total_days_in_month = (date.replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+                
+                # Calculate the fraction of days passed
+                fraction_passed = (date.day - 1) / total_days_in_month.day
+                
+                return fraction_passed
            
             # Create a new figure
             fig3 = go.Figure()
             
             # # Define the metrics
+                        # Calculate the previous day
+            Lastdate = LastUpdate_df['Last_Updated']
+
+            # Calculate fraction of days passed for the selected month
+            fraction_passed = fraction_of_days_in_month(Lastdate)
             
-            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()* fraction_passed
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             
             
