@@ -183,7 +183,7 @@ def app():
             
             # # Define the metrics
             
-            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue']
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             
             
@@ -207,10 +207,10 @@ def app():
             fig2 = go.Figure()
             
             # # Define the Reveneu metrics
-            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
+            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue']
             formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
             
-            Arch_Rev = (performance_df['MTD_Actual_Revenue'].sum() / performance_df['MTD_Budget_Revenue'].sum()) * 100
+            Arch_Rev = (performance_df['MTD_Actual_Revenue'] / performance_df['MTD_Budget_Revenue']) * 100
             formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
             
             
@@ -277,7 +277,8 @@ def app():
 
             
             fig_request_by_type_Rev = go.Figure(data=[go.Table(
-                header=dict(values=['Scheme','Revenue<br>Budget','Revenue<br>Actual','%Arch<br>REV','Total<br>Budget','Projected<br>Revenue',
+                header=dict(values=['Scheme','Revenue<br>Budget','Revenue<br>Actual','%Arch<br>REV',
+                                    'Total<br>Budget','Projected<br>Revenue',
                                     'Footfall<br>Budget','Footfall<br>Actual','%Arch<br>FF','Total<br>Budget','Projected<br>Footfalls'],
                             fill_color='rgba(0, 84, 0, 1)',
                             align='left',
