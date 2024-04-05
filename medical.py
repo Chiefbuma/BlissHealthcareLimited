@@ -168,7 +168,7 @@ def app():
             # Dropdown for selecting the year
             current_year = datetime.now().year
             
-            current_month =  datetime.now().month
+            current_month = "April"
             #current_month =datetime.now().strftime('%B')
 
              # Query the MTD_Revenue table with the filter for location_name and Month
