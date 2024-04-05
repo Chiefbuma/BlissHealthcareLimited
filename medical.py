@@ -183,7 +183,7 @@ def app():
             
             # # Define the metrics
             
-            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue']
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             
             
@@ -207,10 +207,10 @@ def app():
             fig2 = go.Figure()
             
             # # Define the Reveneu metrics
-            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue']
+            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
             formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
             
-            Arch_Rev = (performance_df['MTD_Actual_Revenue'] / performance_df['MTD_Budget_Revenue']) * 100
+            Arch_Rev = (performance_df['MTD_Actual_Revenue'].sum() / performance_df['MTD_Budget_Revenue'].sum()) * 100
             formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
             
             

@@ -18,9 +18,6 @@ from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
 
 
-# Set the page configuration
-st.set_page_config(page_title="My Streamlit App", layout="wide")
-
 def home():
     
     st.session_state.is_authenticated = False 
