@@ -168,7 +168,7 @@ def app():
             # Dropdown for selecting the year
             current_year = datetime.now().year
             
-            current_month = datetime.now().year
+            current_month = "March"
             #current_month =datetime.now().strftime('%B')
 
              # Query the MTD_Revenue table with the filter for location_name and Month
@@ -328,11 +328,6 @@ def app():
                 months = ['Jan', 'Feb', 'Mar']
                 sales = np.random.randint(1000, 5000, size=len(months))
                 return pd.DataFrame({'Month': months, 'Sales': sales})
-            
-            
-            
-            
-            
             
             with card_container(key="MTDREVENUE"):
                 card_style3 = "border: 2px solid #000000; border-radius: 5px; padding: 10px; background-color:#ffffff; color:#000000; text-align: center; font-size: 15px;font-weight: bold; width: 100%; height: 30;"
