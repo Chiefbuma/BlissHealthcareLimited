@@ -207,6 +207,13 @@ def app():
                         # Calculate the previous day
             Lastdate = LastUpdate_df.iloc[0]['Last_Updated']
             Lastdate_date = datetime.strptime(Lastdate, "%Y-%m-%d").date()
+            
+            
+            # Convert Lastdate to a datetime.date object
+            dateword = datetime.strptime(Lastdate, "%Y-%m-%d").date()
+
+            # Format the date as "Friday 24th 2024"
+            formatted_date = dateword.strftime("%A %dth %Y")
 
             # Calculate fraction of days passed for the selected month
             fraction_passed = fraction_of_days_in_month(Lastdate_date)
@@ -371,7 +378,7 @@ def app():
                 with cols[2]:
                     ui.card(title="MTD Archievement", content=formatted_arch_rev, key="Revcard3").render()
                 with cols[3]:
-                    ui.card(title="Last Updated:", content="31/03/2024", key="Revcard4").render()  
+                    ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
                 with st.expander("DEPARTMENTAL MTD REVENUE (CASH & FSS)"):
                     st.vega_lite_chart(generate_sales_data(), {
