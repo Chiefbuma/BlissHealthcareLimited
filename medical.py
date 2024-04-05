@@ -180,12 +180,11 @@ def app():
 
             performance_df = pd.DataFrame(response.data)
             
-            Lastdateresponse = supabase.from_('Last_Update').select('*')
-            
-            LastUpdate_df = pd.DataFrame(Lastdateresponse)
-            
-            # Assuming Allsales_df is your DataFrame
-            LastUpdate_df = pd.DataFrame([Lastdateresponse], columns=['Last_Updated'])
+            Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
+            LastUpdate_df = pd.DataFrame(Lastdateresponse['data'])
+            LastUpdate_df = LastUpdate_df[['Last_Updated']]  # Assuming 'Last_Updated' is the column you want
+            Lastdate = LastUpdate_df.iloc[0]['Last_Updated']
+
 
             
             # Define the function to calculate the fraction of days passed in a month
