@@ -378,7 +378,7 @@ def app():
                 with cols[2]:
                     ui.card(title="MTD Archievement", content=formatted_arch_rev, key="Revcard3").render()
                 with cols[3]:
-                    ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
+                    ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4",style={"font-size": "20px"}).render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
                 with st.expander("DEPARTMENTAL MTD REVENUE (CASH & FSS)"):
                     st.vega_lite_chart(generate_sales_data(), {
