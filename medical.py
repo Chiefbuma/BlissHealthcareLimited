@@ -172,7 +172,7 @@ def app():
             #current_month =datetime.now().strftime('%B')
 
              # Query the MTD_Revenue table with the filter for location_name and Month
-            response = supabase.from_('MTD_Revenue').select('*').eq('location_name', region).eq('Month', current_month).execute()
+            response = supabase.from_('MTD_Revenue').select('*').eq('location_name', location).eq('Month', current_month).execute()
 
             performance_df = pd.DataFrame(response.data)
             
@@ -248,7 +248,6 @@ def app():
                 )
             
             # Create a new figure
-             #fig6 = go.Figure()
              #fig6.add_trace(
              #go.Indicator(
                  #title={'text': "MTD FOOTFALL",'font': {'size': 15,'color': 'green'}},
