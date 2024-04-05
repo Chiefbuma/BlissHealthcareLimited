@@ -20,8 +20,7 @@ import os
 from sqlalchemy import create_engine
 
 
-# Set the page configuration
-st.set_page_config(page_title="My Streamlit App", layout="wide")
+
 
 @st.cache_resource()
 def load_data(email_user, password_user, sharepoint_url, list_name):
