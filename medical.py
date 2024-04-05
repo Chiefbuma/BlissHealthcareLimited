@@ -172,7 +172,7 @@ def app():
             #current_month =datetime.now().strftime('%B')
 
              # Query the MTD_Revenue table with the filter for location_name and Month
-            response = supabase.from_('MTD_Region').select('*').eq('Region', region).eq('Month', current_month).execute()
+            response = supabase.from_('MTD_Revenue').select('*').eq('location_name', region).eq('Month', current_month).execute()
 
             performance_df = pd.DataFrame(response.data)
             
