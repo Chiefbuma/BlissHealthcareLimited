@@ -205,10 +205,11 @@ def app():
             
             # # Define the metrics
                         # Calculate the previous day
-            Lastdate  = LastUpdate_df.iloc[0]['Last_Updated']
+            Lastdate = "2025-4-05"
+            Lastdate_date = datetime.strptime(Lastdate, "%Y-%m-%d").date()
 
             # Calculate fraction of days passed for the selected month
-            fraction_passed = fraction_of_days_in_month(Lastdate)
+            fraction_passed = fraction_of_days_in_month(Lastdate_date)
             
             MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()* fraction_passed
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
