@@ -172,23 +172,18 @@ def app():
             #current_month =datetime.now().strftime('%B')
 
              # Query the MTD_Revenue table with the filter for location_name and Month
-            response = supabase.from_('MTD_Region').select('*').eq('Region', region).execute()
+            response = supabase.from_('MTD_Region').select('*').eq('Region', region).eq('Month', current_month).execute()
 
             performance_df = pd.DataFrame(response.data)
             
-                        # Create a selectbox for selecting the month
-            selected_month = st.selectbox('Select a month', performance_df['Month'].unique())
-
-            # Filter the DataFrame based on the selected month
-            filtered_performance_df = performance_df[performance_df["Month"] == selected_month]
-
+            
            
             # Create a new figure
             fig3 = go.Figure()
             
             # # Define the metrics
             
-            MTD_Revenue_budget =  filtered_performance_df['MTD_Budget_Revenue'].sum()
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             
             
@@ -212,10 +207,10 @@ def app():
             fig2 = go.Figure()
             
             # # Define the Reveneu metrics
-            MTD_Actual_Revenue =  filtered_performance_df['MTD_Actual_Revenue'].sum()
+            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
             formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
             
-            Arch_Rev = ( filtered_performance_df['MTD_Actual_Revenue'].sum() /  filtered_performance_df['MTD_Budget_Revenue'].sum()) * 100
+            Arch_Rev = (performance_df['MTD_Actual_Revenue'].sum() / performance_df['MTD_Budget_Revenue'].sum()) * 100
             formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
             
             
@@ -268,55 +263,56 @@ def app():
                 #plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
                 #uniformtext=dict(minsize=40, mode='hide'),
                 #margin=dict(l=20, r=20, t=50, b=5)
-            filtered_performance_df["MTD_Budget_Revenue"] = filtered_performance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
-            filtered_performance_df["MTD_Actual_Revenue"] = filtered_performance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-            filtered_performance_df["%Arch_REV"] = filtered_performance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x ))
-            filtered_performance_df["Total_Revenue_Budget"] = filtered_performance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
-            filtered_performance_df["Projected_Revenue"] = filtered_performance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
-            filtered_performance_df["MTD_Actual_Footfall"] = filtered_performance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-            filtered_performance_df["MTD_Budget_Footfall"] = filtered_performance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
-            filtered_performance_df["%Arch_FF"] = filtered_performance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100 ))
-            filtered_performance_df["Total_Footfall_Budget"] = filtered_performance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
-            filtered_performance_df["Projected_Footfalls"] = filtered_performance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
+                
+            performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
+            performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
+            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x ))
+            performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
+            performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
+            performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
+            performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
+            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100 ))
+            performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
+            performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
 
-
+            
             fig_request_by_type_Rev = go.Figure(data=[go.Table(
-            header=dict(values=['Scheme', 'Revenue<br>Budget', 'Revenue<br>Actual', '%Arch<br>REV',
-                                    'Total<br>Budget', 'Projected<br>Revenue',
-                                    'Footfall<br>Budget', 'Footfall<br>Actual', '%Arch<br>FF', 'Total<br>Budget', 'Projected<br>Footfalls'],
-                        fill_color='rgba(0, 84, 0, 1)',
-                        align='left',
-                        font=dict(family='Georgia', color='White', size=14),
-                        line_color='darkslategray',  # Border color
-                        line=dict(width=1)),
-            columnwidth=[40, 30, 30, 30, 30, 30, 30, 30, 30, 30, 40],  # Border width
-            cells=dict(values=[filtered_performance_df["Scheme"],
-                                filtered_performance_df["MTD_Budget_Revenue"],
-                                filtered_performance_df["MTD_Actual_Revenue"],
-                                filtered_performance_df["%Arch_REV"],
-                                filtered_performance_df["Total_Revenue_Budget"],
-                                filtered_performance_df["Projected_Revenue"],
-                                filtered_performance_df["MTD_Budget_Footfall"],
-                                filtered_performance_df["MTD_Actual_Footfall"],
-                                filtered_performance_df["%Arch_FF"],
-                                filtered_performance_df["Total_Footfall_Budget"],
-                                filtered_performance_df["Projected_Footfalls"]],
+                header=dict(values=['Scheme','Revenue<br>Budget','Revenue<br>Actual','%Arch<br>REV',
+                                    'Total<br>Budget','Projected<br>Revenue',
+                                    'Footfall<br>Budget','Footfall<br>Actual','%Arch<br>FF','Total<br>Budget','Projected<br>Footfalls'],
+                            fill_color='rgba(0, 84, 0, 1)',
+                            align='left',
+                            font=dict(family='Georgia', color='White', size=14),
+                            line_color='darkslategray',  # Border color
+                            line=dict(width=1)),
+                            columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
+                cells=dict(values=[performance_df["Scheme"],
+                                   performance_df["MTD_Budget_Revenue"],
+                                   performance_df["MTD_Actual_Revenue"],
+                                   performance_df["%Arch_REV"],
+                                    performance_df["Total_Revenue_Budget"],
+                                    performance_df["Projected_Revenue"],
+                                     performance_df["MTD_Budget_Footfall"],
+                                    performance_df["MTD_Actual_Footfall"],
+                                    performance_df["%Arch_FF"],
+                                    performance_df["Total_Footfall_Budget"],
+                                    performance_df["Projected_Footfalls"]]
+,
                         fill_color=[
-                            ['rgba(0, 0, 82, 1)'],  # Blue for "Report" column
-                            ['white'] * len(filtered_performance_df)  # White for "Count" column
-                        ],
+                                ['rgba(0, 0, 82, 1)'],  # Blue for "Report" column
+                                ['white'] * len(performance_df)  # White for "Count" column
+                            ],
                         font_color=[
-                            ['white'],  # Blue for "Report" column
-                            ['black'] * len(filtered_performance_df)  # White for "Count" column
-                        ],
+                                ['white'],  # Blue for "Report" column
+                                ['black'] * len(performance_df)  # White for "Count" column
+                            ],
                         align='left',
                         font=dict(color='black', size=14),
                         line_color='darkslategray',
-                        height=25,  # Border color
+                        height=25,# Border color
                         line=dict(width=0.3))),
-
+                       
             ])
-
             fig_request_by_type_Rev.update_layout(
                     margin=dict(l=0, r=0, t=0, b=0),
                     height=200,
