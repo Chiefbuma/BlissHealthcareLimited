@@ -220,7 +220,7 @@ def app():
             
             # # Define the metrics
             
-            Total_budget = performance_df['Total_Revenue_Budget'].sum()*fraction_passed
+            Total_budget = performance_df['Total_Revenue_Budget'].sum()
             formatted_Rev_budget = "{:,.0f}".format(Total_budget)
             
             MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()*fraction_passed 
