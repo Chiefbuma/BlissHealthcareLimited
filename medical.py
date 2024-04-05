@@ -185,10 +185,9 @@ def app():
             LastUpdate_df = pd.DataFrame(Lastdateresponse)
             
             # Assuming Allsales_df is your DataFrame
-            LastUpdate_df['Last_Updated'] = pd.to_datetime(LastUpdate_df['Last_Updated'])
+            LastUpdate_df = pd.DataFrame([Lastdateresponse], columns=['Last_Updated'])
+
             
-
-
             # Define the function to calculate the fraction of days passed in a month
             def fraction_of_days_in_month(date):
                 # Calculate the total number of days in the month
