@@ -371,7 +371,7 @@ def app():
                                     performance_total["Total_Footfall_Budget"],
                                     performance_total["Projected_Footfalls"]]
                         ,fill_color=[
-                            ['rgba(0, 0, 82, 1)' if j == 0 else 'white' for j in range(len(performance_total.columns))] 
+                            ['rgba(0, 0, 82, 1)' if j == 3 else 'white' for j in range(len(performance_total.columns))] 
                             if i != len(performance_total) - 1 
                             else ['lightgrey' if j == 0 else 'white' for j in range(len(performance_total.columns))]
                             for i in range(len(performance_total))
