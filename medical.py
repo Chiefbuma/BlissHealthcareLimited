@@ -329,7 +329,7 @@ def app():
             performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
             
-                        # Calculate the total values for each column
+           # Calculate the total values for each column
             total_values = {
                 'Scheme': 'TOTAL',
                 'MTD_Budget_Revenue': formatted_Rev_budget ,
