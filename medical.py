@@ -373,7 +373,7 @@ def app():
                         ,fill_color=[
                         ['rgba(0, 0, 82, 1)' if j == 0 else 'white'
                         if i >= len(performance_total) - 6 and i != len(performance_total) - 1 
-                        else 'lightgrey' for i, j in enumerate(range(len(performance_total)))]
+                        else 'lightgrey' for i, j in enumerate(range(len(performance_total)-1))]
 
 
 
