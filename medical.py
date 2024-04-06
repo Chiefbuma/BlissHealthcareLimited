@@ -344,7 +344,7 @@ def app():
                 'Projected_Footfalls':formatted_projected_footfall
 }
                             # Create a DataFrame for the total row
-            total_row_df = pd.DataFrame(total_values, index=[1])
+            total_row_df = pd.DataFrame(total_values, index=[0])
 
                 # Concatenate the total row with performance_df
             performance_total = pd.concat([performance_df, total_row_df], ignore_index=True)
