@@ -260,7 +260,7 @@ def app():
             MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall'].sum()
             formatted_Actual_footfall = "{:,.0f}".format(MTD_Actual_Footfall)
             
-            Total_Budget_Footfall = performance_df['Total_Revenue_Budget'].sum()
+            Total_Budget_Footfall = performance_df['Total_Footfall_Budget'].sum()
             formatted_Total_footfall = "{:,.0f}".format(Total_Budget_Footfall)
             
             projected_Footfall = performance_df['Projected_Footfalls'].sum()
@@ -333,7 +333,7 @@ def app():
             total_values = {
                 'Scheme': 'TOTAL',
                 'MTD_Budget_Revenue': formatted_Rev_budget ,
-                'MTD_Actual_Revenue': MTD_Actual_Revenue,
+                'MTD_Actual_Revenue': formatted_Actual_revenue,
                 '%Arch_REV': formatted_arch_rev,
                 'Total_Revenue_Budget': formatted_Total_revenue,
                 'Projected_Revenue': formatted_projected_reveue,
