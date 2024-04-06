@@ -333,7 +333,7 @@ def app():
             total_values = {
                 'Scheme': 'TOTAL',
                 'MTD_Budget_Revenue': formatted_Rev_budget ,
-                'MTD_Actual_Revenue': formatted_Actual_revenue,
+                'MTD_Actual_Revenue': formatted_arch_rev,
                 '%Arch_REV': formatted_arch_rev,
                 'Total_Revenue_Budget': formatted_Total_revenue,
                 'Projected_Revenue': formatted_projected_reveue,
