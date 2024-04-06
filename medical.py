@@ -373,10 +373,9 @@ def app():
                                     performance_total["%Arch_FF"],
                                     performance_total["Total_Footfall_Budget"],
                                     performance_total["Projected_Footfalls"]]
-,
-                        fill_color=[
-                            ['rgba(0, 0, 82, 1)' if i != len(performance_total) - 1 else 'lightgrey' if i == len(performance_total) - 1 else 'white' for i in range(len(performance_total)>2)]
-                        
+,fill_color=[
+    ['rgba(0, 0, 82, 1)' if i == len(performance_total) - 7 else 'lightgrey' if i == len(performance_total) - 1 else 'white' for i in range(len(performance_total))]
+
 
 ],
                         font_color=[
