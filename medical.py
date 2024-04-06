@@ -375,7 +375,9 @@ def app():
                                     performance_total["Projected_Footfalls"]]
 ,
                         fill_color=[
-                                ['rgba(0, 0, 82, 1)' if i != len(performance_total) - 1 else 'lightgrey' for i in range(len(performance_total))]
+                            ['rgba(0, 0, 82, 1)' if i != len(performance_total) - 1 else 'lightgrey' if i == len(performance_total) - 1 else 'white' for i in range(len(performance_total))]
+                        
+
 ],
                         font_color=[
                                 ['white'],  # Blue for "Report" column
