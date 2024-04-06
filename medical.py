@@ -211,8 +211,7 @@ def app():
             # Calculate fraction of days passed for the selected month
             fraction_passed = fraction_of_days_in_month(Lastdate_date)
             
-            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
-            formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
+            
             
             
             #Total_budget_FF = performance_df['Budget_Footfall'].sum()
@@ -234,6 +233,10 @@ def app():
                         # Create a new figure
             fig2 = go.Figure()
             
+            
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
+            formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
+            
             # # Define the Reveneu metrics
             MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
             formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
@@ -241,6 +244,16 @@ def app():
             Arch_Rev = (MTD_Actual_Revenue /MTD_Revenue_budget) * 100
             formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
             
+            
+            
+            MTD_footfall_budget = performance_df['MTD_Budget_Footfall'].sum()
+            formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
+            # # Define the Reveneu metrics
+            MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall'].sum()
+            formatted_Actual_footfall = "{:,.0f}".format(MTD_Actual_Footfall)
+            
+            Arch_Rev = (MTD_Actual_Revenue /MTD_Revenue_budget) * 100
+            formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
             
             # # Define Footfalls  metrics
             #Total_footfalls = performance_df['Footfall'].sum()
@@ -305,13 +318,13 @@ def app():
                         # Calculate the total values for each column
             total_values = {
                 'Scheme': 'TOTAL',
-                'MTD_Budget_Revenue': performance_df['MTD_Budget_Revenue'].sum(),
-                'MTD_Actual_Revenue': performance_df['MTD_Actual_Revenue'].sum(),
-                '%Arch_REV': performance_df['MTD_Actual_Revenue'].sum(),
+                'MTD_Budget_Revenue': formatted_Rev_budget ,
+                'MTD_Actual_Revenue': MTD_Actual_Revenue,
+                '%Arch_REV': formatted_arch_rev,
                 'Total_Revenue_Budget': performance_df['Total_Revenue_Budget'].sum(),
                 'Projected_Revenue': performance_df['Projected_Revenue'].sum(),
-                'MTD_Budget_Footfall': performance_df['MTD_Budget_Footfall'].sum(),
-                'MTD_Actual_Footfall': performance_df['MTD_Actual_Footfall'].sum(),
+                'MTD_Budget_Footfall': formatted_ff_budget,
+                'MTD_Actual_Footfall': formatted_Actual_footfall,
                 '%Arch_FF': performance_df['MTD_Budget_Footfall'].sum(),
                 'Total_Footfall_Budget': performance_df['Total_Footfall_Budget'].sum(),
                 'Projected_Footfalls': performance_df['Projected_Footfalls'].sum()
