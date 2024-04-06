@@ -293,37 +293,34 @@ def app():
                 
             performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
             performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:,}'.format(x))
+            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x*10 ))
             performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
             performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
             performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
             performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
-            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].apply(lambda x: '{:,}'.format(x))
+            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100))
             performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
-            # Calculate the total values for each column
+            
+                        # Calculate the total values for each column
             total_values = {
-                'Month': 'Total',
+                'Scheme': 'TOTAL',
                 'MTD_Budget_Revenue': performance_df['MTD_Budget_Revenue'].sum(),
                 'MTD_Actual_Revenue': performance_df['MTD_Actual_Revenue'].sum(),
-                
+                '%Arch_REV': performance_df['MTD_Actual_Revenue'].sum(),
                 'Total_Revenue_Budget': performance_df['Total_Revenue_Budget'].sum(),
                 'Projected_Revenue': performance_df['Projected_Revenue'].sum(),
                 'MTD_Budget_Footfall': performance_df['MTD_Budget_Footfall'].sum(),
                 'MTD_Actual_Footfall': performance_df['MTD_Actual_Footfall'].sum(),
-                
+                '%Arch_FF': performance_df['MTD_Budget_Footfall'].sum(),
                 'Total_Footfall_Budget': performance_df['Total_Footfall_Budget'].sum(),
                 'Projected_Footfalls': performance_df['Projected_Footfalls'].sum()
-            }
-
-            # Create a DataFrame for the total row
+}
+                            # Create a DataFrame for the total row
             total_row_df = pd.DataFrame(total_values, index=[0])
 
-            # Concatenate the total row with performance_df
+                # Concatenate the total row with performance_df
             performance_total = pd.concat([performance_df, total_row_df], ignore_index=True)
-
-            
-            
 
             
             fig_request_by_type_Rev = go.Figure(data=[go.Table(
@@ -338,23 +335,23 @@ def app():
                             columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
                 cells=dict(values=[performance_total["Scheme"],
                                    performance_total["MTD_Budget_Revenue"],
-                                    performance_total["MTD_Actual_Revenue"],
-                                    performance_total["%Arch_REV"],
-                                     performance_total["Total_Revenue_Budget"],
-                                     performance_total["Projected_Revenue"],
-                                      performance_total["MTD_Budget_Footfall"],
-                                     performance_total["MTD_Actual_Footfall"],
-                                     performance_total["%Arch_FF"],
-                                     performance_total["Total_Footfall_Budget"],
-                                     performance_total["Projected_Footfalls"]]
+                                   performance_df["MTD_Actual_Revenue"],
+                                   performance_total["%Arch_REV"],
+                                    performance_total["Total_Revenue_Budget"],
+                                    performance_total["Projected_Revenue"],
+                                     performance_total["MTD_Budget_Footfall"],
+                                    performance_total["MTD_Actual_Footfall"],
+                                    performance_total["%Arch_FF"],
+                                    performance_total["Total_Footfall_Budget"],
+                                    performance_total["Projected_Footfalls"]]
 ,
                         fill_color=[
                                 ['rgba(0, 0, 82, 1)'],  # Blue for "Report" column
-                                ['white'] * len( performance_total)  # White for "Count" column
+                                ['white'] * len(performance_total)  # White for "Count" column
                             ],
                         font_color=[
                                 ['white'],  # Blue for "Report" column
-                                ['black'] * len( performance_total)  # White for "Count" column
+                                ['black'] * len(performance_total)  # White for "Count" column
                             ],
                         align='left',
                         font=dict(color='black', size=14),
