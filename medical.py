@@ -241,8 +241,16 @@ def app():
             MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
             formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
             
+            Total_Budget_Reveneu = performance_df['Total_Revenue_Budget'].sum()
+            formatted_Total_revenue = "{:,.0f}".format(Total_Budget_Reveneu)
+            
             Arch_Rev = (MTD_Actual_Revenue /MTD_Revenue_budget) * 100
             formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
+            
+            projected_revenue = performance_df['Projected_Revenue'].sum()
+            formatted_projected_reveue = "{:,.0f}".format(projected_revenue )
+            
+            
             
             
             
@@ -252,8 +260,14 @@ def app():
             MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall'].sum()
             formatted_Actual_footfall = "{:,.0f}".format(MTD_Actual_Footfall)
             
-            Arch_Rev = (MTD_Actual_Revenue /MTD_Revenue_budget) * 100
-            formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
+            Total_Budget_Footfall = performance_df['Total_Revenue_Budget'].sum()
+            formatted_Total_footfall = "{:,.0f}".format(Total_Budget_Footfall)
+            
+            projected_Footfall = performance_df['Projected_Footfalls'].sum()
+            formatted_projected_footfall = "{:,.0f}".format(projected_Footfall )
+            
+            Arch_Rev = (MTD_Actual_Footfall/MTD_footfall_budget) * 100
+            formatted_arch_ff = "{:.2f}%".format(Arch_Rev)
             
             # # Define Footfalls  metrics
             #Total_footfalls = performance_df['Footfall'].sum()
@@ -306,7 +320,7 @@ def app():
                 
             performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
             performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x*10 ))
+            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x ))
             performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
             performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
             performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
@@ -321,13 +335,13 @@ def app():
                 'MTD_Budget_Revenue': formatted_Rev_budget ,
                 'MTD_Actual_Revenue': MTD_Actual_Revenue,
                 '%Arch_REV': formatted_arch_rev,
-                'Total_Revenue_Budget': performance_df['Total_Revenue_Budget'].sum(),
-                'Projected_Revenue': performance_df['Projected_Revenue'].sum(),
+                'Total_Revenue_Budget': formatted_Total_revenue,
+                'Projected_Revenue': formatted_projected_reveue,
                 'MTD_Budget_Footfall': formatted_ff_budget,
                 'MTD_Actual_Footfall': formatted_Actual_footfall,
-                '%Arch_FF': performance_df['MTD_Budget_Footfall'].sum(),
-                'Total_Footfall_Budget': performance_df['Total_Footfall_Budget'].sum(),
-                'Projected_Footfalls': performance_df['Projected_Footfalls'].sum()
+                '%Arch_FF': formatted_arch_ff,
+                'Total_Footfall_Budget': formatted_Total_footfall,
+                'Projected_Footfalls':formatted_projected_footfall
 }
                             # Create a DataFrame for the total row
             total_row_df = pd.DataFrame(total_values, index=[0])
