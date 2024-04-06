@@ -373,7 +373,7 @@ def app():
                         ,fill_color=[
                             ['rgba(0, 0, 82, 1)' if j < 6 else 'white' for j in range(len(performance_total.columns))] 
                             if i != len(performance_total) > 6
-                            else ['lightgrey' if j == 7 else 'white' for j in range(len(performance_total.columns))]
+                            else ['lightgrey' if j == 6 else 'white' for j in range(len(performance_total.columns))]
                             for i in range(len(performance_total))
 ]
 ,
