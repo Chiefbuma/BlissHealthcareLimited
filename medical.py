@@ -306,12 +306,12 @@ def app():
                 'Month': 'Total',
                 'MTD_Budget_Revenue': performance_df['MTD_Budget_Revenue'].sum(),
                 'MTD_Actual_Revenue': performance_df['MTD_Actual_Revenue'].sum(),
-                '%Arch_REV': performance_df['%Arch_REV'].mean(),
+                '%Arch_REV': performance_df['MTD_Budget_Revenue'].sum()/performance_df['MTD_Actual_Revenue'].sum(),
                 'Total_Revenue_Budget': performance_df['Total_Revenue_Budget'].sum(),
                 'Projected_Revenue': performance_df['Projected_Revenue'].sum(),
                 'MTD_Budget_Footfall': performance_df['MTD_Budget_Footfall'].sum(),
                 'MTD_Actual_Footfall': performance_df['MTD_Actual_Footfall'].sum(),
-                '%Arch_FF': performance_df['%Arch_FF'].mean(),
+                '%Arch_FF': performance_df['MTD_Budget_Footfall'].sum()/performance_df['MTD_Actual_Footfall'].sum(),
                 'Total_Footfall_Budget': performance_df['Total_Footfall_Budget'].sum(),
                 'Projected_Footfalls': performance_df['Projected_Footfalls'].sum()
             }
