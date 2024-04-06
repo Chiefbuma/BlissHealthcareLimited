@@ -251,9 +251,6 @@ def app():
             formatted_projected_reveue = "{:,.0f}".format(projected_revenue )
             
             
-            
-            
-            
             MTD_footfall_budget = performance_df['MTD_Budget_Footfall'].sum()
             formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
             # # Define the Reveneu metrics
@@ -362,7 +359,7 @@ def app():
                             columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
                 cells=dict(values=[performance_total["Scheme"],
                                    performance_total["MTD_Budget_Revenue"],
-                                   performance_df["MTD_Actual_Revenue"],
+                                   performance_total["MTD_Actual_Revenue"],
                                    performance_total["%Arch_REV"],
                                     performance_total["Total_Revenue_Budget"],
                                     performance_total["Projected_Revenue"],
