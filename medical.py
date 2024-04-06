@@ -346,10 +346,7 @@ def app():
                 # Concatenate the total row with performance_df
             performance_total = pd.concat([performance_df, total_row_df], ignore_index=True)
 
-                    # Define fill color and font color for the last row
-            fill_color = [['rgba(0, 0, 82, 1)'] if i == len(performance_total) - 1 else ['white'] for i in range(len(performance_total))]
-            font_color = [['white'] if i == len(  performance_total) - 1 else ['black'] for i in range(len(performance_total))]
-
+            
             
             
             fig_request_by_type_Rev = go.Figure(data=[go.Table(
@@ -373,11 +370,12 @@ def app():
                                     performance_total["%Arch_FF"],
                                     performance_total["Total_Footfall_Budget"],
                                     performance_total["Projected_Footfalls"]]
-,fill_color=[
-    ['rgba(0, 0, 82, 1)' if i == len(performance_total) - 7 else 'lightgrey' if i == len(performance_total) - 1 else 'white' for i in range(len(performance_total))]
+                        ,fill_color=[
+                            ['rgba(0, 0, 82, 1)' if i == 0 else 'rgba(0, 0, 82, 1)' if i == len(performance_total) - 7 else 'lightgrey' if i == len(performance_total) - 1 else 'white' for i in range(len(performance_total))]
 
 
-],
+
+                        ],
                         font_color=[
                                 ['white'],  # Blue for "Report" column
                                 ['black'] * len(performance_total)  # White for "Count" column
