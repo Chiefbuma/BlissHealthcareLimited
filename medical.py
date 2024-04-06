@@ -333,7 +333,7 @@ def app():
             total_values = {
                 'Scheme': 'TOTAL',
                 'MTD_Budget_Revenue': formatted_Rev_budget ,
-                'MTD_Actual_Revenue': formatted_arch_rev,
+                'MTD_Actual_Revenue': formatted_Actual_revenue,
                 '%Arch_REV': formatted_arch_rev,
                 'Total_Revenue_Budget': formatted_Total_revenue,
                 'Projected_Revenue': formatted_projected_reveue,
@@ -344,7 +344,7 @@ def app():
                 'Projected_Footfalls':formatted_projected_footfall
 }
                             # Create a DataFrame for the total row
-            total_row_df = pd.DataFrame(total_values, index=[0])
+            total_row_df = pd.DataFrame(total_values, index=[1])
 
                 # Concatenate the total row with performance_df
             performance_total = pd.concat([performance_df, total_row_df], ignore_index=True)
