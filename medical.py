@@ -291,30 +291,33 @@ def app():
                 #uniformtext=dict(minsize=40, mode='hide'),
                 #margin=dict(l=20, r=20, t=50, b=5)
                 
-            performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
-            performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:,}'.format(x))
-            performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
-            performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
-            performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-            performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
-            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].apply(lambda x: '{:,}'.format(x))
-            performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
-            performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
+            # Convert formatted columns back to numeric values
+            performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].str.replace(',', '').astype(float)
+            performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].str.replace(',', '').astype(float)
+            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].str.replace(',', '').astype(float)
+            performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].str.replace(',', '').astype(float)
+            performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].str.replace(',', '').astype(float)
+            performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].str.replace(',', '').astype(float)
+            performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].str.replace(',', '').astype(float)
+            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].str.replace(',', '').astype(float)
+            performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].str.replace(',', '').astype(float)
+            performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].str.replace(',', '').astype(float)
+
             # Calculate the total values for each column
             total_values = {
                 'Month': 'Total',
                 'MTD_Budget_Revenue': performance_df['MTD_Budget_Revenue'].sum(),
                 'MTD_Actual_Revenue': performance_df['MTD_Actual_Revenue'].sum(),
-                '%Arch_REV': performance_df['MTD_Budget_Revenue'].sum()/performance_df['MTD_Actual_Revenue'].sum(),
+                '%Arch_REV': performance_df['MTD_Budget_Revenue'].sum() / performance_df['MTD_Actual_Revenue'].sum(),
                 'Total_Revenue_Budget': performance_df['Total_Revenue_Budget'].sum(),
                 'Projected_Revenue': performance_df['Projected_Revenue'].sum(),
                 'MTD_Budget_Footfall': performance_df['MTD_Budget_Footfall'].sum(),
                 'MTD_Actual_Footfall': performance_df['MTD_Actual_Footfall'].sum(),
-                '%Arch_FF': performance_df['MTD_Budget_Footfall'].sum()/performance_df['MTD_Actual_Footfall'].sum(),
+                '%Arch_FF': performance_df['MTD_Budget_Footfall'].sum() / performance_df['MTD_Actual_Footfall'].sum(),
                 'Total_Footfall_Budget': performance_df['Total_Footfall_Budget'].sum(),
                 'Projected_Footfalls': performance_df['Projected_Footfalls'].sum()
             }
+
 
             # Create a DataFrame for the total row
             total_row_df = pd.DataFrame(total_values, index=[0])
