@@ -493,7 +493,7 @@ def app():
                     ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
                 with st.expander("DOWNLOAD MONTH)"):
-                    current_month = datetime.datetime.now().strftime("%B")
+                    current_month =  current_month_name
                     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
                     search_text = st.selectbox("Search text", [""] + months, index=months.index(current_month))
                     if search_text:
