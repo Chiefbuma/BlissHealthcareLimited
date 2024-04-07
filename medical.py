@@ -378,6 +378,11 @@ def app():
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
             
             
+              # Rearrange the columns
+            MTD_All = performance_df[
+                [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+            ]
+            
             #ALL MONRH DATA
             
             
@@ -513,7 +518,7 @@ def app():
                     if search_text:
                         filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
                     else:
-                        filtered_df = fig_request_by_type_Rev
+                        filtered_df = MTD_All
                     st.write(filtered_df, use_container_width=True)
                 
         
