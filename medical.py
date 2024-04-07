@@ -238,33 +238,33 @@ def app():
             fig2 = go.Figure()
             
             
-            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue']
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             
             # # Define the Reveneu metrics
-            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue']
+            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
             formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
             
-            Total_Budget_Reveneu = performance_df['Total_Revenue_Budget']
+            Total_Budget_Reveneu = performance_df['Total_Revenue_Budget']*fraction_passed
             formatted_Total_revenue = "{:,.0f}".format(Total_Budget_Reveneu)
             
             Arch_Rev = (MTD_Actual_Revenue /MTD_Revenue_budget) * 100
             formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
             
-            projected_revenue = performance_df['Projected_Revenue']
+            projected_revenue = performance_df['Projected_Revenue'].sum()
             formatted_projected_reveue = "{:,.0f}".format(projected_revenue )
             
             
-            MTD_footfall_budget = performance_df['MTD_Budget_Footfall']
+            MTD_footfall_budget = performance_df['MTD_Budget_Footfall']*fraction_passed
             formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
             # # Define the Reveneu metrics
-            MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall']
+            MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall'].sum()
             formatted_Actual_footfall = "{:,.0f}".format(MTD_Actual_Footfall)
             
-            Total_Budget_Footfall = performance_df['Total_Footfall_Budget']
+            Total_Budget_Footfall = performance_df['Total_Footfall_Budget'].sum()
             formatted_Total_footfall = "{:,.0f}".format(Total_Budget_Footfall)
             
-            projected_Footfall = performance_df['Projected_Footfalls']
+            projected_Footfall = performance_df['Projected_Footfalls'].sum()
             formatted_projected_footfall = "{:,.0f}".format(projected_Footfall )
             
             Arch_Rev = (MTD_Actual_Footfall/MTD_footfall_budget) * 100
@@ -375,15 +375,32 @@ def app():
             performance_total = pd.concat([performance_df, total_row_df], ignore_index=True)
 
             
+            
             fig_request_by_type_Rev = go.Figure(data=[go.Table(
-                        header=dict(values=list(performance_df.columns),
+                header=dict(values=['Scheme','Revenue<br>Budget','Revenue<br>Actual','%Arch<br>REV',
+                                    'Total<br>Budget','Projected<br>Revenue',
+                                    'Footfall<br>Budget','Footfall<br>Actual','%Arch<br>FF','Total<br>Budget','Projected<br>Footfalls'],
                             fill_color='rgba(0, 84, 0, 1)',
                             align='left',
                             font=dict(family='Garamond', color='White', size=14),
-                            line_color='darkslategray',
+                            line_color='darkslategray',  # Border color
                             line=dict(width=1)),
-                        cells=dict(values=[performance_df[col] for col in performance_df.columns],
+                            columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
+                cells=dict(values=[performance_total["Scheme"],
+                                   performance_total["MTD_Budget_Revenue"],
+                                   performance_total["MTD_Actual_Revenue"],
+                                   performance_total["%Arch_REV"],
+                                    performance_total["Total_Revenue_Budget"],
+                                    performance_total["Projected_Revenue"],
+                                     performance_total["MTD_Budget_Footfall"],
+                                    performance_total["MTD_Actual_Footfall"],
+                                    performance_total["%Arch_FF"],
+                                    performance_total["Total_Footfall_Budget"],
+                                    performance_total["Projected_Footfalls"]]
+                        ,
                         
+                
+
                         fill_color = ['rgba(0, 0, 82, 1)']+ ['white']+ ['white']+ ['white']+ ['white']+ ['white']+ ['lightgrey'] * (len(performance_total) - 5)
 ,
                         font_color=[
