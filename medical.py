@@ -500,8 +500,15 @@ def app():
                     
                     current_month = datetime.now().month
                     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
+                    
+                    # Create a list of months up to the previous month
+                    display_months = months[:current_month - 1]
 
-                    search_text = st.selectbox("Search text", [""] + months, index=current_month-2)
+                    # Set the default value to the previous month
+                    default_month_index = current_month - 2  #
+            
+                                                    # Select box for searching with default value set to the previous month
+                    search_text = st.selectbox("Search text", [""] + display_months, index=default_month_index)
                     
                     if search_text:
                         filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
