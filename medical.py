@@ -311,22 +311,7 @@ def app():
             Allformatted_arch_ff = "{:.2f}%".format(AllArch_Rev)
             
             
-             # Calculate the total values for each column
-            Alltotal_values = {
-                'Scheme': 'TOTAL',
-                'MTD_Budget_Revenue': Allformatted_Rev_budget ,
-                'MTD_Actual_Revenue': Allformatted_Actual_revenue,
-                '%Arch_REV': Allformatted_arch_rev,
-                'Total_Revenue_Budget': Allformatted_Total_revenue,
-                'Projected_Revenue': Allformatted_projected_reveue,
-                'MTD_Budget_Footfall': Allformatted_ff_budget,
-                'MTD_Actual_Footfall': Allformatted_Actual_footfall,
-                '%Arch_FF': Allformatted_arch_ff,
-                'Total_Footfall_Budget': Allformatted_Total_footfall,
-                'Projected_Footfalls':Allformatted_projected_footfall
-}
-                            # Create a DataFrame for the total row
-            Finaltotal_row_df = pd.DataFrame(Alltotal_values, index=[0])
+            
             
             # # Define Footfalls  metrics
             #Total_footfalls = performance_df['Footfall'].sum()
@@ -391,6 +376,22 @@ def app():
             performance_df["%Arch_FF"] = performance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100))
             performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
+            
+            
+            #ALL MONRH DATA
+            
+            Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
+            Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
+            Allperformance_df["%Arch_REV"] = Allperformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x))
+            Allperformance_df["Total_Revenue_Budget"] = Allperformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
+            Allperformance_df["Projected_Revenue"] = Allperformance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
+            Allperformance_df["MTD_Actual_Footfall"] = Allperformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
+            Allperformance_df["MTD_Budget_Footfall"] = Allperformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
+            Allperformance_df["%Arch_FF"] = Allperformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100))
+            Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
+            Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
+
+            
             
            # Calculate the total values for each column
             total_values = {
@@ -491,13 +492,13 @@ def app():
                     ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
                 with st.expander("DOWNLOAD MONTH)"):
-                    
+                    current_month = datetime.datetime.now().strftime("%B")
                     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-                    search_text = st.selectbox("Search text", [""] + months)
+                    search_text = st.selectbox("Search text", [""] + months, index=months.index(current_month))
                     if search_text:
-                        filtered_df =  Finaltotal_row_df [Finaltotal_row_df ['Month'].str.contains(search_text, case=False)]
+                        filtered_df = Allperformance_df[Allperformance_df['Month'].str.contains(search_text, case=False)]
                     else:
-                        filtered_df = performance_df
+                        filtered_df =Allperformance_df
                     st.write(filtered_df, use_container_width=True)
                 
         
