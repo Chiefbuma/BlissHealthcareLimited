@@ -387,7 +387,7 @@ def app():
                             line=dict(width=1)),
                             columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
                 cells=dict(values=[performance_total["Scheme"],
-                                   formatted_Rev_budget*fraction_passed,
+                                   performance_total["MTD_Budget_Revenue"],
                                    performance_total["MTD_Actual_Revenue"],
                                    performance_total["%Arch_REV"],
                                     performance_total["Total_Revenue_Budget"],
