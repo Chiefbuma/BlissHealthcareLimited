@@ -234,11 +234,11 @@ def app():
             fig2 = go.Figure()
             
             
-            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()*fraction_passed
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             
             # # Define the Reveneu metrics
-            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()*fraction_passed
+            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
             formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
             
             Total_Budget_Reveneu = performance_df['Total_Revenue_Budget'].sum()
@@ -254,7 +254,7 @@ def app():
             MTD_footfall_budget = performance_df['MTD_Budget_Footfall'].sum()*fraction_passed
             formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
             # # Define the Reveneu metrics
-            MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall'].sum()*fraction_passed
+            MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall'].sum()
             formatted_Actual_footfall = "{:,.0f}".format(MTD_Actual_Footfall)
             
             Total_Budget_Footfall = performance_df['Total_Footfall_Budget'].sum()
