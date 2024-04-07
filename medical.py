@@ -238,7 +238,7 @@ def app():
             fig2 = go.Figure()
             
             
-            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()*fraction_passed
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             
             # # Define the Reveneu metrics
@@ -255,7 +255,7 @@ def app():
             formatted_projected_reveue = "{:,.0f}".format(projected_revenue )
             
             
-            MTD_footfall_budget = performance_df['MTD_Budget_Footfall'].sum()*fraction_passed
+            MTD_footfall_budget = performance_df['MTD_Budget_Footfall'].sum()
             formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
             # # Define the Reveneu metrics
             MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall'].sum()
@@ -275,43 +275,6 @@ def app():
             #ALL MONTHS 
             
             # Create a dropdown selectbox for searching
-            
-            
-            
-            AllMTD_Revenue_budget =  Allperformance_df['MTD_Budget_Revenue'].sum()*fraction_passed
-            Allformatted_Rev_budget = "{:,.0f}".format(AllMTD_Revenue_budget)
-            
-            # # Define the Reveneu metrics
-            AllMTD_Actual_Revenue =  Allperformance_df['MTD_Actual_Revenue'].sum()
-            Allformatted_Actual_revenue = "{:,.0f}".format(AllMTD_Actual_Revenue)
-            
-            AllTotal_Budget_Reveneu =  Allperformance_df['Total_Revenue_Budget'].sum()
-            Allformatted_Total_revenue = "{:,.0f}".format(AllTotal_Budget_Reveneu)
-            
-            AllArch_Rev = (AllMTD_Actual_Revenue /AllMTD_Revenue_budget) * 100
-            Allformatted_arch_rev = "{:.2f}%".format(Arch_Rev)
-            
-            Allprojected_revenue =  Allperformance_df['Projected_Revenue'].sum()
-            Allformatted_projected_reveue = "{:,.0f}".format(Allprojected_revenue )
-            
-            
-            AllMTD_footfall_budget = Allperformance_df['MTD_Budget_Footfall'].sum()*fraction_passed
-            Allformatted_ff_budget = "{:,.0f}".format(AllMTD_footfall_budget)
-            # # Define the Reveneu metrics
-            AllMTD_Actual_Footfall =  Allperformance_df['MTD_Actual_Footfall'].sum()
-            Allformatted_Actual_footfall = "{:,.0f}".format(AllMTD_Actual_Footfall)
-            
-            AllTotal_Budget_Footfall =  Allperformance_df['Total_Footfall_Budget'].sum()
-            Allformatted_Total_footfall = "{:,.0f}".format(AllTotal_Budget_Footfall)
-            
-            Allprojected_Footfall =  Allperformance_df['Projected_Footfalls'].sum()
-            Allformatted_projected_footfall = "{:,.0f}".format(Allprojected_Footfall )
-            
-            AllArch_Rev = (AllMTD_Actual_Footfall/AllMTD_footfall_budget) * 100
-            Allformatted_arch_ff = "{:.2f}%".format(AllArch_Rev)
-            
-            
-            
             
             # # Define Footfalls  metrics
             #Total_footfalls = performance_df['Footfall'].sum()
