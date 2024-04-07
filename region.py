@@ -175,7 +175,29 @@ def app():
 
             # Query the MTD_Revenue table with the filter for location_name and Month
             response = supabase.from_('MTD_Revenue').select('*').eq('Region', region).eq('Month', current_month_name ).execute()
-            performance_df = pd.DataFrame(response.data)
+            FinalMerged_df = pd.DataFrame(response.data)
+            
+            # Calculate MTD revenue and footfalls for the selected date range
+            performance_df = FinalMerged_df.groupby(['Region', 'Scheme']).agg(
+                MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
+                MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
+                Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
+                Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
+                Projected_Revenue=('Projected_Revenue', 'sum'),
+                Projected_Footfalls=('Projected_Footfalls', 'sum'),
+                MTD_Budget_Revenue=('MTD_Budget_Revenue', 'sum'),
+                MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
+            ).reset_index()
+
+            performance_df['MTD_Budget_Revenue'] = (performance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
+
+            performance_df['MTD_Budget_Footfall']=(performance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
+            # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
+            performance_df['%Arch_FF'] = (performance_df['MTD_Actual_Footfall'] / performance_df['MTD_Budget_Footfall'])
+            # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
+            performance_df['%Arch_REV'] = (performance_df['MTD_Actual_Revenue'] / performance_df['MTD_Budget_Revenue'])
+            
+            
             
             # Query the MTD_Revenue table with the filter for location_name and Month
             Allresponse = supabase.from_('MTD_Revenue').select('*').eq('Region', region).execute()
@@ -328,23 +350,7 @@ def app():
             # The above code is formatting the columns in a DataFrame called `performance_df`. It is
             # applying specific formatting to the numerical values in the columns to make them more
             # readable and presentable.
-            performance_df['MTD_Budget_Revenue'] = (performance_df['MTD_Budget_Revenue'].sum() * fraction_passed).round(0)
-            performance_df['MTD_Budget_Footfall']=(performance_df['MTD_Budget_Footfall'].sum()*fraction_passed).round(0)
-            # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
-            performance_df['MTD_Actual_Footfall'] = (performance_df['MTD_Actual_Footfall'].sum()).round(0)
-            performance_df['MTD_Actual_Revenue']=(performance_df['MTD_Actual_Revenue'].sum()).round(0)
-            
-            performance_df['Projected_Revenue'] = (performance_df['MTD_Budget_Revenue'].sum()).round(0)
-            performance_df['Projected_Revenue']=(performance_df['MTD_Budget_Footfall'].sum()).round(0)
 
-            
-            performance_df['Total_Revenue_Budget'] = (performance_df['Total_Revenue_Budget'].sum()).round(0)
-            performance_df['Total_Footfall_Budget']=(performance_df['Total_Footfall_Budget'].sum()).round(0)
-            
-            
-            performance_df['%Arch_FF'] = (performance_df['MTD_Actual_Footfall'] / performance_df['MTD_Budget_Footfall'])
-            # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
-            performance_df['%Arch_REV'] = (performance_df['MTD_Actual_Revenue'] / performance_df['MTD_Budget_Revenue'])
                         
             
             
