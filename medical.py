@@ -238,33 +238,33 @@ def app():
             fig2 = go.Figure()
             
             
-            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue']
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             
             # # Define the Reveneu metrics
-            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
+            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue']
             formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
             
-            Total_Budget_Reveneu = performance_df['Total_Revenue_Budget'].sum()
+            Total_Budget_Reveneu = performance_df['Total_Revenue_Budget']
             formatted_Total_revenue = "{:,.0f}".format(Total_Budget_Reveneu)
             
             Arch_Rev = (MTD_Actual_Revenue /MTD_Revenue_budget) * 100
             formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
             
-            projected_revenue = performance_df['Projected_Revenue'].sum()
+            projected_revenue = performance_df['Projected_Revenue']
             formatted_projected_reveue = "{:,.0f}".format(projected_revenue )
             
             
-            MTD_footfall_budget = performance_df['MTD_Budget_Footfall'].sum()
+            MTD_footfall_budget = performance_df['MTD_Budget_Footfall']
             formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
             # # Define the Reveneu metrics
-            MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall'].sum()
+            MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall']
             formatted_Actual_footfall = "{:,.0f}".format(MTD_Actual_Footfall)
             
-            Total_Budget_Footfall = performance_df['Total_Footfall_Budget'].sum()
+            Total_Budget_Footfall = performance_df['Total_Footfall_Budget']
             formatted_Total_footfall = "{:,.0f}".format(Total_Budget_Footfall)
             
-            projected_Footfall = performance_df['Projected_Footfalls'].sum()
+            projected_Footfall = performance_df['Projected_Footfalls']
             formatted_projected_footfall = "{:,.0f}".format(projected_Footfall )
             
             Arch_Rev = (MTD_Actual_Footfall/MTD_footfall_budget) * 100
