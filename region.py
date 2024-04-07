@@ -331,15 +331,15 @@ def app():
             performance_df['MTD_Budget_Revenue'] = (performance_df['MTD_Budget_Revenue'].sum() * fraction_passed).round(0)
             performance_df['MTD_Budget_Footfall']=(performance_df['MTD_Budget_Footfall'].sum()*fraction_passed).round(0)
             # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
-            performance_df['MTD_Actual_Footfall'] = (performance_df['MTD_Actual_Footfall'].sum() * fraction_passed).round(0)
-            performance_df['MTD_Actual_Revenue']=(performance_df['MTD_Actual_Revenue'].sum()*fraction_passed).round(0)
+            performance_df['MTD_Actual_Footfall'] = (performance_df['MTD_Actual_Footfall'].sum()).round(0)
+            performance_df['MTD_Actual_Revenue']=(performance_df['MTD_Actual_Revenue'].sum()).round(0)
             
-            performance_df['Projected_Revenue'] = (performance_df['MTD_Budget_Revenue'].sum() * fraction_passed).round(0)
-            performance_df['Projected_Revenue']=(performance_df['MTD_Budget_Footfall'].sum()*fraction_passed).round(0)
+            performance_df['Projected_Revenue'] = (performance_df['MTD_Budget_Revenue'].sum()).round(0)
+            performance_df['Projected_Revenue']=(performance_df['MTD_Budget_Footfall'].sum()).round(0)
 
             
-            performance_df['Total_Revenue_Budget'] = (performance_df['Total_Revenue_Budget'].sum() * fraction_passed).round(0)
-            performance_df['Total_Footfall_Budget']=(performance_df['Total_Footfall_Budget'].sum()*fraction_passed).round(0)
+            performance_df['Total_Revenue_Budget'] = (performance_df['Total_Revenue_Budget'].sum()).round(0)
+            performance_df['Total_Footfall_Budget']=(performance_df['Total_Footfall_Budget'].sum()).round(0)
             
             
             performance_df['%Arch_FF'] = (performance_df['MTD_Actual_Footfall'] / performance_df['MTD_Budget_Footfall'])
