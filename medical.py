@@ -391,7 +391,10 @@ def app():
             Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
             Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
 
-            
+            # Rearrange the columns
+            Monthly_All = Allperformance_df[
+                [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+            ]
             
            # Calculate the total values for each column
             total_values = {
@@ -496,7 +499,7 @@ def app():
                     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
                     search_text = st.selectbox("Search text", [""] + months)
                     if search_text:
-                        filtered_df = Allperformance_df[Allperformance_df['Month'].str.contains(search_text, case=False)]
+                        filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
                     else:
                         filtered_df = performance_df
                     st.write(filtered_df, use_container_width=True)
