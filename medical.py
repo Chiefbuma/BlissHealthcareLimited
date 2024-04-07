@@ -375,32 +375,15 @@ def app():
             performance_total = pd.concat([performance_df, total_row_df], ignore_index=True)
 
             
-            
             fig_request_by_type_Rev = go.Figure(data=[go.Table(
-                header=dict(values=['Scheme','Revenue<br>Budget','Revenue<br>Actual','%Arch<br>REV',
-                                    'Total<br>Budget','Projected<br>Revenue',
-                                    'Footfall<br>Budget','Footfall<br>Actual','%Arch<br>FF','Total<br>Budget','Projected<br>Footfalls'],
+                        header=dict(values=list(performance_df.columns),
                             fill_color='rgba(0, 84, 0, 1)',
                             align='left',
                             font=dict(family='Garamond', color='White', size=14),
-                            line_color='darkslategray',  # Border color
+                            line_color='darkslategray',
                             line=dict(width=1)),
-                            columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
-                cells=dict(values=[performance_total["Scheme"],
-                                   performance_total["MTD_Budget_Revenue"],
-                                   performance_total["MTD_Actual_Revenue"],
-                                   performance_total["%Arch_REV"],
-                                    performance_total["Total_Revenue_Budget"],
-                                    performance_total["Projected_Revenue"],
-                                     performance_total["MTD_Budget_Footfall"],
-                                    performance_total["MTD_Actual_Footfall"],
-                                    performance_total["%Arch_FF"],
-                                    performance_total["Total_Footfall_Budget"],
-                                    performance_total["Projected_Footfalls"]]
-                        ,
+                        cells=dict(values=[performance_df[col] for col in performance_df.columns],
                         
-                
-
                         fill_color = ['rgba(0, 0, 82, 1)']+ ['white']+ ['white']+ ['white']+ ['white']+ ['white']+ ['lightgrey'] * (len(performance_total) - 5)
 ,
                         font_color=[
