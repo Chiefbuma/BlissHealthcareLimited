@@ -193,7 +193,7 @@ def app():
                 total_days_in_month = (date.replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)
                 
                 # Calculate the fraction of days passed
-                fraction_passed = (date.day - 1) / total_days_in_month.day
+                fraction_passed = (date.day) / total_days_in_month.day
                 
                 return fraction_passed
            
