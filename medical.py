@@ -380,17 +380,7 @@ def app():
             
             #ALL MONRH DATA
             
-            Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["%Arch_REV"] = Allperformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x))
-            Allperformance_df["Total_Revenue_Budget"] = Allperformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["Projected_Revenue"] = Allperformance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["MTD_Actual_Footfall"] = Allperformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["MTD_Budget_Footfall"] = Allperformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["%Arch_FF"] = Allperformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100))
-            Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
-
+            
             # Rearrange the columns
             Monthly_All = Allperformance_df[
                 [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
@@ -496,8 +486,23 @@ def app():
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
                 with st.expander("DOWNLOAD MONTH)"):
                     
-                    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-                    search_text = st.selectbox("Search text", [""] + months)
+                    Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["%Arch_REV"] = Allperformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x))
+                    Allperformance_df["Total_Revenue_Budget"] = Allperformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["Projected_Revenue"] = Allperformance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["MTD_Actual_Footfall"] = Allperformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["MTD_Budget_Footfall"] = Allperformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["%Arch_FF"] = Allperformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100))
+                    Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
+
+                    
+                    current_month = datetime.datetime.now().month
+                    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
+
+                    search_text = st.selectbox("Search text", [""] + months, index=current_month-1)
+                    
                     if search_text:
                         filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
                     else:
