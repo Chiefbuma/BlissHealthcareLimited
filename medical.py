@@ -374,7 +374,7 @@ def app():
                         
                 
 
-                        fill_color = ['rgba(0, 0, 82, 1)']+ ['rgba(0, 0, 82, 1)'] + ['white'] * (len(performance_total) - 2)
+                        fill_color = ['rgba(0, 0, 82, 1)']+ ['white']+ ['white']+ ['white']+ ['white']+ ['white']+ ['lightgrey'] * (len(performance_total) - 6)
 ,
                         font_color=[
                                 ['white'],  # Blue for "Report" column
