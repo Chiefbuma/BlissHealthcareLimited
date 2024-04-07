@@ -373,7 +373,11 @@ def app():
                         ,
                         fill_color = [
                             ['rgba(0, 0, 82, 1)' if j == 5 else 'white' for j in range(len(performance_total.columns)-1)]
+<<<<<<< HEAD
                             if i >=  len(performance_total)+1  # Exclude the last row
+=======
+                            if i >=  len(performance_total)-0  # Exclude the last row
+>>>>>>> c37d8bd6b09dd0e69f70e1ceded02403d6b8aefc
                             else ['lightgrey' for j in range(len(performance_total.columns))]  # Last row color
                             for i in range(len(performance_total))
                         ]
