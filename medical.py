@@ -501,7 +501,7 @@ def app():
                     current_month = datetime.now().month
                     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
 
-                    search_text = st.selectbox("Search text", [""] + months, index=current_month-1)
+                    search_text = st.selectbox("Search text", [""] + months, index=current_month-2)
                     
                     if search_text:
                         filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
