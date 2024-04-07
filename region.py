@@ -174,11 +174,11 @@ def app():
             
 
             # Query the MTD_Revenue table with the filter for location_name and Month
-            response = supabase.from_('MTD_Revenue').select('*').eq('location_name', location).eq('Month', current_month_name ).execute()
+            response = supabase.from_('MTD_Revenue').select('*').eq('Region', region).eq('Month', current_month_name ).execute()
             performance_df = pd.DataFrame(response.data)
             
             # Query the MTD_Revenue table with the filter for location_name and Month
-            Allresponse = supabase.from_('MTD_Revenue').select('*').eq('location_name', location).execute()
+            Allresponse = supabase.from_('MTD_Revenue').select('*').eq('Region', region).execute()
             Allperformance_df = pd.DataFrame(Allresponse.data)
             
             
@@ -352,7 +352,7 @@ def app():
             
               # Rearrange the columns
             MTD_All = performance_df[
-                [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+                [ 'Month','Scheme','Region','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
             #ALL MONRH DATA
@@ -360,7 +360,7 @@ def app():
             
             # Rearrange the columns
             Monthly_All = Allperformance_df[
-                [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+                [ 'Month','Scheme','Region','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
            # Calculate the total values for each column
@@ -447,7 +447,7 @@ def app():
             with card_container(key="MTDREVENUE"):
                 card_style3 = "border: 2px solid #000000; border-radius: 5px; padding: 10px; background-color:#ffffff; color:#000000; text-align: center; font-size: 15px;font-weight: bold; width: 100%; height: 30;"
                 ui.card(
-                    content=location,
+                    content="Region:" + region,
                     key="MCcard3"
                 ).render()
 
