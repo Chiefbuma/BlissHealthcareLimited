@@ -484,7 +484,7 @@ def app():
                 with cols[3]:
                     ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
-                with st.expander("DOWNLOAD MONTH)"):
+                with st.expander("DOWNLOAD PREVIOUS MONTH)"):
                     
                     Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
@@ -508,7 +508,7 @@ def app():
                     default_month_index = current_month - 2  #
             
                                                     # Select box for searching with default value set to the previous month
-                    search_text = st.selectbox("Search text", [""] + display_months, index=default_month_index)
+                    search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index)
                     
                     if search_text:
                         filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
