@@ -234,7 +234,7 @@ def app():
             fig2 = go.Figure()
             
             
-            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()*fraction_passed
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             
             # # Define the Reveneu metrics
