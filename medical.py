@@ -339,12 +339,12 @@ def app():
             
             performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
             performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x ))
+            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x*100 ))
             performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
             performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
             performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
             performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
-            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x))
+            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x*100))
             performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
             
