@@ -498,7 +498,7 @@ def app():
                     Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
 
                     
-                    current_month = datetime.datetime.now().month
+                    current_month = datetime.now().month
                     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
 
                     search_text = st.selectbox("Search text", [""] + months, index=current_month-1)
