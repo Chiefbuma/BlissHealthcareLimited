@@ -371,12 +371,10 @@ def app():
                                     performance_total["Total_Footfall_Budget"],
                                     performance_total["Projected_Footfalls"]]
                         ,
-                        fill_color = [
-                            ['rgba(0, 0, 82, 1)' if j == 4 else 'white' for j in range(len(performance_total.columns)-1)]
-                            if i !=  len(performance_total)-1  # Exclude the last row
-                            else ['lightgrey' for j in range(len(performance_total.columns))]  # Last row color
-                            for i in range(len(performance_total))
-                        ]
+                        
+                
+
+                        fill_color = ['rgba(0, 0, 82, 1)'] + ['white'] * (len(performance_total) - 1)
 ,
                         font_color=[
                                 ['white'],  # Blue for "Report" column
