@@ -355,7 +355,7 @@ def app():
                                     'Footfall<br>Budget','Footfall<br>Actual','%Arch<br>FF','Total<br>Budget','Projected<br>Footfalls'],
                             fill_color='rgba(0, 84, 0, 1)',
                             align='left',
-                            font=dict(family='Garamond', color='White', size=14, bold=True),
+                            font=dict(family='Garamond', color='White', size=14),
                             line_color='darkslategray',  # Border color
                             line=dict(width=1)),
                             columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
