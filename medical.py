@@ -179,7 +179,7 @@ def app():
             
             # Query the MTD_Revenue table with the filter for location_name and Month
             Allresponse = supabase.from_('MTD_Revenue').select('*').eq('location_name', location).execute()
-            filtered_All = pd.DataFrame(Allresponse.data)
+            Allperformance_df = pd.DataFrame(Allresponse.data)
             
             
             Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
@@ -276,13 +276,7 @@ def app():
             
             # Create a dropdown selectbox for searching
             
-            months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-            search_text = st.selectbox("Search text", [""] + months)
             
-            if search_text:
-               Allperformance_df =  filtered_All[filtered_All['Month'].str.contains(search_text, case=False)]
-            else:
-                Allperformance_df = filtered_All
             
             AllMTD_Revenue_budget =  Allperformance_df['MTD_Budget_Revenue'].sum()*fraction_passed
             Allformatted_Rev_budget = "{:,.0f}".format(AllMTD_Revenue_budget)
@@ -403,7 +397,6 @@ def app():
 
             
             
-            
             fig_request_by_type_Rev = go.Figure(data=[go.Table(
                 header=dict(values=['Scheme','Revenue<br>Budget','Revenue<br>Actual','%Arch<br>REV',
                                     'Total<br>Budget','Projected<br>Revenue',
@@ -455,98 +448,6 @@ def app():
             # applying specific formatting to the numerical values in the columns to make them more
             # readable and presentable.
             
-      
-            
-            
-            
-            
-            Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["%Arch_REV"] = Allperformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x))
-            Allperformance_df["Total_Revenue_Budget"] = Allperformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["Projected_Revenue"] = Allperformance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["MTD_Actual_Footfall"] = Allperformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["MTD_Budget_Footfall"] = Allperformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["%Arch_FF"] = Allperformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100))
-            Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
-            Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
-
-           # Calculate the total values for each column
-            Alltotal_values = {
-                'Scheme': 'TOTAL',
-                'MTD_Budget_Revenue': Allformatted_Rev_budget ,
-                'MTD_Actual_Revenue': Allformatted_Actual_revenue,
-                '%Arch_REV': Allformatted_arch_rev,
-                'Total_Revenue_Budget': Allformatted_Total_revenue,
-                'Projected_Revenue': Allformatted_projected_reveue,
-                'MTD_Budget_Footfall': Allformatted_ff_budget,
-                'MTD_Actual_Footfall': Allformatted_Actual_footfall,
-                '%Arch_FF': Allformatted_arch_ff,
-                'Total_Footfall_Budget': Allformatted_Total_footfall,
-                'Projected_Footfalls':Allformatted_projected_footfall
-}
-                            # Create a DataFrame for the total row
-            Alltotal_row_df = pd.DataFrame(Alltotal_values, index=[0])
-
-                # Concatenate the total row with performance_df
-            Allperformance_total = pd.concat([Allperformance_df, Alltotal_row_df], ignore_index=True)
-
-            
-            
-            
-            # It looks like the code is a comment in a Python script. The comment is indicating that
-            # the code below it is related to a figure request by type for all revenue.
-            fig_request_by_type_AllRev = go.Figure(data=[go.Table(
-                header=dict(values=['Scheme','Revenue<br>Budget','Revenue<br>Actual','%Arch<br>REV',
-                                    'Total<br>Budget','Projected<br>Revenue',
-                                    'Footfall<br>Budget','Footfall<br>Actual','%Arch<br>FF','Total<br>Budget','Projected<br>Footfalls'],
-                            fill_color='rgba(0, 84, 0, 1)',
-                            align='left',
-                            font=dict(family='Garamond', color='White', size=14),
-                            line_color='darkslategray',  # Border color
-                            line=dict(width=1)),
-                            columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
-                cells=dict(values=[Allperformance_total["Scheme"],
-                                   Allperformance_total["MTD_Budget_Revenue"],
-                                   Allperformance_total["MTD_Actual_Revenue"],
-                                   Allperformance_total["%Arch_REV"],
-                                    Allperformance_total["Total_Revenue_Budget"],
-                                    Allperformance_total["Projected_Revenue"],
-                                     Allperformance_total["MTD_Budget_Footfall"],
-                                    Allperformance_total["MTD_Actual_Footfall"],
-                                    Allperformance_total["%Arch_FF"],
-                                    Allperformance_total["Total_Footfall_Budget"],
-                                    Allperformance_total["Projected_Footfalls"]]
-                        ,
-                        
-                
-
-                        fill_color = ['rgba(0, 0, 82, 1)']+ ['white']+ ['white']+ ['white']+ ['white']+ ['white']+ ['lightgrey'] * (len(performance_total) - 5)
-,
-                        font_color=[
-                                ['white'],  # Blue for "Report" column
-                                ['black'] * len(Allperformance_total)  # White for "Count" column
-                            ],
-                        align='left',
-                        font=dict(color='black', size=14),
-                        line_color='darkslategray',
-                        height=25,# Border color
-                        line=dict(width=0.3))),
-                       
-            ])
-            fig_request_by_type_Rev.update_layout(
-                    margin=dict(l=0, r=0, t=0, b=0),
-                    height=200,
-                    width=1000,# Set all margins to 0
-                    paper_bgcolor='rgba(0, 0, 0, 0)', 
-                    # Set paper background color to transparent
-                )
-            
-            
-            
-            
-            
-            
             
             
             def generate_sales_data():
@@ -573,8 +474,15 @@ def app():
                     ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
                 with st.expander("DOWNLOAD MONTH)"):
-                     st.write(fig_request_by_type_AllRev, use_container_width=True)
-        
+                    
+                    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                    search_text = st.selectbox("Search text", [""] + months)
+                    if search_text:
+                        filtered_df =  Allperformance_df [Allperformance_df ['Month'].str.contains(search_text, case=False)]
+                    else:
+                        filtered_df = performance_df
+                    st.write(filtered_df, use_container_width=True)
+                
         
         # Use the expander widget
         #with st.expander("MONTHWISE REVENUE SUMMARY TABLE"):
