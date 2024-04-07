@@ -179,7 +179,7 @@ def app():
             
             # Query the MTD_Revenue table with the filter for location_name and Month
             Allresponse = supabase.from_('MTD_Revenue').select('*').eq('location_name', location).execute()
-            Allperformance_df = pd.DataFrame(Allresponse.data)
+            filtered_All = pd.DataFrame(Allresponse.data)
             
             
             Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
@@ -270,9 +270,19 @@ def app():
             Arch_Rev = (MTD_Actual_Footfall/MTD_footfall_budget) * 100
             formatted_arch_ff = "{:.2f}%".format(Arch_Rev)
             
-            
+           
             
             #ALL MONTHS 
+            
+            # Create a dropdown selectbox for searching
+            
+            months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            search_text = st.selectbox("Search text", [""] + months)
+            
+            if search_text:
+               Allperformance_df =  filtered_All[filtered_All['Month'].str.contains(search_text, case=False)]
+            else:
+                Allperformance_df = filtered_All
             
             AllMTD_Revenue_budget =  Allperformance_df['MTD_Budget_Revenue'].sum()*fraction_passed
             Allformatted_Rev_budget = "{:,.0f}".format(AllMTD_Revenue_budget)
@@ -444,6 +454,11 @@ def app():
             # The above code is formatting the columns in a DataFrame called `performance_df`. It is
             # applying specific formatting to the numerical values in the columns to make them more
             # readable and presentable.
+            
+      
+            
+            
+            
             
             Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
             Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
