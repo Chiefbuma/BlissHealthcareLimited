@@ -329,13 +329,13 @@ def app():
             # applying specific formatting to the numerical values in the columns to make them more
             # readable and presentable.
             
-            performance_df["MTD_Budget_Revenue"] = (performance_df["MTD_Budget_Revenue"]*formatted_Rev_budget).apply(lambda x: '{:,}'.format(x))
+            performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
             performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
             performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x ))
             performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
             performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
             performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-            performance_df["MTD_Budget_Footfall"] = (performance_df["MTD_Budget_Footfall"]*formatted_Rev_budget ).apply(lambda x: '{:,}'.format(x))
+            performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
             performance_df["%Arch_FF"] = performance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100))
             performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
@@ -387,7 +387,7 @@ def app():
                             line=dict(width=1)),
                             columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
                 cells=dict(values=[performance_total["Scheme"],
-                                   performance_total["MTD_Budget_Revenue"],
+                                   formatted_Rev_budget*fraction_passed,
                                    performance_total["MTD_Actual_Revenue"],
                                    performance_total["%Arch_REV"],
                                     performance_total["Total_Revenue_Budget"],
