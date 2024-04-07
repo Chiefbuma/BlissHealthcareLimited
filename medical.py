@@ -484,7 +484,7 @@ def app():
                 with cols[3]:
                     ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
-                with st.expander("DOWNLOAD PREVIOUS MONTH)"):
+                with st.expander("DOWNLOAD PREVIOUS MONTH"):
                     
                     Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
