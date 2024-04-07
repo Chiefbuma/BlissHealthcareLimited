@@ -501,7 +501,7 @@ def app():
                     if search_text:
                         filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
                     else:
-                        filtered_df = performance_df
+                        filtered_df = fig_request_by_type_Rev
                     st.write(filtered_df, use_container_width=True)
                 
         
