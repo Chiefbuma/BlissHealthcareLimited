@@ -311,6 +311,23 @@ def app():
             Allformatted_arch_ff = "{:.2f}%".format(AllArch_Rev)
             
             
+             # Calculate the total values for each column
+            Alltotal_values = {
+                'Scheme': 'TOTAL',
+                'MTD_Budget_Revenue': Allformatted_Rev_budget ,
+                'MTD_Actual_Revenue': Allformatted_Actual_revenue,
+                '%Arch_REV': Allformatted_arch_rev,
+                'Total_Revenue_Budget': Allformatted_Total_revenue,
+                'Projected_Revenue': Allformatted_projected_reveue,
+                'MTD_Budget_Footfall': Allformatted_ff_budget,
+                'MTD_Actual_Footfall': Allformatted_Actual_footfall,
+                '%Arch_FF': Allformatted_arch_ff,
+                'Total_Footfall_Budget': Allformatted_Total_footfall,
+                'Projected_Footfalls':Allformatted_projected_footfall
+}
+                            # Create a DataFrame for the total row
+            Finaltotal_row_df = pd.DataFrame(Alltotal_values, index=[0])
+            
             # # Define Footfalls  metrics
             #Total_footfalls = performance_df['Footfall'].sum()
             #formatted_total_footfalls = "{:,.0f}".format(Total_footfalls)
@@ -478,7 +495,7 @@ def app():
                     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
                     search_text = st.selectbox("Search text", [""] + months)
                     if search_text:
-                        filtered_df =  Allperformance_df [Allperformance_df ['Month'].str.contains(search_text, case=False)]
+                        filtered_df =  Finaltotal_row_df [Finaltotal_row_df ['Month'].str.contains(search_text, case=False)]
                     else:
                         filtered_df = performance_df
                     st.write(filtered_df, use_container_width=True)
