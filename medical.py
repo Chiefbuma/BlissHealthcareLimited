@@ -245,7 +245,7 @@ def app():
             MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
             formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
             
-            Total_Budget_Reveneu = performance_df['Total_Revenue_Budget']*fraction_passed
+            Total_Budget_Reveneu = performance_df['Total_Revenue_Budget'].sum()*fraction_passed
             formatted_Total_revenue = "{:,.0f}".format(Total_Budget_Reveneu)
             
             Arch_Rev = (MTD_Actual_Revenue /MTD_Revenue_budget) * 100
@@ -255,7 +255,7 @@ def app():
             formatted_projected_reveue = "{:,.0f}".format(projected_revenue )
             
             
-            MTD_footfall_budget = performance_df['MTD_Budget_Footfall']*fraction_passed
+            MTD_footfall_budget = performance_df['MTD_Budget_Footfall'].sum()*fraction_passed
             formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
             # # Define the Reveneu metrics
             MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall'].sum()
