@@ -367,7 +367,7 @@ def app():
             
               # Rearrange the columns
             MTD_All = FinalMerged_df[
-                [ 'Month','Scheme','Region','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+                [ 'Month','Region','location_name','Scheme','MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
             #ALL MONRH DATA
@@ -375,7 +375,7 @@ def app():
             
             # Rearrange the columns
             Monthly_All = Allperformance_df[
-                [ 'Month','Scheme','Region','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+                [ 'Month','Region','location_name','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
            # Calculate the total values for each column
