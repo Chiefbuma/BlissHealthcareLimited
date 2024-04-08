@@ -509,11 +509,11 @@ def app():
                         search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index)
                         location = st.selectbox("Select Location", [""] + location_names)
                         if search_text:
-                            filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
+                            filtered_df = Monthly_All[ Monthly_All['Month'].str.contains(search_text, case=False)]
                         
                         if location:
                             
-                            filtered_df = Monthly_All[filtered_df['location_name'] == location]
+                            filtered_df = Monthly_All[Monthly_All['location_name'] == location]
                         
                         else:
                             filtered_df = MTD_All
