@@ -421,25 +421,6 @@ def app():
             ]
             
             
-                         # Calculate MTD revenue and footfalls for the selected date range
-            BHCPerformance_df =  Monthly_All.groupby([ 'Scheme','Month']).agg(
-                MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
-                MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
-                Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
-                Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
-                Projected_Revenue=('Projected_Revenue', 'sum'),
-                Projected_Footfalls=('Projected_Footfalls', 'sum'),
-                MTD_Budget_Revenue=('MTD_Budget_Revenue', 'sum'),
-                MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
-            ).reset_index()
-            
-            
-                        # Rearrange the columns
-            RegioALL_DF =  BHCPerformance_df[
-                [ 'Month''Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
-            ]
-            
-            
             
            # Calculate the total values for each column
             total_values = {
@@ -556,7 +537,7 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df = RegioALL_DF.query("`Month` == @Month")
+                            Newfiltered_df = MTD_All.query("`Month` == @Month and `location_name` == @location")
                             
                             NewMTD_Revenue_budget = Newfiltered_df['MTD_Budget_Revenue'].sum() 
                             Newformatted_Rev_budget = "{:,.0f}".format(NewMTD_Revenue_budget)
