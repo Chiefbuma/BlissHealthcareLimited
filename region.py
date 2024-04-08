@@ -549,10 +549,10 @@ def app():
                     current_month = datetime.now().month
                     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
                     # Create a list of months up to the previous month
-                    display_months = months[:current_month - 1]
+                    display_months = months[:current_month - 0]
 
                     # Set the default value to the previous month
-                    default_month_index = current_month - 2  #
+                    default_month_index = current_month - 0  #
     
                     with col1:
                         location = st.selectbox("Select Location", [""] +  Region_location_names)
@@ -565,6 +565,27 @@ def app():
                         
   
                     st.write(filtered_df, use_container_width=True)
+                    
+                    with st.expander("DOWNLOAD PREVIOUS MONTH"):
+                        col1, col2, col3 = st.columns(3)
+                        with col1:
+                            
+                            current_month = datetime.now().month
+                            months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
+                                # Create a list of months up to the previous month
+                            display_months = months[:current_month - 0]
+
+                            # Set the default value to the previous month
+                            default_month_index = current_month - 0  #   
+                            
+                            Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index) 
+                            if Month == "":
+                                filtered_df = performance_total
+                            else:
+                                filtered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
+                                
+                        
+                        
                 
         
         # Use the expander widget
