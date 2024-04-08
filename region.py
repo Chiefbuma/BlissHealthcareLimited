@@ -194,7 +194,7 @@ def app():
             Allperformance_df = pd.DataFrame(Allresponse.data)
             
             # Calculate MTD revenue and footfalls for the selected date range
-            MTDPerformance_df = Allperformance_df.groupby(['Region', 'Scheme']).agg(
+            MTDPerformance_df = Allperformance_df.groupby(['Region', 'Scheme','Month']).agg(
                 MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
                 MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
                 Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
