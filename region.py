@@ -580,11 +580,11 @@ def app():
                         
                         Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
                         if Month == "":
-                            filtered_df = performance_total
+                            Newfiltered_df = performance_total
                         else:
-                            filtered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
+                            Newfiltered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
                                 
-                        
+                    st.write(Newfiltered_df, use_container_width=True)   
                         
                 
         
