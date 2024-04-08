@@ -505,6 +505,9 @@ def app():
                 
                     Region = region
                     
+                    Region_location_names = location_df[location_df['Region'] == region]['Location'].unique().tolist()
+
+                    
                     current_month = datetime.now().month
                     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
                     # Create a list of months up to the previous month
@@ -514,7 +517,8 @@ def app():
                     default_month_index = current_month - 2  #
     
                     with col1:
-                        location = st.selectbox("Select Location", [""] + location_names)
+                        
+                        location = st.selectbox("Select Location", [""] +  Region_location_names)
                     with col2:
                         Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index) 
                     if Month == "" and location =="":
