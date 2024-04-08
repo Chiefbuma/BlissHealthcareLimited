@@ -264,7 +264,7 @@ def app():
             Total_Budget_Footfall = performance_df['Total_Footfall_Budget'].sum()
             formatted_Total_footfall = "{:,.0f}".format(Total_Budget_Footfall)
             
-            projected_Footfall = performance_df['otal_Footfall_Budget'].sum()*(performance_df['MTD_Actual_Footfall'].sum()/(performance_df['MTD_Budget_Footfall'].sum()*fraction_passed))
+            projected_Footfall = performance_df['Total_Footfall_Budget'].sum()*(performance_df['MTD_Actual_Footfall'].sum()/(performance_df['MTD_Budget_Footfall'].sum()*fraction_passed))
             formatted_projected_footfall = "{:,.0f}".format(projected_Footfall )
             
             Arch_Rev = (MTD_Actual_Footfall/MTD_footfall_budget) * 100
