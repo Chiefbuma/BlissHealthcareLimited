@@ -191,21 +191,11 @@ def app():
 
             
             
+            
+            
             # Query the MTD_Revenue table with the filter for location_name and Month
             Allresponse = supabase.from_('MTD_Revenue').select('*').eq('Region', region).execute()
-            AllfinalMerged = pd.DataFrame(Allresponse.data)
-            
-            # Calculate MTD revenue and footfalls for the selected date range
-            Allperformance_df = AllfinalMerged .groupby(['Region', 'Scheme']).agg(
-                MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
-                MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
-                Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
-                Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
-                Projected_Revenue=('Projected_Revenue', 'sum'),
-                Projected_Footfalls=('Projected_Footfalls', 'sum'),
-                MTD_Budget_Revenue=('MTD_Budget_Revenue', 'sum'),
-                MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
-            ).reset_index()
+            Allperformance_df = pd.DataFrame(Allresponse.data)
             
             
             Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
@@ -385,8 +375,8 @@ def app():
             
             
             # Rearrange the columns
-            Monthly_All = Allperformance_df [
-                [ 'Month','Region','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+            Monthly_All = Allperformance_df[
+                [ 'Month','Scheme','Region','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
            # Calculate the total values for each column
