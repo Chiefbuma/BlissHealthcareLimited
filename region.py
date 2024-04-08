@@ -493,32 +493,38 @@ def app():
                     Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
 
-                    cols = st.columns(4)
-                    with cols[0]:
+                    col1, col2, col3 = st.columns(3)
+            
+                    st.markdown("""<style>
+                    div.st.container > button:first-child {
+                        background-color: #00cc00;
+                        color: white;
+                        font-size: 20px;
+                        height: 3em;
+                        width: 30em;
+                        border-radius: 10px;
+                    }
+                    </style>""", unsafe_allow_html=True)
+
+                
+                    Region = region
+                    # Create a list of months up to the previous month
+                    display_months = months[:current_month - 1]
+
+                    # Set the default value to the previous month
+                    default_month_index = current_month - 2  #
+    
+                    with col1:
+                        location = st.selectbox("Select Location", [""] + location_names)
+                    with col2:
+                        Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index) 
+                    if Month == "" and location =="":
+                        filtered_df = MTD_All
+                    else:
+                        filtered_df = Monthly_All.query("`Month` == @search_text2 or `location_name` == @location")
                         current_month = datetime.now().month
                         months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
-                        
-                        # Create a list of months up to the previous month
-                        display_months = months[:current_month - 1]
-
-                        # Set the default value to the previous month
-                        default_month_index = current_month - 2  #
-                        
-                                    
-                                                        # Select box for searching with default value set to the previous month
-                        search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index)
-                        location = st.selectbox("Select Location", [""] + location_names)
-                        if search_text:
-                            filtered_df = Monthly_All[ Monthly_All['Month'].str.contains(search_text, case=False)]
-                        
-                        if location:
-                            
-                            filtered_df = Monthly_All[Monthly_All['location_name'] == location]
-                        
-                        else:
-                            filtered_df = MTD_All
-                        
-    
+  
                     st.write(filtered_df, use_container_width=True)
                 
         
