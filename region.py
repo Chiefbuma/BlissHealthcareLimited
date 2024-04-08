@@ -193,6 +193,17 @@ def app():
             Allresponse = supabase.from_('MTD_Revenue').select('*').eq('Region', region).execute()
             Allperformance_df = pd.DataFrame(Allresponse.data)
             
+            # Calculate MTD revenue and footfalls for the selected date range
+            Newperformance_df = Allperformance_df.groupby(['Region', 'Scheme']).agg(
+                MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
+                MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
+                Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
+                Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
+                Projected_Revenue=('Projected_Revenue', 'sum'),
+                Projected_Footfalls=('Projected_Footfalls', 'sum'),
+                MTD_Budget_Revenue=('MTD_Budget_Revenue', 'sum'),
+                MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
+            ).reset_index()
             
             Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
             LastUpdate_df = pd.DataFrame(Lastdateresponse.data)
@@ -366,8 +377,8 @@ def app():
             
             
               # Rearrange the columns
-            MTD_All = FinalMerged_df[
-                [ 'Month','Region','location_name','Scheme','MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+            MTD_All = Newperformance_df[
+                [ 'Month','Region','Scheme','MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
             #ALL MONRH DATA
@@ -517,11 +528,10 @@ def app():
                     default_month_index = current_month - 2  #
     
                     with col1:
-                        
                         location = st.selectbox("Select Location", [""] +  Region_location_names)
                     with col2:
                         Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index) 
-                    if Month == "" and location =="":
+                    if Month == "" or location =="":
                         filtered_df = MTD_All
                     else:
                         filtered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
