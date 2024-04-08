@@ -546,7 +546,7 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df = REGIONPerformance_df.query("`Month` == @Month")
+                            Newfiltered_df =   MTD_All.query("`Month` == @Month")
                             RegionlFilter_df=REGIONPerformance_df.query("`Month` == @Month")
                                                                                      
                     st.write(Newfiltered_df, use_container_width=True)   
