@@ -557,7 +557,7 @@ def app():
                     with col1:
                         location = st.selectbox("Select Location", [""] +  Region_location_names)
                     with col2:
-                        Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index) 
+                        Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="MTDmonth") 
                     if Month == "" or location =="":
                         filtered_df = MTD_All
                     else:
@@ -578,7 +578,7 @@ def app():
                         # Set the default value to the previous month
                         default_month_index = current_month - 0  #   
                         
-                        Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index) 
+                        Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
                         if Month == "":
                             filtered_df = performance_total
                         else:
