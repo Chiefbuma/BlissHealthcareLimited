@@ -493,23 +493,32 @@ def app():
                     Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
 
-                    
-                    current_month = datetime.now().month
-                    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
-                    
-                    # Create a list of months up to the previous month
-                    display_months = months[:current_month - 1]
+                    cols = st.columns(4)
+                    with cols[0]:
+                        current_month = datetime.now().month
+                        months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
+                        
+                        # Create a list of months up to the previous month
+                        display_months = months[:current_month - 1]
 
-                    # Set the default value to the previous month
-                    default_month_index = current_month - 2  #
-            
-                                                    # Select box for searching with default value set to the previous month
-                    search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index)
-                    
-                    if search_text:
-                        filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
-                    else:
-                        filtered_df = MTD_All
+                        # Set the default value to the previous month
+                        default_month_index = current_month - 2  #
+                        
+                                    
+                                                        # Select box for searching with default value set to the previous month
+                        search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index)
+                        location = st.selectbox("Select Location", [""] + location_names)
+                        if search_text:
+                            filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
+                        
+                        if location:
+                            
+                            filtered_df = Monthly_All[filtered_df['location_name'] == location]
+                        
+                        else:
+                            filtered_df = MTD_All
+                        
+    
                     st.write(filtered_df, use_container_width=True)
                 
         
