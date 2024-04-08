@@ -527,7 +527,7 @@ def app():
                         # Set the default value to the previous month
                         default_month_index = current_month - 1  #   
                         
-                        #Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
+                        Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
@@ -584,8 +584,8 @@ def app():
                                             # Create a DataFrame for the total row
                             Newtotal_row_df = pd.DataFrame(Newtotal_values, index=[0])
                                                          
-                    #st.write(Newfiltered_df, use_container_width=True)   
-                    #st.write(Newtotal_row_df,use_container_width=True) 
+                    st.write(Newfiltered_df, use_container_width=True)   
+           
                 
                 with st.expander("DOWNLOAD MEDICAL CENTRES-click the download icon on the upper right corner of the table"):
                     
