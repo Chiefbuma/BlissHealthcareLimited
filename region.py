@@ -514,7 +514,29 @@ def app():
                 with cols[3]:
                     ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
+                
                 with st.expander("DOWNLOAD PREVIOUS MONTH"):
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        
+                        current_month = datetime.now().month
+                        months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
+                            # Create a list of months up to the previous month
+                        display_months = months[:current_month - 0]
+
+                        # Set the default value to the previous month
+                        default_month_index = current_month - 0  #   
+                        
+                        Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
+                        if Month == "":
+                            Newfiltered_df = performance_total
+                        else:
+                            Newfiltered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
+                                
+                    st.write(Newfiltered_df, use_container_width=True)   
+                
+                
+                with st.expander("DOWNLOAD MEDICAL CENTRES-click the download icon on the upper right corner of the table"):
                     
                     Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
@@ -566,25 +588,7 @@ def app():
   
                     st.write(filtered_df, use_container_width=True)
                     
-                with st.expander("DOWNLOAD PREVIOUS MONTH"):
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        
-                        current_month = datetime.now().month
-                        months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
-                            # Create a list of months up to the previous month
-                        display_months = months[:current_month - 0]
-
-                        # Set the default value to the previous month
-                        default_month_index = current_month - 0  #   
-                        
-                        Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
-                        if Month == "":
-                            Newfiltered_df = performance_total
-                        else:
-                            Newfiltered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
-                                
-                    st.write(Newfiltered_df, use_container_width=True)   
+                
                         
                 
         
