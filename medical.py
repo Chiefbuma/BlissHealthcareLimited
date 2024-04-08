@@ -486,7 +486,13 @@ def app():
                     default_month_index = current_month - 2  #
             
                                                     # Select box for searching with default value set to the previous month
-                   
+                    search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index)
+                    
+                    if search_text:
+                        filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
+                    else:
+                        filtered_df = MTD_All
+                    st.write(filtered_df, use_container_width=True)
                 
         
         # Use the expander widget
