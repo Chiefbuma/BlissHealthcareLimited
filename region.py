@@ -532,9 +532,60 @@ def app():
                             Newfiltered_df = performance_total
                         else:
                             Newfiltered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
-                                
+                            
+                            NewMTD_Revenue_budget = Newfiltered_df['MTD_Budget_Revenue'].sum() 
+                            Newformatted_Rev_budget = "{:,.0f}".format(NewMTD_Revenue_budget)
+
+                            # Define the Revenue metrics
+                            NewMTD_Actual_Revenue = Newfiltered_df['MTD_Actual_Revenue'].sum()
+                            Newformatted_Actual_revenue = "{:,.0f}".format(NewMTD_Actual_Revenue)
+
+                            NewTotal_Budget_Revenue = Newfiltered_df['Total_Revenue_Budget'].sum()
+                            Newformatted_Total_revenue = "{:,.0f}".format(NewTotal_Budget_Revenue)
+
+                            NewArch_Rev = (NewMTD_Actual_Revenue / NewMTD_Revenue_budget) * 100
+                            Newformatted_arch_rev = "{:.2f}%".format(NewArch_Rev)
+
+                            Newprojected_revenue = Newfiltered_df['Projected_Revenue'].sum()
+                            Newformatted_projected_revenue = "{:,.0f}".format(Newprojected_revenue)
+
+                            NewMTD_footfall_budget = Newfiltered_df['MTD_Budget_Footfall'].sum() 
+                            Newformatted_ff_budget = "{:,.0f}".format(NewMTD_footfall_budget)
+
+                            # Define the Footfall metrics
+                            NewMTD_Actual_Footfall = Newfiltered_df['MTD_Actual_Footfall'].sum()
+                            Newformatted_Actual_footfall = "{:,.0f}".format(NewMTD_Actual_Footfall)
+
+                            NewTotal_Budget_Footfall = Newfiltered_df['Total_Footfall_Budget'].sum()
+                            Newformatted_Total_footfall = "{:,.0f}".format(NewTotal_Budget_Footfall)
+
+                            Newprojected_Footfall = Newfiltered_df['Projected_Footfalls'].sum()
+                            Newformatted_projected_footfall = "{:,.0f}".format(Newprojected_Footfall)
+
+                            NewArch_FF = (NewMTD_Actual_Footfall / NewMTD_footfall_budget) * 100
+                            Newformatted_arch_ff = "{:.2f}%".format(NewArch_FF)
+
+                                            # Calculate the total values for each column
+                            Newtotal_values = {
+                                'Scheme': 'TOTAL',
+                                'Month':Month ,
+                                'Region':region,
+                                'MTD_Budget_Revenue': Newformatted_Rev_budget ,
+                                'MTD_Actual_Revenue': Newformatted_Actual_revenue,
+                                '%Arch_REV': Newformatted_arch_rev,
+                                'Total_Revenue_Budget': Newformatted_Total_revenue,
+                                'Projected_Revenue': Newformatted_projected_revenue,
+                                'MTD_Budget_Footfall': Newformatted_ff_budget,
+                                'MTD_Actual_Footfall': Newformatted_Actual_footfall,
+                                '%Arch_FF': Newformatted_arch_ff,
+                                'Total_Footfall_Budget': Newformatted_Total_footfall,
+                                'Projected_Footfalls':Newformatted_projected_footfall
+                }
+                                            # Create a DataFrame for the total row
+                            Newtotal_row_df = pd.DataFrame(Newtotal_values, index=[0])
+                                                         
                     st.write(Newfiltered_df, use_container_width=True)   
-                
+                    st.write(Newtotal_row_df,use_container_width=True) 
                 
                 with st.expander("DOWNLOAD MEDICAL CENTRES-click the download icon on the upper right corner of the table"):
                     
