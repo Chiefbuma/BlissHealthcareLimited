@@ -508,6 +508,9 @@ def app():
 
                 
                     Region = region
+                    
+                    urrent_month = datetime.now().month
+                    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
                     # Create a list of months up to the previous month
                     display_months = months[:current_month - 1]
 
@@ -522,8 +525,7 @@ def app():
                         filtered_df = MTD_All
                     else:
                         filtered_df = Monthly_All.query("`Month` == @search_text2 or `location_name` == @location")
-                        current_month = datetime.now().month
-                        months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
+                        c
   
                     st.write(filtered_df, use_container_width=True)
                 
