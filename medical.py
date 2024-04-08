@@ -335,8 +335,9 @@ def app():
             performance_df['%Arch_FF'] = (performance_df['MTD_Actual_Footfall'] / performance_df['MTD_Budget_Footfall'])
             # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
             performance_df['%Arch_REV'] = (performance_df['MTD_Actual_Revenue'] / performance_df['MTD_Budget_Revenue'])
-                        
             
+            performance_df['Projected_Footfalls']=(performance_df['Total_Footfall_Budget'] ) * (performance_df['MTD_Actual_Footfall'] / performance_df['MTD_Budget_Footfall'])           
+            performance_df['Projected_Revenue']=(performance_df['Total_Revenue_Budget'] ) * (performance_df['MTD_Actual_Revenue'] / performance_df['MTD_Budget_Revenue'])           
             
             performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
             performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
