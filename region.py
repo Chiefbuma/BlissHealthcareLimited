@@ -517,24 +517,7 @@ def app():
                         filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
                     else:
                         filtered_df = MTD_All
-                        
-                    st.write(filtered_df, use_container_width=True)  
-                     
-                    with st.expander("DOWNLOAD MEDICAL CENTRES PREVIOUS MONTH"):
-                        
-                        search_text2 = st.selectbox("Select Month", [""] + display_months, index=default_month_index)
-                        location = st.selectbox("Select Location", [""] + location_names)
-
-                        Regionfiltered_df = Monthly_All  # Start with the full DataFrame
-
-                        if search_text2:
-                            Regionfiltered_df = Regionfiltered_df[Regionfiltered_df['Month'].str.contains(search_text2, case=False)]
-
-                        if location:
-                            Regionfiltered_df= Regionfiltered_df[filtered_df['location_name'] == location]
-
-                        st.write(Regionfiltered_df, use_container_width=True)                 
-                    
+                    st.write(filtered_df, use_container_width=True)
                 
         
         # Use the expander widget
