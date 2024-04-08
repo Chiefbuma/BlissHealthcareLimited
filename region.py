@@ -205,7 +205,7 @@ def app():
                 MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
             ).reset_index()
             
-            REGIONPerformance_df = Allperformance_df.groupby(['Region','Month']).agg(
+            REGIONPerformance_df = Allperformance_df.groupby(['Region','Scheme','Month']).agg(
                 MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
                 MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
                 Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
@@ -546,11 +546,11 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
+                            Newfiltered_df = REGIONPerformance_df.query("`Month` == @Month")
                             RegionlFilter_df=REGIONPerformance_df.query("`Month` == @Month")
                                                                                      
                     st.write(Newfiltered_df, use_container_width=True)   
-                    st.write(RegionlFilter_df,use_container_width=True) 
+                  
                 
                 with st.expander("DOWNLOAD MEDICAL CENTRES-click the download icon on the upper right corner of the table"):
                     
