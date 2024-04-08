@@ -205,7 +205,7 @@ def app():
                 MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
             ).reset_index()
             
-            REGIONPerformance_df = Allperformance_df.groupby(['Region']).agg(
+            REGIONPerformance_df = Allperformance_df.groupby(['Region','Month']).agg(
                 MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
                 MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
                 Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
