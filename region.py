@@ -524,7 +524,7 @@ def app():
                     if Month == "" and location =="":
                         filtered_df = MTD_All
                     else:
-                        filtered_df = Monthly_All.query("`Month` == @Month or `location_name` == @location")
+                        filtered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
                         
   
                     st.write(filtered_df, use_container_width=True)
