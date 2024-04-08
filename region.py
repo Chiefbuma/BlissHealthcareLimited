@@ -194,7 +194,7 @@ def app():
             Allperformance_df = pd.DataFrame(Allresponse.data)
             
             # Calculate MTD revenue and footfalls for the selected date range
-            MTDPerformance_df = Allperformance_df.groupby(['Region', 'Scheme','Month']).agg(
+            MTDPerformance_df = Allperformance_df.groupby(['Region', 'Scheme']).agg(
                 MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
                 MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
                 Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
@@ -599,7 +599,7 @@ def app():
                     if Month == "" or location =="":
                         filtered_df = MTD_All
                     else:
-                        filtered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
+                        filtered_df = MTDPerformance_df.query("`Month` == @Month")
                         
   
                     st.write(filtered_df, use_container_width=True)
