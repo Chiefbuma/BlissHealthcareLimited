@@ -194,7 +194,7 @@ def app():
             Allperformance_df = pd.DataFrame(Allresponse.data)
             
             # Calculate MTD revenue and footfalls for the selected date range
-            Newperformance_df = Allperformance_df.groupby(['Region', 'Scheme']).agg(
+            MTDPerformance_df = Allperformance_df.groupby(['Region', 'Scheme']).agg(
                 MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
                 MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
                 Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
@@ -376,8 +376,35 @@ def app():
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
             
             
+            
+            
+            MTDPerformance_df['MTD_Budget_Revenue'] = (MTDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
+
+            MTDPerformance_df['MTD_Budget_Footfall'] = (MTDPerformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
+
+            # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
+            MTDPerformance_df['%Arch_FF'] = (MTDPerformance_df['MTD_Actual_Footfall'] / MTDPerformance_df['MTD_Budget_Footfall'])
+
+            # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
+            MTDPerformance_df['%Arch_REV'] = (MTDPerformance_df['MTD_Actual_Revenue'] / MTDPerformance_df['MTD_Budget_Revenue'])
+
+            MTDPerformance_df['Projected_Footfalls'] = (MTDPerformance_df['Total_Footfall_Budget'] ) * (MTDPerformance_df['MTD_Actual_Footfall'] / MTDPerformance_df['MTD_Budget_Footfall'])           
+            MTDPerformance_df['Projected_Revenue'] = (MTDPerformance_df['Total_Revenue_Budget'] ) * (MTDPerformance_df['MTD_Actual_Revenue'] / MTDPerformance_df['MTD_Budget_Revenue'])           
+
+            MTDPerformance_df["MTD_Budget_Revenue"] = MTDPerformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
+            MTDPerformance_df["MTD_Actual_Revenue"] = MTDPerformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
+            MTDPerformance_df["%Arch_REV"] = MTDPerformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x*100))
+            MTDPerformance_df["Total_Revenue_Budget"] = MTDPerformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,.0f}'.format(x))
+            MTDPerformance_df["Projected_Revenue"] = MTDPerformance_df["Projected_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
+            MTDPerformance_df["MTD_Actual_Footfall"] = MTDPerformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
+            MTDPerformance_df["MTD_Budget_Footfall"] = MTDPerformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,.0f}'.format(x))
+            MTDPerformance_df["%Arch_FF"] = MTDPerformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x*100))
+            MTDPerformance_df["Total_Footfall_Budget"] = MTDPerformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
+            MTDPerformance_df["Projected_Footfalls"] = MTDPerformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
+
+            
               # Rearrange the columns
-            MTD_All = Newperformance_df[
+            MTD_All =  MTDPerformance_df[
                 [ 'Month','Region','Scheme','MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
