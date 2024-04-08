@@ -342,13 +342,13 @@ def app():
             performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].fillna(0).astype(int).apply(lambda x: '{:,.0f}'.format(x))
             performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].fillna(0).astype(int).apply(lambda x: '{:,}'.format(x))
             performance_df["%Arch_REV"] = performance_df["%Arch_REV"].fillna(0).apply(lambda x: '{:.1f}%'.format(x*100 ))
-            performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
-            performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
-            performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-            performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,.0f}'.format(x))
-            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x*100))
-            performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
-            performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
+            performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].fillna(0).apply(lambda x: '{:,}'.format(x))
+            performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
+            performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].fillna(0).apply(lambda x: '{:,}'.format(x))
+            performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
+            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].fillna(0).apply(lambda x: '{:.1f}%'.format(x*100))
+            performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].fillna(0).apply(lambda x: '{:,}'.format(x))
+            performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             
             
               # Rearrange the columns
