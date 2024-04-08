@@ -531,7 +531,7 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df =MTD_All.query("`Month` == @Month and `location_name` == @location")
+                            Newfiltered_df =MTD_All.query("`Month` == @Month")
                             
                             NewMTD_Revenue_budget = Newfiltered_df['MTD_Budget_Revenue'].sum() 
                             Newformatted_Rev_budget = "{:,.0f}".format(NewMTD_Revenue_budget)
