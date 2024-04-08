@@ -191,11 +191,21 @@ def app():
 
             
             
-            
-            
             # Query the MTD_Revenue table with the filter for location_name and Month
             Allresponse = supabase.from_('MTD_Revenue').select('*').eq('Region', region).execute()
-            Allperformance_df = pd.DataFrame(Allresponse.data)
+            AllfinalMerged = pd.DataFrame(Allresponse.data)
+            
+            # Calculate MTD revenue and footfalls for the selected date range
+            Allperformance_df = AllfinalMerged .groupby(['Region', 'Scheme']).agg(
+                MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
+                MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
+                Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
+                Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
+                Projected_Revenue=('Projected_Revenue', 'sum'),
+                Projected_Footfalls=('Projected_Footfalls', 'sum'),
+                MTD_Budget_Revenue=('MTD_Budget_Revenue', 'sum'),
+                MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
+            ).reset_index()
             
             
             Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
@@ -375,8 +385,8 @@ def app():
             
             
             # Rearrange the columns
-            Monthly_All = Allperformance_df[
-                [ 'Month','Scheme','Region','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+            Monthly_All = Allperformance_df [
+                [ 'Month','Region','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
            # Calculate the total values for each column
@@ -507,7 +517,24 @@ def app():
                         filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
                     else:
                         filtered_df = MTD_All
-                    st.write(filtered_df, use_container_width=True)
+                        
+                    st.write(filtered_df, use_container_width=True)  
+                     
+                    with st.expander("DOWNLOAD MEDICAL CENTRES PREVIOUS MONTH"):
+                        
+                        search_text2 = st.selectbox("Select Month", [""] + display_months, index=default_month_index)
+                        location = st.selectbox("Select Location", [""] + location_names)
+
+                        Regionfiltered_df = Monthly_All  # Start with the full DataFrame
+
+                        if search_text2:
+                            Regionfiltered_df = Regionfiltered_df[Regionfiltered_df['Month'].str.contains(search_text2, case=False)]
+
+                        if location:
+                            Regionfiltered_df= Regionfiltered_df[filtered_df['location_name'] == location]
+
+                        st.write(Regionfiltered_df, use_container_width=True)                 
+                    
                 
         
         # Use the expander widget
