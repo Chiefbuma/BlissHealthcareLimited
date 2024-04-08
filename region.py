@@ -522,10 +522,10 @@ def app():
                         current_month = datetime.now().month
                         months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
                             # Create a list of months up to the previous month
-                        display_months = months[:current_month - 0]
+                        display_months = months[:current_month - 1]
 
                         # Set the default value to the previous month
-                        default_month_index = current_month - 0  #   
+                        default_month_index = current_month - 1  #   
                         
                         Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
                         if Month == "":
@@ -571,10 +571,10 @@ def app():
                     current_month = datetime.now().month
                     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
                     # Create a list of months up to the previous month
-                    display_months = months[:current_month - 0]
+                    display_months = months[:current_month - 1]
 
                     # Set the default value to the previous month
-                    default_month_index = current_month - 0  #
+                    default_month_index = current_month - 1  #
     
                     with col1:
                         location = st.selectbox("Select Location", [""] +  Region_location_names)
