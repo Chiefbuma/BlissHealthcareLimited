@@ -437,10 +437,6 @@ def app():
             NewDPerformance_df["Projected_Footfalls"] = NewDPerformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
 
 
-
-
-
-
             
               # Rearrange the columns
             MTD_All =  MTDPerformance_df[
@@ -572,7 +568,7 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df = performance_total[performance_total['Month'] == Month].copy()
+                            Newfiltered_df =performance_total
 
                     st.write(Newfiltered_df, use_container_width=True)   
            
