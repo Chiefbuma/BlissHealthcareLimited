@@ -205,10 +205,6 @@ def app():
                 MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
             ).reset_index()
             
-            
-
-            
-            
             Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
             LastUpdate_df = pd.DataFrame(Lastdateresponse.data)
             LastUpdate_df = LastUpdate_df[['Last_Updated']]  # Assuming 'Last_Updated' is the column you want
@@ -420,8 +416,6 @@ def app():
                 [ 'Month','Region','location_name','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
-            
-            
            # Calculate the total values for each column
             total_values = {
                 'Scheme': 'TOTAL',
@@ -537,7 +531,7 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df = MTD_All.query("`Month` == @Month and `location_name` == @location")
+                            Newfiltered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
                             
                             NewMTD_Revenue_budget = Newfiltered_df['MTD_Budget_Revenue'].sum() 
                             Newformatted_Rev_budget = "{:,.0f}".format(NewMTD_Revenue_budget)
