@@ -178,7 +178,7 @@ def app():
             FinalMerged_df = pd.DataFrame(response.data)
             
             # Calculate MTD revenue and footfalls for the selected date range
-            performance_df = FinalMerged_df.groupby(['Region', 'Scheme']).agg(
+            performance_df = FinalMerged_df.groupby(['Region', 'Scheme','Month']).agg(
                 MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
                 MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
                 Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
