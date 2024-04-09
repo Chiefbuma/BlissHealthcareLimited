@@ -422,9 +422,15 @@ def app():
             
             
             # Rearrange the columns
-            Monthly_All = NewDPerformance_df[
+            Monthly_All = Allperformance_df[
+                [ 'Month','Region','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+            ]
+            
+            # Rearrange the columns
+            Monthly_New = NewDPerformance_df[
                 [ 'Month','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
+            
             
            # Calculate the total values for each column
             total_values = {
@@ -541,7 +547,7 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df = Monthly_All.query("`Month` == @Month")
+                            Newfiltered_df = Monthly_New.query("`Month` == @Month")
                             
                             NewMTD_Revenue_budget = Newfiltered_df['MTD_Budget_Revenue'].sum() 
                             Newformatted_Rev_budget = "{:,.0f}".format(NewMTD_Revenue_budget)
