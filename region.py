@@ -212,7 +212,7 @@ def app():
             New_df = pd.DataFrame(REGresponse)
             
             # Calculate MTD revenue and footfalls for the selected date range
-            REGperformance_df=   New_df.groupby(['Region', 'Scheme','Month']).agg(
+            REGperformance_df=   New_df.groupby(['Scheme','Month']).agg(
                 MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
                 MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
                 Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
