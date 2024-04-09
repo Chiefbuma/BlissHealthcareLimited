@@ -174,11 +174,11 @@ def app():
             
 
             # Query the MTD_Revenue table with the filter for location_name and Month
-            response = supabase.from_('MTD_Revenue').select('*').eq('Region', region).eq('Month', current_month_name ).execute()
+            response = supabase.from_('MTD_Revenue').select('*').eq('Region', region).execute()
             FinalMerged_df = pd.DataFrame(response.data)
             
             # Calculate MTD revenue and footfalls for the selected date range
-            performance_df = FinalMerged_df.groupby(['Region', 'Scheme']).agg(
+            performance_df = FinalMerged_df.groupby(['Region', 'Scheme','Month']).agg(
                 MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
                 MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
                 Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
@@ -201,7 +201,7 @@ def app():
                 Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
                 Projected_Revenue=('Projected_Revenue', 'sum'),
                 Projected_Footfalls=('Projected_Footfalls', 'sum'),
-                MTD_Budget_Revenue =('MTD_Budget_Revenue', 'sum'),
+                MTD_Budget_Revenue=('MTD_Budget_Revenue', 'sum'),
                 MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
             ).reset_index()
             
@@ -209,19 +209,7 @@ def app():
             
             # Query the MTD_Revenue table with the filter for location_name and Month
             REGresponse = supabase.from_('MTD_Region').select('*').eq('Region', region).execute()
-            New_df = pd.DataFrame(REGresponse)
-            
-            # Calculate MTD revenue and footfalls for the selected date range
-            REGperformance_df=   New_df.groupby(['Scheme','Month']).agg(
-                MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
-                MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
-                Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
-                Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
-                Projected_Revenue=('Projected_Revenue', 'sum'),
-                Projected_Footfalls=('Projected_Footfalls', 'sum'),
-                MTD_Budget_Revenue =('MTD_Budget_Revenue', 'sum'),
-                MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
-            ).reset_index()
+            REGperformance_df = pd.DataFrame(REGresponse)
             
             
             # Calculate MTD revenue and footfalls for the selected date range
@@ -428,7 +416,7 @@ def app():
             MTDPerformance_df["Projected_Footfalls"] = MTDPerformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
             
             
-            
+            REGperformance_df
             
             NewDPerformance_df['MTD_Budget_Revenue'] = (NewDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
 
@@ -479,6 +467,13 @@ def app():
             REGperformance_df["%Arch_FF"] = REGperformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x*100))
             REGperformance_df["Total_Footfall_Budget"] = REGperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
             REGperformance_df["Projected_Footfalls"] = REGperformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
+
+            
+                        
+              # Rearrange the columns
+            REGperformance_df=  REGperformance_df[
+                [ 'Month','Region','Scheme','MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+            ]
             
             
               # Rearrange the columns
@@ -611,7 +606,7 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df = MTD_All.query("`Month` == @Month")
+                            Newfiltered_df =performance_total
 
                     st.write(Newfiltered_df, use_container_width=True)   
            
