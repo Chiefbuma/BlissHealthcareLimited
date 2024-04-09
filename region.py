@@ -611,7 +611,7 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df =REGperformance_df.query("`Month` == @Month")
+                            Newfiltered_df =New_df.query("`Month` == @Month")
 
                     st.write(Newfiltered_df, use_container_width=True)   
            
