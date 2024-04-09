@@ -174,7 +174,7 @@ def app():
             
 
             # Query the MTD_Revenue table with the filter for location_name and Month
-            response = supabase.from_('MTD_Revenue').select('*').eq('location_name', location).eq('Month', current_month_name ).execute()
+            response = supabase.from_('MTD_Overall').select('*').eq('Month', current_month_name ).execute()
             performance_df = pd.DataFrame(response.data)
             
             # Query the MTD_Revenue table with the filter for location_name and Month
