@@ -416,7 +416,7 @@ def app():
             MTDPerformance_df["Projected_Footfalls"] = MTDPerformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
             
             
-            REGperformance_df
+            
             
             NewDPerformance_df['MTD_Budget_Revenue'] = (NewDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
 
@@ -467,13 +467,6 @@ def app():
             REGperformance_df["%Arch_FF"] = REGperformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x*100))
             REGperformance_df["Total_Footfall_Budget"] = REGperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
             REGperformance_df["Projected_Footfalls"] = REGperformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
-
-            
-                        
-              # Rearrange the columns
-            REGperformance_df=  REGperformance_df[
-                [ 'Month','Region','Scheme','MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
-            ]
             
             
               # Rearrange the columns
