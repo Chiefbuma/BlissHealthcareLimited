@@ -194,7 +194,7 @@ def app():
             Allperformance_df = pd.DataFrame(Allresponse.data)
             
             # Calculate MTD revenue and footfalls for the selected date range
-            MTDPerformance_df = Allperformance_df.groupby([ 'Scheme','Month']).agg(
+            MTDPerformance_df = Allperformance_df.groupby(['Region', 'Scheme','Month']).agg(
                 MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
                 MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
                 Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
@@ -204,7 +204,19 @@ def app():
                 MTD_Budget_Revenue=('MTD_Budget_Revenue', 'sum'),
                 MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
             ).reset_index()
-
+            
+            # Calculate MTD revenue and footfalls for the selected date range
+            NewDPerformance_df = Allperformance_df.groupby(['Scheme','Month']).agg(
+                MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
+                MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
+                Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
+                Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
+                Projected_Revenue=('Projected_Revenue', 'sum'),
+                Projected_Footfalls=('Projected_Footfalls', 'sum'),
+                MTD_Budget_Revenue=('MTD_Budget_Revenue', 'sum'),
+                MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
+            ).reset_index()
+            
             Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
             LastUpdate_df = pd.DataFrame(Lastdateresponse.data)
             LastUpdate_df = LastUpdate_df[['Last_Updated']]  # Assuming 'Last_Updated' is the column you want
@@ -237,14 +249,11 @@ def app():
 
             # Calculate fraction of days passed for the selected month
             fraction_passed = fraction_of_days_in_month(Lastdate_date)
-            
-            
-            
+                      
             
             #Total_budget_FF = performance_df['Budget_Footfall'].sum()
             #formatted_FF_budget = "{:,.0f}".format(Total_budget_FF)
-                        
-   
+                           
             # For example, let's say you want to add a trace for the "Projection" metric
             fig3.update_layout(
                 template="plotly_white",
@@ -403,7 +412,7 @@ def app():
             
               # Rearrange the columns
             MTD_All =  MTDPerformance_df[
-                [ 'Month','location_name','Scheme''MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+                [ 'Month','Region','Scheme','MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
             #ALL MONRH DATA
@@ -531,7 +540,59 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df = MTD_All.query("`Month` == @Month")
+                            Newfiltered_df = Monthly_All.query("`Month` == @Month")
+                            
+                            NewMTD_Revenue_budget = Newfiltered_df['MTD_Budget_Revenue'].sum() 
+                            Newformatted_Rev_budget = "{:,.0f}".format(NewMTD_Revenue_budget)
+
+                            # Define the Revenue metrics
+                            NewMTD_Actual_Revenue = Newfiltered_df['MTD_Actual_Revenue'].sum()
+                            Newformatted_Actual_revenue = "{:,.0f}".format(NewMTD_Actual_Revenue)
+
+                            NewTotal_Budget_Revenue = Newfiltered_df['Total_Revenue_Budget'].sum()
+                            Newformatted_Total_revenue = "{:,.0f}".format(NewTotal_Budget_Revenue)
+
+                            NewArch_Rev = (NewMTD_Actual_Revenue / NewMTD_Revenue_budget) * 100
+                            Newformatted_arch_rev = "{:.2f}%".format(NewArch_Rev)
+
+                            Newprojected_revenue = Newfiltered_df['Projected_Revenue'].sum()
+                            Newformatted_projected_revenue = "{:,.0f}".format(Newprojected_revenue)
+
+                            NewMTD_footfall_budget = Newfiltered_df['MTD_Budget_Footfall'].sum() 
+                            Newformatted_ff_budget = "{:,.0f}".format(NewMTD_footfall_budget)
+
+                            # Define the Footfall metrics
+                            NewMTD_Actual_Footfall = Newfiltered_df['MTD_Actual_Footfall'].sum()
+                            Newformatted_Actual_footfall = "{:,.0f}".format(NewMTD_Actual_Footfall)
+
+                            NewTotal_Budget_Footfall = Newfiltered_df['Total_Footfall_Budget'].sum()
+                            Newformatted_Total_footfall = "{:,.0f}".format(NewTotal_Budget_Footfall)
+
+                            Newprojected_Footfall = Newfiltered_df['Projected_Footfalls'].sum()
+                            Newformatted_projected_footfall = "{:,.0f}".format(Newprojected_Footfall)
+
+                            NewArch_FF = (NewMTD_Actual_Footfall / NewMTD_footfall_budget) * 100
+                            Newformatted_arch_ff = "{:.2f}%".format(NewArch_FF)
+
+                                            # Calculate the total values for each column
+                            Newtotal_values = {
+                                'Scheme': 'TOTAL',
+                                'Month':Month ,
+                                'Region':region,
+                                'MTD_Budget_Revenue': Newformatted_Rev_budget ,
+                                'MTD_Actual_Revenue': Newformatted_Actual_revenue,
+                                '%Arch_REV': Newformatted_arch_rev,
+                                'Total_Revenue_Budget': Newformatted_Total_revenue,
+                                'Projected_Revenue': Newformatted_projected_revenue,
+                                'MTD_Budget_Footfall': Newformatted_ff_budget,
+                                'MTD_Actual_Footfall': Newformatted_Actual_footfall,
+                                '%Arch_FF': Newformatted_arch_ff,
+                                'Total_Footfall_Budget': Newformatted_Total_footfall,
+                                'Projected_Footfalls':Newformatted_projected_footfall
+                }
+                                            # Create a DataFrame for the total row
+                            Newtotal_row_df = pd.DataFrame(Newtotal_values, index=[0])
+                                                         
                     st.write(Newfiltered_df, use_container_width=True)   
            
                 
