@@ -173,13 +173,9 @@ def app():
             current_month_name = calendar.month_name[current_month]
             
 
-            # Query the MTD_Revenue table with the filter for location_name and Month
             response = supabase.from_('MTD_Overall').select('*').eq('Month', current_month_name ).execute()
             performance_df = pd.DataFrame(response.data)
             
-            # Query the MTD_Revenue table with the filter for location_name and Month
-            Allresponse = supabase.from_('MTD_Revenue').select('*').eq('location_name', location).execute()
-            Allperformance_df = pd.DataFrame(Allresponse.data)
             
             
             Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
@@ -351,18 +347,13 @@ def app():
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             
             
-              # Rearrange the columns
-            MTD_All = performance_df[
-                [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
-            ]
+             
             
             #ALL MONRH DATA
             
             
             # Rearrange the columns
-            Monthly_All = Allperformance_df[
-                [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
-            ]
+            
             
            # Calculate the total values for each column
             total_values = {
@@ -462,40 +453,8 @@ def app():
                 with cols[3]:
                     ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
-                with st.expander("DOWNLOAD PREVIOUS MONTH"):
-                    
-                    Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["%Arch_REV"] = Allperformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x))
-                    Allperformance_df["Total_Revenue_Budget"] = Allperformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["Projected_Revenue"] = Allperformance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["MTD_Actual_Footfall"] = Allperformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["MTD_Budget_Footfall"] = Allperformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["%Arch_FF"] = Allperformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100))
-                    Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
 
-                    
-                    current_month = datetime.now().month
-                    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
-                    
-                    # Create a list of months up to the previous month
-                    display_months = months[:current_month - 1]
-
-                    # Set the default value to the previous month
-                    default_month_index = current_month - 2  #
-            
-                                                    # Select box for searching with default value set to the previous month
-                    search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index)
-                    
-                    if search_text:
-                        filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
-                    else:
-                        filtered_df = MTD_All
-                    st.write(filtered_df, use_container_width=True)
-                
-        
-        # Use the expander widget
+                            # Use the expander widget
         #with st.expander("MONTHWISE REVENUE SUMMARY TABLE"):
             # Set the height of the expander
             #st.write(RR_pivot_Actual, use_container_width=True)
