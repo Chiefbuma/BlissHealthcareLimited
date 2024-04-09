@@ -201,7 +201,7 @@ def app():
                 Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
                 Projected_Revenue=('Projected_Revenue', 'sum'),
                 Projected_Footfalls=('Projected_Footfalls', 'sum'),
-                MTD_Budget_Revenue=('MTD_Budget_Revenue', 'sum'),
+                MTD_Budget_Revenue =('MTD_Budget_Revenue', 'sum'),
                 MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
             ).reset_index()
             
@@ -209,7 +209,19 @@ def app():
             
             # Query the MTD_Revenue table with the filter for location_name and Month
             REGresponse = supabase.from_('MTD_Region').select('*').eq('Region', region).execute()
-            REGperformance_df = pd.DataFrame(REGresponse)
+            New_df = pd.DataFrame(REGresponse)
+            
+            # Calculate MTD revenue and footfalls for the selected date range
+            REGperformance_df=   New_df.groupby(['Region', 'Scheme','Month']).agg(
+                MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
+                MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
+                Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
+                Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
+                Projected_Revenue=('Projected_Revenue', 'sum'),
+                Projected_Footfalls=('Projected_Footfalls', 'sum'),
+                MTD_Budget_Revenue =('MTD_Budget_Revenue', 'sum'),
+                MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
+            ).reset_index()
             
             
             # Calculate MTD revenue and footfalls for the selected date range
