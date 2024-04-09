@@ -408,6 +408,38 @@ def app():
             MTDPerformance_df["%Arch_FF"] = MTDPerformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x*100))
             MTDPerformance_df["Total_Footfall_Budget"] = MTDPerformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
             MTDPerformance_df["Projected_Footfalls"] = MTDPerformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
+            
+            
+            
+            
+            NewDPerformance_df['MTD_Budget_Revenue'] = (NewDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
+
+            NewDPerformance_df['MTD_Budget_Footfall'] = (NewDPerformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
+
+            # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
+            NewDPerformance_df['%Arch_FF'] = (NewDPerformance_df['MTD_Actual_Footfall'] / NewDPerformance_df['MTD_Budget_Footfall'])
+
+            # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
+            NewDPerformance_df['%Arch_REV'] = (NewDPerformance_df['MTD_Actual_Revenue'] / NewDPerformance_df['MTD_Budget_Revenue'])
+
+            NewDPerformance_df['Projected_Footfalls'] = (NewDPerformance_df['Total_Footfall_Budget'] ) * (NewDPerformance_df['MTD_Actual_Footfall'] / NewDPerformance_df['MTD_Budget_Footfall'])           
+            NewDPerformance_df['Projected_Revenue'] = (NewDPerformance_df['Total_Revenue_Budget'] ) * (NewDPerformance_df['MTD_Actual_Revenue'] / NewDPerformance_df['MTD_Budget_Revenue'])           
+
+            NewDPerformance_df["MTD_Budget_Revenue"] = NewDPerformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
+            NewDPerformance_df["MTD_Actual_Revenue"] = NewDPerformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
+            NewDPerformance_df["%Arch_REV"] = NewDPerformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x*100))
+            NewDPerformance_df["Total_Revenue_Budget"] = NewDPerformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,.0f}'.format(x))
+            NewDPerformance_df["Projected_Revenue"] = NewDPerformance_df["Projected_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
+            NewDPerformance_df["MTD_Actual_Footfall"] = NewDPerformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
+            NewDPerformance_df["MTD_Budget_Footfall"] = NewDPerformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,.0f}'.format(x))
+            NewDPerformance_df["%Arch_FF"] = NewDPerformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x*100))
+            NewDPerformance_df["Total_Footfall_Budget"] = NewDPerformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
+            NewDPerformance_df["Projected_Footfalls"] = NewDPerformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
+
+
+
+
+
 
             
               # Rearrange the columns
@@ -540,7 +572,7 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df = Monthly_All.query("`Month` == @Month")
+                            Newfiltered_df = NewDPerformance_df.query("`Month` == @Month")
                             
                             NewMTD_Revenue_budget = Newfiltered_df['MTD_Budget_Revenue'].sum() 
                             Newformatted_Rev_budget = "{:,.0f}".format(NewMTD_Revenue_budget)
