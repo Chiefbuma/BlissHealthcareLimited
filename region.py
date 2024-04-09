@@ -205,6 +205,13 @@ def app():
                 MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
             ).reset_index()
             
+            
+            
+            # Query the MTD_Revenue table with the filter for location_name and Month
+            REGresponse = supabase.from_('MTD_Region').select('*').eq('Region', region).execute()
+            REGperformance_df = pd.DataFrame(REGresponse)
+            
+            
             # Calculate MTD revenue and footfalls for the selected date range
             NewDPerformance_df = Allperformance_df.groupby(['Scheme','Month']).agg(
                 MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
@@ -285,8 +292,7 @@ def app():
             
             projected_revenue =performance_df['Total_Revenue_Budget'].sum()*(performance_df['MTD_Actual_Revenue'].sum()/(performance_df['MTD_Budget_Revenue'].sum()*fraction_passed))
             formatted_projected_reveue = "{:,.0f}".format(projected_revenue )
-            
-            
+                        
             MTD_footfall_budget = performance_df['MTD_Budget_Footfall'].sum()*fraction_passed
             formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
             # # Define the Reveneu metrics
@@ -410,7 +416,7 @@ def app():
             MTDPerformance_df["Projected_Footfalls"] = MTDPerformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
             
             
-            
+            REGperformance_df
             
             NewDPerformance_df['MTD_Budget_Revenue'] = (NewDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
 
@@ -436,7 +442,39 @@ def app():
             NewDPerformance_df["Total_Footfall_Budget"] = NewDPerformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
             NewDPerformance_df["Projected_Footfalls"] = NewDPerformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
 
+            
+            
+            REGperformance_df['MTD_Budget_Revenue'] = (REGperformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
 
+            REGperformance_df['MTD_Budget_Footfall'] = (REGperformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
+
+            # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
+            REGperformance_df['%Arch_FF'] = (REGperformance_df['MTD_Actual_Footfall'] / REGperformance_df['MTD_Budget_Footfall'])
+
+            # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
+            REGperformance_df['%Arch_REV'] = (REGperformance_df['MTD_Actual_Revenue'] / REGperformance_df['MTD_Budget_Revenue'])
+
+            REGperformance_df['Projected_Footfalls'] = (REGperformance_df['Total_Footfall_Budget'] ) * (REGperformance_df['MTD_Actual_Footfall'] / REGperformance_df['MTD_Budget_Footfall'])           
+            REGperformance_df['Projected_Revenue'] = (REGperformance_df['Total_Revenue_Budget'] ) * (REGperformance_df['MTD_Actual_Revenue'] / REGperformance_df['MTD_Budget_Revenue'])           
+
+            REGperformance_df["MTD_Budget_Revenue"] = REGperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
+            REGperformance_df["MTD_Actual_Revenue"] = REGperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
+            REGperformance_df["%Arch_REV"] = REGperformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x*100))
+            REGperformance_df["Total_Revenue_Budget"] = REGperformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,.0f}'.format(x))
+            REGperformance_df["Projected_Revenue"] = REGperformance_df["Projected_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
+            REGperformance_df["MTD_Actual_Footfall"] = REGperformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
+            REGperformance_df["MTD_Budget_Footfall"] = REGperformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,.0f}'.format(x))
+            REGperformance_df["%Arch_FF"] = REGperformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x*100))
+            REGperformance_df["Total_Footfall_Budget"] = REGperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
+            REGperformance_df["Projected_Footfalls"] = REGperformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
+
+            
+                        
+              # Rearrange the columns
+            REGperformance_df=  REGperformance_df[
+                [ 'Month','Region','Scheme','MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+            ]
+            
             
               # Rearrange the columns
             MTD_All =  MTDPerformance_df[
@@ -568,7 +606,7 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df =performance_total
+                            Newfiltered_df =REGperformance_df.query("`Month` == @Month")
 
                     st.write(Newfiltered_df, use_container_width=True)   
            
