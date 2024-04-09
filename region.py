@@ -174,7 +174,7 @@ def app():
             
 
             # Query the MTD_Revenue table with the filter for location_name and Month
-            response = supabase.from_('MTD_Revenue').select('*').eq('Region', region).eq('Month', current_month_name ).execute()
+            response = supabase.from_('MTD_Revenue').select('*').eq('Region', region).execute()
             FinalMerged_df = pd.DataFrame(response.data)
             
             # Calculate MTD revenue and footfalls for the selected date range
@@ -477,7 +477,7 @@ def app():
                 # Concatenate the total row with performance_df
             performance_total = pd.concat([performance_df, total_row_df], ignore_index=True)
 
-            
+            finalperformance_df = performance_total[performance_total['Month'] == current_month_name].copy()
             
             fig_request_by_type_Rev = go.Figure(data=[go.Table(
                 header=dict(values=['Scheme','Revenue<br>Budget','Revenue<br>Actual','%Arch<br>REV',
@@ -489,26 +489,26 @@ def app():
                             line_color='darkslategray',  # Border color
                             line=dict(width=1)),
                             columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
-                cells=dict(values=[performance_total["Scheme"],
-                                   performance_total["MTD_Budget_Revenue"],
-                                   performance_total["MTD_Actual_Revenue"],
-                                   performance_total["%Arch_REV"],
-                                    performance_total["Total_Revenue_Budget"],
-                                    performance_total["Projected_Revenue"],
-                                     performance_total["MTD_Budget_Footfall"],
-                                    performance_total["MTD_Actual_Footfall"],
-                                    performance_total["%Arch_FF"],
-                                    performance_total["Total_Footfall_Budget"],
-                                    performance_total["Projected_Footfalls"]]
+                cells=dict(values=[finalperformance_df["Scheme"],
+                                   finalperformance_df["MTD_Budget_Revenue"],
+                                   finalperformance_df["MTD_Actual_Revenue"],
+                                   finalperformance_df["%Arch_REV"],
+                                   finalperformance_df["Total_Revenue_Budget"],
+                                   finalperformance_df["Projected_Revenue"],
+                                    finalperformance_df["MTD_Budget_Footfall"],
+                                    finalperformance_df["MTD_Actual_Footfall"],
+                                    finalperformance_df["%Arch_FF"],
+                                    finalperformance_df["Total_Footfall_Budget"],
+                                    finalperformance_df["Projected_Footfalls"]]
                         ,
-                        
+            
                 
 
                         fill_color = ['rgba(0, 0, 82, 1)']+ ['white']+ ['white']+ ['white']+ ['white']+ ['white']+ ['lightgrey'] * (len(performance_total) - 5)
 ,
                         font_color=[
                                 ['white'],  # Blue for "Report" column
-                                ['black'] * len(performance_total)  # White for "Count" column
+                                ['black'] * len(finalperformance_df)  # White for "Count" column
                             ],
                         align='left',
                         font=dict(color='black', size=14),
@@ -572,7 +572,7 @@ def app():
                         if Month == "":
                             Newfiltered_df = performance_total
                         else:
-                            Newfiltered_df = NewDPerformance_df
+                            Newfiltered_df = performance_total[performance_total['Month'] == Month].copy()
                     st.write(Newfiltered_df, use_container_width=True)   
            
                 
