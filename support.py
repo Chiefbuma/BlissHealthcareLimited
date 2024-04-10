@@ -175,7 +175,10 @@ def app():
 
             response = supabase.from_('MTD_Overall').select('*').eq('Month', current_month_name ).execute()
             performance_df = pd.DataFrame(response.data)
+
             
+            Regionresponse = supabase.from_('MTD_RegionALL').select('*').eq('Month', current_month_name ).execute()
+            Regionperformance_df = pd.DataFrame(Regionresponse.data)
             
             
             Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
@@ -266,6 +269,39 @@ def app():
             Arch_Rev = (MTD_Actual_Footfall/MTD_footfall_budget) * 100
             formatted_arch_ff = "{:.2f}%".format(Arch_Rev)
             
+            
+            
+                      # # Define the Reveneu metrics
+            AllMTD_Actual_Revenue = Regionperformance_df['MTD_Actual_Revenue'].sum()
+            formatted_Actual_revenue = "{:,.0f}".format(AllMTD_Actual_Revenue)
+            
+            AllTotal_Budget_Reveneu = Regionperformance_df['Total_Revenue_Budget'].sum()
+            formatted_Total_revenue = "{:,.0f}".format(AllTotal_Budget_Reveneu)
+            
+            AllArch_Rev = (MTD_Actual_Revenue /MTD_Revenue_budget) * 100
+            formatted_arch_rev = "{:.2f}%".format(AllArch_Rev)
+            # It looks like the code is a comment in Python. Comments in Python start with a hash
+            # symbol (#) and are used to provide explanations or notes within the code. In this case,
+            # the comment appears to say "projecte".
+            
+            projected_revenue =Regionperformance_df['Total_Revenue_Budget'].sum()*(Regionperformance_df['MTD_Actual_Revenue'].sum()/(Regionperformance_df['MTD_Budget_Revenue'].sum()*fraction_passed))
+            formatted_projected_reveue = "{:,.0f}".format(projected_revenue )
+            
+            
+            MTD_footfall_budget = Regionperformance_df['MTD_Budget_Footfall'].sum()*fraction_passed
+            formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
+            # # Define the Reveneu metrics
+            MTD_Actual_Footfall = Regionperformance_df['MTD_Actual_Footfall'].sum()
+            formatted_Actual_footfall = "{:,.0f}".format(MTD_Actual_Footfall)
+            
+            Total_Budget_Footfall = Regionperformance_df['Total_Footfall_Budget'].sum()
+            formatted_Total_footfall = "{:,.0f}".format(Total_Budget_Footfall)
+            
+            projected_Footfall = Regionperformance_df['Total_Footfall_Budget'].sum()*(Regionperformance_df['MTD_Actual_Footfall'].sum()/(performance_df['MTD_Budget_Footfall'].sum()*fraction_passed))
+            formatted_projected_footfall = "{:,.0f}".format(projected_Footfall )
+            
+            Arch_Rev = (MTD_Actual_Footfall/MTD_footfall_budget) * 100
+            formatted_arch_ff = "{:.2f}%".format(Arch_Rev)
            
             
             #ALL MONTHS 
@@ -347,6 +383,30 @@ def app():
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             
             
+            
+            
+            Regionperformance_df['MTD_Budget_Revenue'] = (Regionperformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
+
+            Regionperformance_df['MTD_Budget_Footfall']=(Regionperformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
+            # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
+            Regionperformance_df['%Arch_FF'] = (Regionperformance_df['MTD_Actual_Footfall'] / Regionperformance_df['MTD_Budget_Footfall'])
+            # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
+            Regionperformance_df['%Arch_REV'] = (Regionperformance_df['MTD_Actual_Revenue'] / Regionperformance_df['MTD_Budget_Revenue'])
+
+            Regionperformance_df['Projected_Footfalls']=(Regionperformance_df['Total_Footfall_Budget'] ) * (Regionperformance_df['MTD_Actual_Footfall'] / Regionperformance_df['MTD_Budget_Footfall'])           
+            Regionperformance_df['Projected_Revenue']=(Regionperformance_df['Total_Revenue_Budget'] ) * (Regionperformance_df['MTD_Actual_Revenue'] / Regionperformance_df['MTD_Budget_Revenue'])           
+
+            Regionperformance_df["MTD_Budget_Revenue"] = Regionperformance_df["MTD_Budget_Revenue"].fillna(0).astype(int).apply(lambda x: '{:,.0f}'.format(x))
+            Regionperformance_df["MTD_Actual_Revenue"] = Regionperformance_df["MTD_Actual_Revenue"].fillna(0).astype(int).apply(lambda x: '{:,}'.format(x))
+            Regionperformance_df["%Arch_REV"] = Regionperformance_df["%Arch_REV"].fillna(0).apply(lambda x: '{:.1f}%'.format(x*100 ))
+            Regionperformance_df["Total_Revenue_Budget"] = Regionperformance_df["Total_Revenue_Budget"].fillna(0).apply(lambda x: '{:,}'.format(x))
+            Regionperformance_df["Projected_Revenue"] = Regionperformance_df["Projected_Revenue"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
+            Regionperformance_df["MTD_Actual_Footfall"] = Regionperformance_df["MTD_Actual_Footfall"].fillna(0).apply(lambda x: '{:,}'.format(x))
+            Regionperformance_df["MTD_Budget_Footfall"] = Regionperformance_df["MTD_Budget_Footfall"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
+            Regionperformance_df["%Arch_FF"] = Regionperformance_df["%Arch_FF"].fillna(0).apply(lambda x: '{:.1f}%'.format(x*100))
+            Regionperformance_df["Total_Footfall_Budget"] = Regionperformance_df["Total_Footfall_Budget"].fillna(0).apply(lambda x: '{:,}'.format(x))
+            Regionperformance_df["Projected_Footfalls"] = Regionperformance_df["Projected_Footfalls"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
+
              
             
             #ALL MONRH DATA
