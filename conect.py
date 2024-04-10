@@ -16,7 +16,7 @@ import supabase
 import streamlit_shadcn_ui as ui
 from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
-import main, region,medical,support
+import main, region,medical,support,maintenance
 
 # Set the page configuration
 st.set_page_config(page_title="Bliss Healthcare limited", layout="wide")
@@ -32,7 +32,7 @@ class MultiApp:
         with st.sidebar: 
             app = option_menu.option_menu(key="main_key",
             menu_title='DASHBOARDS',
-            options=['Home','Medical centre Dashboard', 'Region Dashboard','Summary Dashboard' ],
+            options=['Home','Medical centre Dashboard', 'Region Dashboard','Summary Dashboard','Maintenance Dashboard' ],
             icons=['house-fill', 'receipt', 'receipt', 'receipt', 'receipt', 'person-circle'],
             menu_icon='house-fill',
             default_index=0,
@@ -42,13 +42,16 @@ class MultiApp:
                 "nav-link-selected": {"background-color": "Black"}
             }
         )       
+            
 
         if app == "Medical centre Dashboard":
             medical.app()
         if app == "Region Dashboard":
             region.app()  
         if app == "Summary Dashboard":
-            support.app()      
+            support.app()  
+        if app == "Maintenance Dashboardd":
+            maintenance.app()    
 
     run()            
         
