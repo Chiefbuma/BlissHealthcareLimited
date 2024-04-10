@@ -4639,17 +4639,3 @@ def region():
 
 
 
-with st.sidebar:
-    #st.image("Dashboard/logo.png", caption="Bliss Healthcare")
-        selected_page = option_menu.option_menu(
-        menu_title='DASHBOARDS',
-        options=['Medical centre Dashboard', 'Region Dashboard', 'Departments Dashboard', "Maintenance Dashboard", 'Summary Dashboard', 'Account'],
-        icons=['house-fill', 'receipt', 'receipt', 'receipt', 'receipt', 'person-circle'],
-        menu_icon='house-fill',
-        default_index=0,
-        styles={
-            "container": {"padding": "15", "background-color": {"grey": "black", "font-size": "10px"}},
-            "nav-link": {"color": "Blck", "font-size": "13px", "text-align": "left"},
-            "nav-link-selected": {"background-color": "Black"}
-        }
-    )
