@@ -174,48 +174,13 @@ def app():
             
 
             # Query the MTD_Revenue table with the filter for location_name and Month
-            response = supabase.from_('MTD_Revenue').select('*').eq('Region', region).eq('Month', current_month_name ).execute()
-            FinalMerged_df = pd.DataFrame(response.data)
+            response = supabase.from_('MTD_Revenue').select('*').eq('location_name', location).eq('Month', current_month_name ).execute()
+            performance_df = pd.DataFrame(response.data)
             
-            # Calculate MTD revenue and footfalls for the selected date range
-            performance_df = FinalMerged_df.groupby(['Region', 'Scheme']).agg(
-                MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
-                MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
-                Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
-                Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
-                Projected_Revenue=('Projected_Revenue', 'sum'),
-                Projected_Footfalls=('Projected_Footfalls', 'sum'),
-                MTD_Budget_Revenue=('MTD_Budget_Revenue', 'sum'),
-                MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
-            ).reset_index()
-
             # Query the MTD_Revenue table with the filter for location_name and Month
-            Allresponse = supabase.from_('MTD_Revenue').select('*').eq('Region', region).execute()
+            Allresponse = supabase.from_('MTD_Revenue').select('*').eq('location_name', location).execute()
             Allperformance_df = pd.DataFrame(Allresponse.data)
             
-            # Calculate MTD revenue and footfalls for the selected date range
-            MTDPerformance_df = Allperformance_df.groupby(['Region', 'Scheme','Month']).agg(
-                MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
-                MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
-                Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
-                Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
-                Projected_Revenue=('Projected_Revenue', 'sum'),
-                Projected_Footfalls=('Projected_Footfalls', 'sum'),
-                MTD_Budget_Revenue=('MTD_Budget_Revenue', 'sum'),
-                MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
-            ).reset_index()
-            
-            # Calculate MTD revenue and footfalls for the selected date range
-            NewDPerformance_df = Allperformance_df.groupby(['Scheme','Month']).agg(
-                MTD_Actual_Footfall=('MTD_Actual_Footfall', 'sum'),
-                MTD_Budget_Footfall=('MTD_Budget_Footfall', 'sum'),
-                Total_Revenue_Budget=('Total_Revenue_Budget', 'sum'),
-                Total_Footfall_Budget=('Total_Footfall_Budget', 'sum'),
-                Projected_Revenue=('Projected_Revenue', 'sum'),
-                Projected_Footfalls=('Projected_Footfalls', 'sum'),
-                MTD_Budget_Revenue=('MTD_Budget_Revenue', 'sum'),
-                MTD_Actual_Revenue=('MTD_Actual_Revenue', 'sum')
-            ).reset_index()
             
             Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
             LastUpdate_df = pd.DataFrame(Lastdateresponse.data)
@@ -249,11 +214,14 @@ def app():
 
             # Calculate fraction of days passed for the selected month
             fraction_passed = fraction_of_days_in_month(Lastdate_date)
-                      
+            
+            
+            
             
             #Total_budget_FF = performance_df['Budget_Footfall'].sum()
             #formatted_FF_budget = "{:,.0f}".format(Total_budget_FF)
-                           
+                        
+   
             # For example, let's say you want to add a trace for the "Projection" metric
             fig3.update_layout(
                 template="plotly_white",
@@ -285,7 +253,8 @@ def app():
             
             projected_revenue =performance_df['Total_Revenue_Budget'].sum()*(performance_df['MTD_Actual_Revenue'].sum()/(performance_df['MTD_Budget_Revenue'].sum()*fraction_passed))
             formatted_projected_reveue = "{:,.0f}".format(projected_revenue )
-                        
+            
+            
             MTD_footfall_budget = performance_df['MTD_Budget_Footfall'].sum()*fraction_passed
             formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
             # # Define the Reveneu metrics
@@ -366,80 +335,25 @@ def app():
             performance_df['%Arch_FF'] = (performance_df['MTD_Actual_Footfall'] / performance_df['MTD_Budget_Footfall'])
             # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
             performance_df['%Arch_REV'] = (performance_df['MTD_Actual_Revenue'] / performance_df['MTD_Budget_Revenue'])
-                        
+            
             performance_df['Projected_Footfalls']=(performance_df['Total_Footfall_Budget'] ) * (performance_df['MTD_Actual_Footfall'] / performance_df['MTD_Budget_Footfall'])           
             performance_df['Projected_Revenue']=(performance_df['Total_Revenue_Budget'] ) * (performance_df['MTD_Actual_Revenue'] / performance_df['MTD_Budget_Revenue'])           
             
+            performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].fillna(0).astype(int).apply(lambda x: '{:,.0f}'.format(x))
+            performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].fillna(0).astype(int).apply(lambda x: '{:,}'.format(x))
+            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].fillna(0).apply(lambda x: '{:.1f}%'.format(x*100 ))
+            performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].fillna(0).apply(lambda x: '{:,}'.format(x))
+            performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
+            performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].fillna(0).apply(lambda x: '{:,}'.format(x))
+            performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
+            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].fillna(0).apply(lambda x: '{:.1f}%'.format(x*100))
+            performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].fillna(0).apply(lambda x: '{:,}'.format(x))
+            performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             
-            
-            performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
-            performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x*100 ))
-            performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].apply(lambda x: '{:,.0f}'.format(x))
-            performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
-            performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-            performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,.0f}'.format(x))
-            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x*100))
-            performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
-            performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
-            
-            
-            MTDPerformance_df['MTD_Budget_Revenue'] = (MTDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
-
-            MTDPerformance_df['MTD_Budget_Footfall'] = (MTDPerformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
-
-            # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
-            MTDPerformance_df['%Arch_FF'] = (MTDPerformance_df['MTD_Actual_Footfall'] / MTDPerformance_df['MTD_Budget_Footfall'])
-
-            # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
-            MTDPerformance_df['%Arch_REV'] = (MTDPerformance_df['MTD_Actual_Revenue'] / MTDPerformance_df['MTD_Budget_Revenue'])
-
-            MTDPerformance_df['Projected_Footfalls'] = (MTDPerformance_df['Total_Footfall_Budget'] ) * (MTDPerformance_df['MTD_Actual_Footfall'] / MTDPerformance_df['MTD_Budget_Footfall'])           
-            MTDPerformance_df['Projected_Revenue'] = (MTDPerformance_df['Total_Revenue_Budget'] ) * (MTDPerformance_df['MTD_Actual_Revenue'] / MTDPerformance_df['MTD_Budget_Revenue'])           
-
-            MTDPerformance_df["MTD_Budget_Revenue"] = MTDPerformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
-            MTDPerformance_df["MTD_Actual_Revenue"] = MTDPerformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-            MTDPerformance_df["%Arch_REV"] = MTDPerformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x*100))
-            MTDPerformance_df["Total_Revenue_Budget"] = MTDPerformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,.0f}'.format(x))
-            MTDPerformance_df["Projected_Revenue"] = MTDPerformance_df["Projected_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
-            MTDPerformance_df["MTD_Actual_Footfall"] = MTDPerformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-            MTDPerformance_df["MTD_Budget_Footfall"] = MTDPerformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,.0f}'.format(x))
-            MTDPerformance_df["%Arch_FF"] = MTDPerformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x*100))
-            MTDPerformance_df["Total_Footfall_Budget"] = MTDPerformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
-            MTDPerformance_df["Projected_Footfalls"] = MTDPerformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
-            
-            
-            
-            
-            NewDPerformance_df['MTD_Budget_Revenue'] = (NewDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
-
-            NewDPerformance_df['MTD_Budget_Footfall'] = (NewDPerformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
-
-            # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
-            NewDPerformance_df['%Arch_FF'] = (NewDPerformance_df['MTD_Actual_Footfall'] / NewDPerformance_df['MTD_Budget_Footfall'])
-
-            # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
-            NewDPerformance_df['%Arch_REV'] = (NewDPerformance_df['MTD_Actual_Revenue'] / NewDPerformance_df['MTD_Budget_Revenue'])
-
-            NewDPerformance_df['Projected_Footfalls'] = (NewDPerformance_df['Total_Footfall_Budget'] ) * (NewDPerformance_df['MTD_Actual_Footfall'] / NewDPerformance_df['MTD_Budget_Footfall'])           
-            NewDPerformance_df['Projected_Revenue'] = (NewDPerformance_df['Total_Revenue_Budget'] ) * (NewDPerformance_df['MTD_Actual_Revenue'] / NewDPerformance_df['MTD_Budget_Revenue'])           
-
-            NewDPerformance_df["MTD_Budget_Revenue"] = NewDPerformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
-            NewDPerformance_df["MTD_Actual_Revenue"] = NewDPerformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-            NewDPerformance_df["%Arch_REV"] = NewDPerformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x*100))
-            NewDPerformance_df["Total_Revenue_Budget"] = NewDPerformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,.0f}'.format(x))
-            NewDPerformance_df["Projected_Revenue"] = NewDPerformance_df["Projected_Revenue"].apply(lambda x: '{:,.0f}'.format(x))
-            NewDPerformance_df["MTD_Actual_Footfall"] = NewDPerformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-            NewDPerformance_df["MTD_Budget_Footfall"] = NewDPerformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,.0f}'.format(x))
-            NewDPerformance_df["%Arch_FF"] = NewDPerformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x*100))
-            NewDPerformance_df["Total_Footfall_Budget"] = NewDPerformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
-            NewDPerformance_df["Projected_Footfalls"] = NewDPerformance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
-
-
             
               # Rearrange the columns
-            MTD_All =  MTDPerformance_df[
-                [ 'Month','Region','Scheme','MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+            MTD_All = performance_df[
+                [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
             #ALL MONRH DATA
@@ -447,10 +361,8 @@ def app():
             
             # Rearrange the columns
             Monthly_All = Allperformance_df[
-                [ 'Month','Region','location_name','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+                [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
-            
-            
             
            # Calculate the total values for each column
             total_values = {
@@ -536,7 +448,7 @@ def app():
             with card_container(key="MTDREVENUE"):
                 card_style3 = "border: 2px solid #000000; border-radius: 5px; padding: 10px; background-color:#ffffff; color:#000000; text-align: center; font-size: 15px;font-weight: bold; width: 100%; height: 30;"
                 ui.card(
-                    content="Region:" + region,
+                    content=location,
                     key="MCcard3"
                 ).render()
 
@@ -550,29 +462,7 @@ def app():
                 with cols[3]:
                     ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
-                
                 with st.expander("DOWNLOAD PREVIOUS MONTH"):
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        
-                        current_month = datetime.now().month
-                        months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
-                            # Create a list of months up to the previous month
-                        display_months = months[:current_month - 1]
-
-                        # Set the default value to the previous month
-                        default_month_index = current_month - 1  #   
-                        
-                        Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
-                        if Month == "":
-                            Newfiltered_df = performance_total
-                        else:
-                            Newfiltered_df =performance_total
-
-                    st.write(Newfiltered_df, use_container_width=True)   
-           
-                
-                with st.expander("DOWNLOAD MEDICAL CENTRES-click the download icon on the upper right corner of the table"):
                     
                     Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
@@ -585,47 +475,24 @@ def app():
                     Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
 
-                    col1, col2, col3 = st.columns(3)
-            
-                    st.markdown("""<style>
-                    div.st.container > button:first-child {
-                        background-color: #00cc00;
-                        color: white;
-                        font-size: 20px;
-                        height: 3em;
-                        width: 30em;
-                        border-radius: 10px;
-                    }
-                    </style>""", unsafe_allow_html=True)
-
-                
-                    Region = region
-                    
-                    Region_location_names = location_df[location_df['Region'] == region]['Location'].unique().tolist()
-
                     
                     current_month = datetime.now().month
                     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
+                    
                     # Create a list of months up to the previous month
                     display_months = months[:current_month - 1]
 
                     # Set the default value to the previous month
-                    default_month_index = current_month - 1  #
-    
-                    with col1:
-                        location = st.selectbox("Select Location", [""] +  Region_location_names)
-                    with col2:
-                        Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="MTDmonth") 
-                    if Month == "" or location =="":
-                        filtered_df = MTD_All
-                    else:
-                        filtered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
-                        
-  
-                    st.write(filtered_df, use_container_width=True)
+                    default_month_index = current_month - 2  #
+            
+                                                    # Select box for searching with default value set to the previous month
+                    search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index)
                     
-                
-                        
+                    if search_text:
+                        filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
+                    else:
+                        filtered_df = MTD_All
+                    st.write(filtered_df, use_container_width=True)
                 
         
         # Use the expander widget
