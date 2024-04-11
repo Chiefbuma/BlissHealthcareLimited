@@ -207,7 +207,7 @@ def app():
 
                 data = []
                 for item in items:
-                    item_data = {key: item.properties[key] for key in selected_columns}
+                    item_data = {key: item.properties[key] for key in item.properties.keys()}
                     data.append(item_data)
                 return pd.DataFrame(data)
 
