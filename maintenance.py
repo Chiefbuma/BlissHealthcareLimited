@@ -230,7 +230,7 @@ def app():
             if st.button("Edit"):
                 # Create a form for editing the item
                 title = st.text_input("Title", value=item.properties['Title'])
-                description = st.text_area("Description", value=item.properties['Description'])
+               
 
                 # Button to update item
                 if st.button("Update"):
