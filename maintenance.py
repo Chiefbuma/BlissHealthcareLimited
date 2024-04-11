@@ -242,7 +242,7 @@ def app():
         df = load_data(username, password, sharepoint_url, list_name)
         if df is not None:
             st.write("SharePoint Data:")
-            st.write(df)
+            #st.write(df)
             
             
         with card_container(key="Main1"):
