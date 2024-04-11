@@ -245,8 +245,6 @@ def app():
         with card_container(key="Main1"):
             
             choice = ui.select(options=["My Pendings", "Approved", "Rejected"])
-
-            st.markdown(f"Currrent value: {choice}")
             
             Main_df = load_data(username, password, sharepoint_url, list_name)
                   
