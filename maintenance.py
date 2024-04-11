@@ -176,6 +176,9 @@ def app():
 
         # Get all items from the list
         items = target_list.get_items()
+        
+        ctx.load(items)
+        ctx.execute_query()
 
         # Streamlit gallery-like table for displaying SharePoint list items
         st.write("# SharePoint List Items")
