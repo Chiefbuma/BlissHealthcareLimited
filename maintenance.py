@@ -169,7 +169,7 @@ def app():
                 ctx.load(items)
                 ctx.execute_query()
 
-                selected_columns = [
+                selected_columns= [
                         "ID",
                         "Title",
                         "AuthorId",
