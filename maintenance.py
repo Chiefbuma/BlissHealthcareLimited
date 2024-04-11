@@ -156,38 +156,29 @@ def app():
     if st.session_state.is_authenticated:        
         form_container.empty()  
         
-        @st.cache_resource()
-        def load_data(username, password, sharepoint_url, list_name):
-            try:
-                user_credentials = UserCredential(username, password)
-                ctx = ClientContext(sharepoint_url).with_credentials(user_credentials)
-                web = ctx.web
-                ctx.load(web)
-                ctx.execute_query()
-                target_list = ctx.web.lists.get_by_title(list_name)
-                items = target_list.get_items()
-                ctx.load(items)
-                ctx.execute_query()
-
-                data = []
-                for item in items:
-                    item_data = {key: item.properties[key] for key in item.properties.keys()}
-                    data.append(item_data)
-                return pd.DataFrame(data)
-
-            except Exception as e:
-                st.error("Failed to load data from SharePoint. Please check your credentials and try again.")
-                st.error(f"Error details: {e}")
-                return None
-
         sharepoint_url = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReports"
+
+        # SharePoint list name
         list_name = "Maintenance Report"
+
+        # Your SharePoint username and password
         username = "biosafety@blisshealthcare.co.ke"
         password = "NaSi#2024"
 
-        # Load data from SharePoint
-        items = load_data(username, password, sharepoint_url, list_name)
+        # Initialize user credentials
+        user_credentials = UserCredential(username, password)
 
+        # Create a client context using the credentials
+        ctx = ClientContext(sharepoint_url).with_credentials(user_credentials)
+
+        # Get the target list
+        target_list = ctx.web.lists.get_by_title(list_name)
+
+        # Get all items from the list
+        items = target_list.get_items()
+
+        # Streamlit gallery-like table for displaying SharePoint list items
+        st.write("# SharePoint List Items")
 
         # Iterate over the items and display them in a table
         for item in items:
