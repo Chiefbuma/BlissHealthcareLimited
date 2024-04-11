@@ -241,11 +241,7 @@ def app():
 
         # Load data from SharePoint
         df = load_data(username, password, sharepoint_url, list_name)
-        if df is not None:
-            st.write("SharePoint Data:")
-            #st.write(df)
-            
-            
+       
         with card_container(key="Main1"):
             
             choice = ui.select(options=["My Pendings", "Approved", "Rejected"])
@@ -345,58 +341,6 @@ def app():
                 """,
                 unsafe_allow_html=True
 )
-            with st.container():
-                c1, c2, c3 = st.columns([0.5, 3, 1.5])
-                # Add content to the columns
-                with c1:
-                    # Display the figure
-                    st.plotly_chart(fig_data_cards, use_container_width=True) 
-                with c2:
-                    graph(df_mainselected)  # Call the graph function with df_mainselecte
-                with c3:
-                    graphy(df_mainselected)  # Call the graph function with df_mainselected
-                    st.markdown("""<div class='.st-cd'>•</div>""", unsafe_allow_html=True)
+           
 
 
-              
-def graph(df_mainselected):
-    
-    request_by_report = df_mainselected.groupby(by=["Typeofmaintenance"]).size().reset_index(name='Count').sort_values(by="Count", ascending=True)
-    
-    fig_request_by_report = px.bar(request_by_report, x="Count", y="Typeofmaintenance",
-                                orientation="h", title="<b> Category of Works </b>",
-                                color_discrete_sequence=["#0083b8"]*len(request_by_report), template="plotly_white")
-
-    fig_request_by_report.update_layout(plot_bgcolor="rgba(0,255,0,0)", xaxis=dict(showgrid=True))
-    
-    st.plotly_chart(fig_request_by_report, use_container_width=True)
-    
-def graphy(df_mainselected):
-    request_by_type = df_mainselected.groupby(by=["Report"]).size().reset_index(name='Count').sort_values(by="Count", ascending=False)
-    
-    fig_request_by_type = go.Figure(data=[go.Table(
-        header=dict(values=["ITEM", "NO."],
-                    fill_color='rgba(0, 131, 184, 1)',
-                    align='left',
-                    font=dict(color='White', size=11),
-                    line_color='darkslategray',  # Border color
-                    line=dict(width=1)),  # Border width
-        cells=dict(values=[request_by_type["Report"], request_by_type["Count"]],
-                   fill_color=[
-                        ['rgba(0, 131, 184, 1)'],  # Blue for "Report" column
-                        ['white'] * len(request_by_type)  # White for "Count" column
-                    ],
-                   font_color=[
-                        ['white'],  # Blue for "Report" column
-                        ['black'] * len(request_by_type)  # White for "Count" column
-                    ],
-                   align='left',
-                   font=dict(color='black', size=11),
-                   line_color='darkslategray',  # Border color
-                   line=dict(width=1)))  # Border width
-    ])
-
-    fig_request_by_type.update_layout(title="<b> Type of items </b>", template="plotly_white")
-    
-    st.plotly_chart(fig_request_by_type, use_container_width=True)
- 
