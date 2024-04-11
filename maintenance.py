@@ -245,20 +245,13 @@ def app():
             st.write(df)
             
             
+        with card_container(key="Main1"):
             
-        # Authentication and connection to SharePoint
-        Main_df = load_data(username, password, sharepoint_url, list_name)
-        if Main_df is not None:
-            col1, col2, col3 = st.columns(3)
-            
-            with col1:
-                Region = st.selectbox("Region:", options=[""] + list(Main_df["Region2"].unique()))
-                st.markdown("<style>div[data-baseweb='card'] {background-color: blue !important;}</style>", unsafe_allow_html=True)
-            with col2:
-                Location = st.selectbox("Medical Centre:", options=[""] + list(Main_df["Clinic2"].unique()))
-            with col3:
-                Status = st.selectbox("Request Status:", options=[""] + list(Main_df["Maintenancestatus"].unique()))
-
+            Main_df = load_data(username, password, sharepoint_url, list_name)
+                  
+            Region = st.selectbox("Region:", options=[""] + list(Main_df["Region2"].unique()))
+            Location = st.selectbox("Medical Centre:", options=[""] + list(Main_df["Clinic2"].unique()))
+            Status = st.selectbox("Request Status:", options=[""] + list(Main_df["Maintenancestatus"].unique()))
             if Region == "" and Location == "" and Status == "":
                 df_mainselected = Main_df
             else:
@@ -286,6 +279,17 @@ def app():
             # Calculate average days pending
             Average_Days_pending = int(df_mainselected["Days_x0020_Pending"].mean())
             
+            if Main_df is not None:
+                cols = st.columns(4)
+                with cols[0]:
+                    ui.card(title="Total Request", content=Total_requests, key="Revcard1").render()
+                with cols[1]:
+                    ui.card(title="Closed Request", content=closed_requests_calc , key="Revcard2").render()
+                with cols[2]:
+                    ui.card(title="Pending Request", content=pending_requests_calc, key="Revcard3").render()
+                with cols[3]:
+                    ui.card(title="Average TAT:", content=numeric_days_pending, key="Revcard4").render()  
+                
             # Display Table
             with st.expander("View Table"):
                 st.dataframe(df_mainselected, use_container_width=True)
