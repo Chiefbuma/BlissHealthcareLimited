@@ -249,50 +249,50 @@ def app():
             
             Main_df = load_data(username, password, sharepoint_url, list_name)
                   
-            Region = st.selectbox("Region:", options=[""] + list(Main_df["Region2"].unique()))
-            Location = st.selectbox("Medical Centre:", options=[""] + list(Main_df["Clinic2"].unique()))
-            Status = st.selectbox("Request Status:", options=[""] + list(Main_df["Maintenancestatus"].unique()))
-            if Region == "" and Location == "" and Status == "":
-                df_mainselected = Main_df
-            else:
-                df_mainselected = Main_df.query("Clinic2 == @Location or Region2 == @Region or Maintenancestatus == @Status")
+            #Region = st.selectbox("Region:", options=[""] + list(Main_df["Region2"].unique()))
+            #Location = st.selectbox("Medical Centre:", options=[""] + list(Main_df["Clinic2"].unique()))
+            #Status = st.selectbox("Request Status:", options=[""] + list(Main_df["Maintenancestatus"].unique()))
+            #if Region == "" and Location == "" and Status == "":
+                #df_mainselected = Main_df
+            #else:
+                #df_mainselected = Main_df.query("Clinic2 == @Location or Region2 == @Region or Maintenancestatus == @Status")
 
-            Total_requests = int(df_mainselected.shape[0])  # Count all rows in the filtered DataFrame
+            Total_requests = int(Main_df.shape[0])  # Count all rows in the filtered DataFrame
 
             # Filter the DataFrame to include only rows where "Maintenancestatus" is "Pending"
-            pending_requests_calc = df_mainselected[df_mainselected["Maintenancestatus"] == "Pending"]
+            pending_requests_calc =  Main_df [Main_df ["Maintenancestatus"] == "Pending"]
 
             # Count the number of rows in the filtered DataFrame
             pending_request = int(pending_requests_calc.shape[0])
 
             # Filter the DataFrame to include only rows where "Maintenancestatus" is "Closed"
-            closed_requests_calc = df_mainselected[df_mainselected["Maintenancestatus"] == "Closed"]
+            closed_requests_calc =  Main_df [ Main_df ["Maintenancestatus"] == "Closed"]
 
             # Count the number of rows in the filtered DataFrame
             closed_request = int(closed_requests_calc.shape[0])
 
             # Filter out rows with non-numeric values in "Days_x0020_Pending" column
-            numeric_days_pending = df_mainselected["Days_x0020_Pending"].apply(pd.to_numeric, errors="coerce")
-            df_mainselected["Days_x0020_Pending"] = numeric_days_pending
-            df_mainselected.dropna(subset=["Days_x0020_Pending"], inplace=True)
+            numeric_days_pending = Main_df["Days_x0020_Pending"].apply(pd.to_numeric, errors="coerce")
+            Main_df["Days_x0020_Pending"] = numeric_days_pending
+            Main_df.dropna(subset=["Days_x0020_Pending"], inplace=True)
 
             # Calculate average days pending
-            Average_Days_pending = int(df_mainselected["Days_x0020_Pending"].mean())
+            Average_Days_pending = int(Main_df["Days_x0020_Pending"].mean())
             
             if Main_df is not None:
                 cols = st.columns(4)
                 with cols[0]:
                     ui.card(title="Total Request", content=Total_requests, key="Revcard10").render()
                 with cols[1]:
-                    ui.card(title="Closed Request", content=Total_requests , key="Revcard11").render()
+                    ui.card(title="Closed Request", content=closed_request , key="Revcard11").render()
                 with cols[2]:
-                    ui.card(title="Pending Request", content=Total_requests , key="Revcard12").render()
+                    ui.card(title="Pending Request", content=pending_request , key="Revcard12").render()
                 with cols[3]:
-                    ui.card(title="Average TAT:", content=Total_requests, key="Revcard13").render()  
+                    ui.card(title="Average TAT:", content=Average_Days_pending, key="Revcard13").render()  
                 
             # Display Table
             with st.expander("View Table"):
-                st.dataframe(df_mainselected, use_container_width=True)
+                st.dataframe(Main_df, use_container_width=True)
                 
            # Define the metrics
             metrics = [
