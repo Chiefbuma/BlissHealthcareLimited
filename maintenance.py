@@ -17,6 +17,7 @@ import supabase
 import streamlit_shadcn_ui as ui
 from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
+
 import main
 from postgrest import APIError
 
@@ -246,6 +247,10 @@ def app():
             
             
         with card_container(key="Main1"):
+            
+            choice = ui.select(options=["My Pendings", "Approved", "Rejected"])
+
+            st.markdown(f"Currrent value: {choice}")
             
             Main_df = load_data(username, password, sharepoint_url, list_name)
                   
