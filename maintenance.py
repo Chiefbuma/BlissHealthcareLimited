@@ -10,6 +10,7 @@ import plotly.express as px
 from IPython.display import HTML
 from office365.sharepoint.client_context import ClientContext
 from office365.runtime.auth.authentication_context import AuthenticationContext
+from office365.sharepoint.client_context import UserCredential
 import streamlit_option_menu as option_menu
 import plotly.graph_objects as go
 import supabase
@@ -156,59 +157,20 @@ def app():
         form_container.empty()  
         
         @st.cache_resource()
-        def load_data(email_user, password_user, sharepoint_url, list_name):
+        def load_data(username, password, sharepoint_url, list_name):
             try:
-                auth = AuthenticationContext(sharepoint_url)
-                auth.acquire_token_for_user(email_user, password_user)
-                ctx = ClientContext(sharepoint_url, auth)
+                user_credentials = UserCredential(username, password)
+                ctx = ClientContext(sharepoint_url).with_credentials(user_credentials)
                 web = ctx.web
                 ctx.load(web)
                 ctx.execute_query()
-                # Main form for updating or creating items
                 target_list = ctx.web.lists.get_by_title(list_name)
-
-                # Get items from SharePoint list
                 items = target_list.get_items()
                 ctx.load(items)
                 ctx.execute_query()
 
-                # Specify column names to import
-                selected_columns = ["Dateofreport",
-                                    "Typeofmaintenance",
-                                    "Details",
-                                    "Month",
-                                    "Approval",
-                                    "FacilityCoordinatorApproval",
-                                    "FacilitycoordinatorComments",
-                                    "Approvedammount",
-                                    "Receivedstatus",
-                                    "ReceivedAmmount",
-                                    "Maintenancestatus",
-                                    "ProjectsApproval",
-                                    "ProjectComments",
-                                    "AdminApproval",
-                                    "AdminComments",
-                                    "FinanceApproval",
-                                    "FinanceComment",
-                                    "FacilityApproval",
-                                    "Approver",
-                                    "Clinic2",
-                                    "Report",
-                                    "Region2",
-                                    "CentreManager2",
-                                    "Department",
-                                    "EmailId",
-                                    "Qty",
-                                    "FacilityQty",
-                                    "ProjectsQty",
-                                    "AdminQty",
-                                    "Laborcost",
-                                    "MainItem",
-                                    "Days_x0020_Pending",
-                                    "Created"
-                                    ]
+                selected_columns = ["Dateofreport", "Typeofmaintenance"]
 
-                # Convert selected columns to a DataFrame
                 data = []
                 for item in items:
                     item_data = {key: item.properties[key] for key in selected_columns}
@@ -219,20 +181,23 @@ def app():
                 st.error("Failed to load data from SharePoint. Please check your credentials and try again.")
                 st.error(f"Error details: {e}")
                 return None
-        
+
         sharepoint_url = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReports"
-        list_name_maintenance_report = "Credentials"
-        list_name_maintenance_tracker = "Maintenance Tracker"
+        list_name = "Maintenance Report"
+        username = "biosafety@blisshealthcare.co.ke"
+        password = "NaSi#2024"
 
-        
-        # Hardcoded email and password
-        email_user = "biosafety@blisshealthcare.co.ke"
-        password_user = "NaSi#2024"
-
+        # Load data from SharePoint
+        df = load_data(username, password, sharepoint_url, list_name)
+        if df is not None:
+            st.write("SharePoint Data:")
+            st.write(df)
+            
+            
+            
         # Authentication and connection to SharePoint
-        Main_df = load_data(email_user, password_user, sharepoint_url, list_name_maintenance_report)
-        Maintenance_tracker_df = load_data(email_user, password_user, sharepoint_url, list_name_maintenance_tracker)
-        if Main_df is not None and Maintenance_tracker_df is not None:
+        Main_df = load_data(username, password, sharepoint_url, list_name)
+        if Main_df is not None:
             col1, col2, col3 = st.columns(3)
             
             with col1:
