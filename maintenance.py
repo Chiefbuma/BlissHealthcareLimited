@@ -238,15 +238,12 @@ def app():
         list_name = "Maintenance Report"
         username = "biosafety@blisshealthcare.co.ke"
         password = "NaSi#2024"
-
-        # Load data from SharePoint
-        df = load_data(username, password, sharepoint_url, list_name)
        
         with card_container(key="Main1"):
-            
-            choice = ui.select(options=["My Pendings", "Approved", "Rejected"])
-            
+                        
             Main_df = load_data(username, password, sharepoint_url, list_name)
+            
+            ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
                   
             #Region = st.selectbox("Region:", options=[""] + list(Main_df["Region2"].unique()))
             #Location = st.selectbox("Medical Centre:", options=[""] + list(Main_df["Clinic2"].unique()))
