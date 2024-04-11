@@ -187,35 +187,33 @@ def app():
 
         # Load data from SharePoint
         items = load_data(username, password, sharepoint_url, list_name)
-        if items is not None:
-            st.write("SharePoint Data:")
-            st.write(items)
 
-            # Iterate over the items and display them in a table
-            for item in items:
-                st.write("---")
-                st.write(f"**ID:** {item.id}")
-                st.write(f"**Title:** {item.properties['Title']}")
-                st.write(f"**Description:** {item.properties['Description']}")
-                st.write(f"**Created:** {item.properties['Created']}")
-                st.write(f"**Modified:** {item.properties['Modified']}")
 
-                # Add an "Edit" button to update the item
-                if st.button("Edit"):
-                    # Create a form for editing the item
-                    title = st.text_input("Title", value=item.properties['Title'])
-                    description = st.text_area("Description", value=item.properties['Description'])
+        # Iterate over the items and display them in a table
+        for item in items:
+            st.write("---")
+            st.write(f"**ID:** {item.id}")
+            st.write(f"**Title:** {item.properties['Title']}")
+            st.write(f"**Description:** {item.properties['Description']}")
+            st.write(f"**Created:** {item.properties['Created']}")
+            st.write(f"**Modified:** {item.properties['Modified']}")
 
-                    # Button to update item
-                    if st.button("Update"):
-                        try:
-                            # Update the item's properties
-                            item.set_property('Title', title)
-                            item.set_property('Description', description)
+            # Add an "Edit" button to update the item
+            if st.button("Edit"):
+                # Create a form for editing the item
+                title = st.text_input("Title", value=item.properties['Title'])
+                description = st.text_area("Description", value=item.properties['Description'])
 
-                            # Save the changes
-                            item.update().execute_query()
+                # Button to update item
+                if st.button("Update"):
+                    try:
+                        # Update the item's properties
+                        item.set_property('Title', title)
+                        item.set_property('Description', description)
 
-                            st.success("Item updated successfully.")
-                        except Exception as e:
-                            st.error(f"Failed to update item: {e}")
+                        # Save the changes
+                        item.update().execute_query()
+
+                        st.success("Item updated successfully.")
+                    except Exception as e:
+                        st.error(f"Failed to update item: {e}")
