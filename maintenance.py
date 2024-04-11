@@ -226,8 +226,8 @@ def app():
 
         
         # Hardcoded email and password
-        email_user = "dentalreports@blisshealthcare.co.ke"
-        password_user = "bliss@2025"
+        email_user = "biosafety@blisshealthcare.co.ke"
+        password_user = "NaSi#2024"
 
         # Authentication and connection to SharePoint
         Main_df = load_data(email_user, password_user, sharepoint_url, list_name_maintenance_report)
