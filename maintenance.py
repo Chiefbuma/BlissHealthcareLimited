@@ -100,7 +100,7 @@ def app():
                 response = supabase.from_('users').select('*').execute()
                 data = response.data
                 return data
-
+ 
 
             if choice == "Login":
                 # Check if the user is logged in
@@ -226,8 +226,8 @@ def app():
 
         
         # Hardcoded email and password
-        email_user = "manintenance@blisshealthcare.co.ke"
-        password_user = "*@Murera2019"
+        email_user = "biosafety@blisshealthcare.co.ke"
+        password_user = "NaSi#2024"
 
         # Authentication and connection to SharePoint
         Main_df = load_data(email_user, password_user, sharepoint_url, list_name_maintenance_report)
