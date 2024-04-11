@@ -169,7 +169,41 @@ def app():
                 ctx.load(items)
                 ctx.execute_query()
 
-                selected_columns = ["Dateofreport", "Typeofmaintenance"]
+                selected_columns = ["Dateofreport",
+                                        "Typeofmaintenance",
+                                        "Details",
+                                        "Month",
+                                        "Approval",
+                                        "FacilityCoordinatorApproval",
+                                        "FacilitycoordinatorComments",
+                                        "Approvedammount",
+                                        "Receivedstatus",
+                                        "ReceivedAmmount",
+                                        "Maintenancestatus",
+                                        "ProjectsApproval",
+                                        "ProjectComments",
+                                        "AdminApproval",
+                                        "AdminComments",
+                                        "FinanceApproval",
+                                        "FinanceComment",
+                                        "FacilityApproval",
+                                        "Approver",
+                                        "Clinic2",
+                                        "Report",
+                                        "Region2",
+                                        "CentreManager2",
+                                        "Department",
+                                        "EmailId",
+                                        "Qty",
+                                        "FacilityQty",
+                                        "ProjectsQty",
+                                        "AdminQty",
+                                        "Laborcost",
+                                        "MainItem",
+                                        "Days_x0020_Pending",
+                                        "Created"
+                                        ]
+
 
                 data = []
                 for item in items:
