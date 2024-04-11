@@ -168,76 +168,6 @@ def app():
                 items = target_list.get_items()
                 ctx.load(items)
                 ctx.execute_query()
-                
-                
-                
-                # Streamlit gallery-like table for displaying SharePoint list items
-                st.write("# SharePoint List Items")
-
-                # Iterate over the items and display them in a table
-                for item in items:
-                    st.write("---")
-                    st.write(f"**ID:** {item.id}")
-                    st.write(f"**Title:** {item.properties['Title']}")
-                    st.write(f"**Description:** {item.properties['Description']}")
-                    st.write(f"**Created:** {item.properties['Created']}")
-                    st.write(f"**Modified:** {item.properties['Modified']}")
-
-                    # Add an "Edit" button to update the item
-                    if st.button("Edit"):
-                        # Create a form for editing the item
-                        title = st.text_input("Title", value=item.properties['Title'])
-                        description = st.text_area("Description", value=item.properties['Description'])
-
-                        # Button to update item
-                        if st.button("Update"):
-                            try:
-                                # Update the item's properties
-                                item.set_property('Title', title)
-                                item.set_property('Description', description)
-
-                                # Save the changes
-                                item.update().execute_query()
-
-                                st.success("Item updated successfully.")
-                            except Exception as e:
-                                st.error(f"Failed to update item: {e}")
-
-                selected_columns = ["Dateofreport",
-                                        "Typeofmaintenance",
-                                        "Details",
-                                        "Month",
-                                        "Approval",
-                                        "FacilityCoordinatorApproval",
-                                        "FacilitycoordinatorComments",
-                                        "Approvedammount",
-                                        "Receivedstatus",
-                                        "ReceivedAmmount",
-                                        "Maintenancestatus",
-                                        "ProjectsApproval",
-                                        "ProjectComments",
-                                        "AdminApproval",
-                                        "AdminComments",
-                                        "FinanceApproval",
-                                        "FinanceComment",
-                                        "FacilityApproval",
-                                        "Approver",
-                                        "Clinic2",
-                                        "Report",
-                                        "Region2",
-                                        "CentreManager2",
-                                        "Department",
-                                        "EmailId",
-                                        "Qty",
-                                        "FacilityQty",
-                                        "ProjectsQty",
-                                        "AdminQty",
-                                        "Laborcost",
-                                        "MainItem",
-                                        "Days_x0020_Pending",
-                                        "Created"
-                                        ]
-
 
                 data = []
                 for item in items:
@@ -255,4 +185,37 @@ def app():
         username = "biosafety@blisshealthcare.co.ke"
         password = "NaSi#2024"
 
-        
+        # Load data from SharePoint
+        items = load_data(username, password, sharepoint_url, list_name)
+        if items is not None:
+            st.write("SharePoint Data:")
+            st.write(items)
+
+            # Iterate over the items and display them in a table
+            for item in items:
+                st.write("---")
+                st.write(f"**ID:** {item.id}")
+                st.write(f"**Title:** {item.properties['Title']}")
+                st.write(f"**Description:** {item.properties['Description']}")
+                st.write(f"**Created:** {item.properties['Created']}")
+                st.write(f"**Modified:** {item.properties['Modified']}")
+
+                # Add an "Edit" button to update the item
+                if st.button("Edit"):
+                    # Create a form for editing the item
+                    title = st.text_input("Title", value=item.properties['Title'])
+                    description = st.text_area("Description", value=item.properties['Description'])
+
+                    # Button to update item
+                    if st.button("Update"):
+                        try:
+                            # Update the item's properties
+                            item.set_property('Title', title)
+                            item.set_property('Description', description)
+
+                            # Save the changes
+                            item.update().execute_query()
+
+                            st.success("Item updated successfully.")
+                        except Exception as e:
+                            st.error(f"Failed to update item: {e}")
