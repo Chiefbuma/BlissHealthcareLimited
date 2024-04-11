@@ -50,7 +50,7 @@ class MultiApp:
             region.app()  
         if app == "Summary Dashboard":
             support.app()  
-        if app == "Maintenance Dashboardd":
+        if app == "Maintenance Dashboard":
             maintenance.app()    
 
     run()            
