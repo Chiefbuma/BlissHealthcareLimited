@@ -221,7 +221,7 @@ def app():
                 return None
         
         sharepoint_url = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReports"
-        list_name_maintenance_report = "Maintenance Report"
+        list_name_maintenance_report = "Credentials"
         list_name_maintenance_tracker = "Maintenance Tracker"
 
         
