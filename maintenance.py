@@ -184,15 +184,49 @@ def app():
         st.write("# SharePoint List Items")
 
         # Iterate over the items and display them in a table
-        for item in items:
-            st.write("---")
-            st.write(f"**ID:** {item.id}")
-            st.write(f"**Title:** {item.properties['Title']}")
-            st.write(f"**Description:** {item.properties['Description']}")
-            st.write(f"**Created:** {item.properties['Created']}")
-            st.write(f"**Modified:** {item.properties['Modified']}")
+        selected_columns = [
+        "Dateofreport",
+        "Typeofmaintenance",
+        "Details",
+        "Month",
+        "Approval",
+        "FacilityCoordinatorApproval",
+        "FacilitycoordinatorComments",
+        "Approvedammount",
+        "Receivedstatus",
+        "ReceivedAmmount",
+        "Maintenancestatus",
+        "ProjectsApproval",
+        "ProjectComments",
+        "AdminApproval",
+        "AdminComments",
+        "FinanceApproval",
+        "FinanceComment",
+        "FacilityApproval",
+        "Approver",
+        "Clinic2",
+        "Report",
+        "Region2",
+        "CentreManager2",
+        "Department",
+        "EmailId",
+        "Qty",
+        "FacilityQty",
+        "ProjectsQty",
+        "AdminQty",
+        "Laborcost",
+        "MainItem",
+        "Days_x0020_Pending",
+        "Created"
+    ]
 
-            # Add an "Edit" button to update the item
+    # Iterate over the items and display them in a table
+    for item in items:
+        st.write("---")
+        st.write(f"**ID:** {item.id}")
+        for column in selected_columns:
+            st.write(f"**{column}:** {item.properties[column]}")
+            # Add an "Edit" button to update the item   
             if st.button("Edit"):
                 # Create a form for editing the item
                 title = st.text_input("Title", value=item.properties['Title'])
