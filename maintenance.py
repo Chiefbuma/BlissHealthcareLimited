@@ -286,9 +286,9 @@ def app():
                 with cols[1]:
                     ui.card(title="Closed Request", content=Total_requests , key="Revcard11").render()
                 with cols[2]:
-                    ui.card(title="Pending Request", content=pending_requests_calc, key="Revcard12").render()
+                    ui.card(title="Pending Request", content=Total_requests , key="Revcard12").render()
                 with cols[3]:
-                    ui.card(title="Average TAT:", content=numeric_days_pending, key="Revcard13").render()  
+                    ui.card(title="Average TAT:", content=Total_requests, key="Revcard13").render()  
                 
             # Display Table
             with st.expander("View Table"):
