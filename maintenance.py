@@ -100,7 +100,7 @@ def app():
                 response = supabase.from_('users').select('*').execute()
                 data = response.data
                 return data
- 
+
 
             if choice == "Login":
                 # Check if the user is logged in
