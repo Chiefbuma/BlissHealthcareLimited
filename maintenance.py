@@ -156,92 +156,221 @@ def app():
     if st.session_state.is_authenticated:        
         form_container.empty()  
         
+        @st.cache_resource()
+        def load_data(username, password, sharepoint_url, list_name):
+            try:
+                user_credentials = UserCredential(username, password)
+                ctx = ClientContext(sharepoint_url).with_credentials(user_credentials)
+                web = ctx.web
+                ctx.load(web)
+                ctx.execute_query()
+                target_list = ctx.web.lists.get_by_title(list_name)
+                items = target_list.get_items()
+                ctx.load(items)
+                ctx.execute_query()
+
+                selected_columns = ["Dateofreport",
+                                        "Typeofmaintenance",
+                                        "Details",
+                                        "Month",
+                                        "Approval",
+                                        "FacilityCoordinatorApproval",
+                                        "FacilitycoordinatorComments",
+                                        "Approvedammount",
+                                        "Receivedstatus",
+                                        "ReceivedAmmount",
+                                        "Maintenancestatus",
+                                        "ProjectsApproval",
+                                        "ProjectComments",
+                                        "AdminApproval",
+                                        "AdminComments",
+                                        "FinanceApproval",
+                                        "FinanceComment",
+                                        "FacilityApproval",
+                                        "Approver",
+                                        "Clinic2",
+                                        "Report",
+                                        "Region2",
+                                        "CentreManager2",
+                                        "Department",
+                                        "EmailId",
+                                        "Qty",
+                                        "FacilityQty",
+                                        "ProjectsQty",
+                                        "AdminQty",
+                                        "Laborcost",
+                                        "MainItem",
+                                        "Days_x0020_Pending",
+                                        "Created"
+                                        ]
+
+
+                data = []
+                for item in items:
+                    item_data = {key: item.properties[key] for key in item.properties.keys()}
+                    data.append(item_data)
+                return pd.DataFrame(data)
+
+            except Exception as e:
+                st.error("Failed to load data from SharePoint. Please check your credentials and try again.")
+                st.error(f"Error details: {e}")
+                return None
+
         sharepoint_url = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReports"
-
-        # SharePoint list name
         list_name = "Maintenance Report"
-
-        # Your SharePoint username and password
         username = "biosafety@blisshealthcare.co.ke"
         password = "NaSi#2024"
 
-        # Initialize user credentials
-        user_credentials = UserCredential(username, password)
+        # Load data from SharePoint
+        df = load_data(username, password, sharepoint_url, list_name)
+        if df is not None:
+            st.write("SharePoint Data:")
+            st.write(df)
+            
+            
+            
+        # Authentication and connection to SharePoint
+        Main_df = load_data(username, password, sharepoint_url, list_name)
+        if Main_df is not None:
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                Region = st.selectbox("Region:", options=[""] + list(Main_df["Region2"].unique()))
+                st.markdown("<style>div[data-baseweb='card'] {background-color: blue !important;}</style>", unsafe_allow_html=True)
+            with col2:
+                Location = st.selectbox("Medical Centre:", options=[""] + list(Main_df["Clinic2"].unique()))
+            with col3:
+                Status = st.selectbox("Request Status:", options=[""] + list(Main_df["Maintenancestatus"].unique()))
 
-        # Create a client context using the credentials
-        ctx = ClientContext(sharepoint_url).with_credentials(user_credentials)
+            if Region == "" and Location == "" and Status == "":
+                df_mainselected = Main_df
+            else:
+                df_mainselected = Main_df.query("Clinic2 == @Location or Region2 == @Region or Maintenancestatus == @Status")
 
-        # Get the target list
-        target_list = ctx.web.lists.get_by_title(list_name)
+            Total_requests = int(df_mainselected.shape[0])  # Count all rows in the filtered DataFrame
 
-        # Get all items from the list
-        items = target_list.get_items()
-        
-        ctx.load(items)
-        ctx.execute_query()
+            # Filter the DataFrame to include only rows where "Maintenancestatus" is "Pending"
+            pending_requests_calc = df_mainselected[df_mainselected["Maintenancestatus"] == "Pending"]
 
-        # Streamlit gallery-like table for displaying SharePoint list items
-        st.write("# SharePoint List Items")
+            # Count the number of rows in the filtered DataFrame
+            pending_request = int(pending_requests_calc.shape[0])
 
-        # Iterate over the items and display them in a table
-        selected_columns = [
-        "Dateofreport",
-        "Typeofmaintenance",
-        "Details",
-        "Month",
-        "Approval",
-        "FacilityCoordinatorApproval",
-        "FacilitycoordinatorComments",
-        "Approvedammount",
-        "Receivedstatus",
-        "ReceivedAmmount",
-        "Maintenancestatus",
-        "ProjectsApproval",
-        "ProjectComments",
-        "AdminApproval",
-        "AdminComments",
-        "FinanceApproval",
-        "FinanceComment",
-        "FacilityApproval",
-        "Approver",
-        "Clinic2",
-        "Report",
-        "Region2",
-        "CentreManager2",
-        "Department",
-        "EmailId",
-        "Qty",
-        "FacilityQty",
-        "ProjectsQty",
-        "AdminQty",
-        "Laborcost",
-        "MainItem",
-        "Days_x0020_Pending",
-        "Created"
-    ]
+            # Filter the DataFrame to include only rows where "Maintenancestatus" is "Closed"
+            closed_requests_calc = df_mainselected[df_mainselected["Maintenancestatus"] == "Closed"]
 
-    # Iterate over the items and display them in a table
-    for item in items:
-        st.write("---")
-        st.write(f"**ID:** {item.id}")
-        for column in selected_columns:
-            st.write(f"**{column}:** {item.properties[column]}")
-            # Add an "Edit" button to update the item   
-            if st.button("Edit"):
-                # Create a form for editing the item
-                title = st.text_input("Title", value=item.properties['Title'])
-               
+            # Count the number of rows in the filtered DataFrame
+            closed_request = int(closed_requests_calc.shape[0])
 
-                # Button to update item
-                if st.button("Update"):
-                    try:
-                        # Update the item's properties
-                        item.set_property('Title', title)
-                        item.set_property('Description', description)
+            # Filter out rows with non-numeric values in "Days_x0020_Pending" column
+            numeric_days_pending = df_mainselected["Days_x0020_Pending"].apply(pd.to_numeric, errors="coerce")
+            df_mainselected["Days_x0020_Pending"] = numeric_days_pending
+            df_mainselected.dropna(subset=["Days_x0020_Pending"], inplace=True)
 
-                        # Save the changes
-                        item.update().execute_query()
+            # Calculate average days pending
+            Average_Days_pending = int(df_mainselected["Days_x0020_Pending"].mean())
+            
+            # Display Table
+            with st.expander("View Table"):
+                st.dataframe(df_mainselected, use_container_width=True)
+                
+           # Define the metrics
+            metrics = [
+                {"label": "Total", "value": Total_requests},
+                {"label": "Closed", "value": closed_request},
+                {"label": "Pending", "value": pending_request},
+                {"label": "TAT(days)", "value": Average_Days_pending}
+            ]
 
-                        st.success("Item updated successfully.")
-                    except Exception as e:
-                        st.error(f"Failed to update item: {e}")
+            # Create the data cards
+            fig_data_cards = go.Figure()
+
+            for i, metric in enumerate(metrics):
+                fig_data_cards.add_trace(go.Indicator(
+                    mode="number",
+                    value=metric["value"],
+                    number={'font': {'size': 25, 'color': 'white'}},
+                    domain={'row': i, 'column': 0},  # Set the row and column to stack vertically
+                    title={'text': metric["label"],'font': {'size': 20,'color': 'white'}},
+                    align="center"
+                ))
+
+            # Update layout
+            fig_data_cards.update_layout(
+                grid={'rows': len(metrics), 'columns': 1, 'pattern': "independent"},
+                template="plotly_white",
+                height=100*len(metrics),  # Adjust the height based on the number of metrics
+                paper_bgcolor='rgba(0, 131, 184, 1)',  # Set background color to transparent
+                plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
+                uniformtext=dict(minsize=40, mode='hide'),
+                margin=dict(l=20, r=20, t=50, b=5)
+                
+                )
+
+            st.markdown(
+                """
+                <style>
+                .st-cd {
+                    border: 1px solid #e6e9ef;
+                    border-radius: 5px;
+                    padding: 10px;
+                    margin-bottom: 10px;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+)
+            with st.container():
+                c1, c2, c3 = st.columns([0.5, 3, 1.5])
+                # Add content to the columns
+                with c1:
+                    # Display the figure
+                    st.plotly_chart(fig_data_cards, use_container_width=True) 
+                with c2:
+                    graph(df_mainselected)  # Call the graph function with df_mainselecte
+                with c3:
+                    graphy(df_mainselected)  # Call the graph function with df_mainselected
+                    st.markdown("""<div class='.st-cd'>•</div>""", unsafe_allow_html=True)
+
+
+              
+def graph(df_mainselected):
+    
+    request_by_report = df_mainselected.groupby(by=["Typeofmaintenance"]).size().reset_index(name='Count').sort_values(by="Count", ascending=True)
+    
+    fig_request_by_report = px.bar(request_by_report, x="Count", y="Typeofmaintenance",
+                                orientation="h", title="<b> Category of Works </b>",
+                                color_discrete_sequence=["#0083b8"]*len(request_by_report), template="plotly_white")
+
+    fig_request_by_report.update_layout(plot_bgcolor="rgba(0,255,0,0)", xaxis=dict(showgrid=True))
+    
+    st.plotly_chart(fig_request_by_report, use_container_width=True)
+    
+def graphy(df_mainselected):
+    request_by_type = df_mainselected.groupby(by=["Report"]).size().reset_index(name='Count').sort_values(by="Count", ascending=False)
+    
+    fig_request_by_type = go.Figure(data=[go.Table(
+        header=dict(values=["ITEM", "NO."],
+                    fill_color='rgba(0, 131, 184, 1)',
+                    align='left',
+                    font=dict(color='White', size=11),
+                    line_color='darkslategray',  # Border color
+                    line=dict(width=1)),  # Border width
+        cells=dict(values=[request_by_type["Report"], request_by_type["Count"]],
+                   fill_color=[
+                        ['rgba(0, 131, 184, 1)'],  # Blue for "Report" column
+                        ['white'] * len(request_by_type)  # White for "Count" column
+                    ],
+                   font_color=[
+                        ['white'],  # Blue for "Report" column
+                        ['black'] * len(request_by_type)  # White for "Count" column
+                    ],
+                   align='left',
+                   font=dict(color='black', size=11),
+                   line_color='darkslategray',  # Border color
+                   line=dict(width=1)))  # Border width
+    ])
+
+    fig_request_by_type.update_layout(title="<b> Type of items </b>", template="plotly_white")
+    
+    st.plotly_chart(fig_request_by_type, use_container_width=True)
+ 
