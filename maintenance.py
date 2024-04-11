@@ -201,13 +201,14 @@ def app():
                                         "Laborcost",
                                         "MainItem",
                                         "Days_x0020_Pending",
-                                        "Created"
+                                        "Created",
+                                        "LinkEdit"
                                         ]
 
 
                 data = []
                 for item in items:
-                    item_data = {key: item.properties[key] for key in item.properties.keys()}
+                    item_data = {key: item.properties[key] for key in selected_columns}
                     data.append(item_data)
                 return pd.DataFrame(data)
 
