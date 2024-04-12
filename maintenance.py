@@ -28,13 +28,11 @@ def app():
 
 
     if not st.session_state.is_authenticated :
-
-        col1, col2 = st.columns([2,1])
-        with col1:
-            menu = ["Login", "Sign up"]
-            choice = st.sidebar.selectbox("", menu,key="choice_medical")
-
             form_container = st.empty()
+            col1, col2 = st.columns([2,1])
+            with col1:
+               menu = ["Login", "Sign up"]
+            choice = st.sidebar.selectbox("", menu,key="choice_medical")
             with form_container:
                 @st.cache_resource
                 def init_connection():
@@ -128,8 +126,12 @@ def app():
                             st.success("You have created a new account")
                             st.session_state.is_authenticated=True
                             st.session_state.logged_in= True
-                            form_container.empty()
+                           
 
+    
+    else:
+         form_container.empty()
+         
     if st.session_state.is_authenticated:
         form_container.empty()
 
