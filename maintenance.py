@@ -275,23 +275,12 @@ def app():
             # Calculate average days pending
             Average_Days_pending = int(Main_df["Days_x0020_Pending"].mean())
             
-            # Define custom CSS
-            custom_css = """
-            <style>
-            .metricCard {
-                padding: 10px;
-                font-size: 14px;
-            }
-            </style>
-            """
             
-                        # Apply custom CSS
-            st.markdown(custom_css, unsafe_allow_html=True)
 
             if Main_df is not None:
                 cols = st.columns(4)
                 with cols[0]:
-                    ui.card(title="Total Request", content=Total_requests, key="Revcard10", className="metricCard").render()
+                    ui.card(title="Total Request", content=Total_requests, key="Revcard10", style={"height": "150px"}).render()
                 with cols[1]:
                     ui.card(title="Closed Request", content=closed_request , key="Revcard11").render()
                 with cols[2]:
