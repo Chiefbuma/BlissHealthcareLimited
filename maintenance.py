@@ -101,7 +101,7 @@ def app():
 
                             result, location, region = login_user(staffnumber, password)
                             if result:
-                                maintenance.app()
+                                maintenance()
                                 st.success("Logged In successfully")
                                 st.write(f"Location: {location}, Region: {region}")
 
