@@ -101,10 +101,10 @@ def app():
 
                             result, location, region = login_user(staffnumber, password)
                             if result:
-                                maintenance()
+                               
                                 st.success("Logged In successfully")
                                 st.write(f"Location: {location}, Region: {region}")
-
+                                app()
                                 st.session_state.logged_in= True
                                 st.session_state.is_authenticated=True
                                 st.session_state.staffnumber = staffnumber
@@ -127,13 +127,13 @@ def app():
                             st.success("You have created a new account")
                             st.session_state.is_authenticated=True
                             st.session_state.logged_in= True
-                            maintenance.app()
+                            app()
                            
     else:
          form_container.empty()
          
          
-def maintenance():        
+def app():        
     if st.session_state.is_authenticated:
         
         @st.cache_resource()
