@@ -101,6 +101,7 @@ def app():
 
                             result, location, region = login_user(staffnumber, password)
                             if result:
+                                maintenance.app()
                                 st.success("Logged In successfully")
                                 st.write(f"Location: {location}, Region: {region}")
 
@@ -126,170 +127,170 @@ def app():
                             st.success("You have created a new account")
                             st.session_state.is_authenticated=True
                             st.session_state.logged_in= True
+                            maintenance.app()
                            
-
-    
     else:
          form_container.empty()
          
-if st.session_state.is_authenticated:
-    
+         
+def maintenance():        
+    if st.session_state.is_authenticated:
+        
+        @st.cache_resource()
+        def load_data(username, password, sharepoint_url, list_name):
+            try:
+                user_credentials = UserCredential(username, password)
+                ctx = ClientContext(sharepoint_url).with_credentials(user_credentials)
+                web = ctx.web
+                ctx.load(web)
+                ctx.execute_query()
+                target_list = ctx.web.lists.get_by_title(list_name)
+                items = target_list.get_items()
+                ctx.load(items)
+                ctx.execute_query()
 
-    @st.cache_resource()
-    def load_data(username, password, sharepoint_url, list_name):
-        try:
-            user_credentials = UserCredential(username, password)
-            ctx = ClientContext(sharepoint_url).with_credentials(user_credentials)
-            web = ctx.web
-            ctx.load(web)
-            ctx.execute_query()
-            target_list = ctx.web.lists.get_by_title(list_name)
-            items = target_list.get_items()
-            ctx.load(items)
-            ctx.execute_query()
-
-            selected_columns= [
-                "ID",
-                "Title",
-                "AuthorId",
-                "Dateofreport",
-                "DateNumber",
-                "Typeofmaintenance",
-                "Details",
-                "Month",
-                "FacilitycoordinatorComments",
-                "Approvedammount",
-                "Receivedstatus",
-                "ReceivedAmmount",
-                "Maintenancestatus",
-                "ProjectsApproval",
-                "ProjectComments",
-                "AdminApproval",
-                "AdminComments",
-                "FinanceApproval",
-                "FinanceComment",
-                "FacilityApproval",
-                "Approver",
-                "LinkEdit",
-                "AmmountontheQuotation",
-                "Clinic2",
-                "Region2",
-                "CentreManager2",
-                "Department",
-                "RITApproval",
-                "RITComment",
-                "BiomedicalHeadApproval",
-                "BiomedicalHeadComments",
-                "MarketingManagerApproval",
-                "MarketingManagerComments",
-                "Phone",
-                "Days_x0020_Pending",
-                "Report",
-                "Qty",
-                "FacilityQty",
-                "ProjectsQty",
-                "AdminQty",
-                "Laborcost",
-                "MainItem",
-                "TimeLine",
-                "RITlabour",
-                "FacilityLabor",
-                "ProjectLabor",
-                "Adminlabor",
-                "Disbursement"
-            ]
-
-            data = []
-            for item in items:
-                item_data = {key: item.properties[key] for key in selected_columns}
-                data.append(item_data)
-            return pd.DataFrame(data)
-
-        except Exception as e:
-            st.error("Failed to load data from SharePoint. Please check your credentials and try again.")
-            st.error(f"Error details: {e}")
-            return None
-
-    sharepoint_url = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReports"
-    list_name = "Maintenance Report"
-    username = "biosafety@blisshealthcare.co.ke"
-    password = "NaSi#2024"
-
-    Main_df = load_data(username, password, sharepoint_url, list_name)
-
-    Total_requests = int(Main_df.shape[0])
-
-    pending_requests_calc =  Main_df [Main_df ["Maintenancestatus"] == "Pending"]
-    pending_request = int(pending_requests_calc.shape[0])
-
-    closed_requests_calc =  Main_df [ Main_df ["Maintenancestatus"] == "Closed"]
-    closed_request = int(closed_requests_calc.shape[0])
-
-    numeric_days_pending = Main_df["Days_x0020_Pending"].apply(pd.to_numeric, errors="coerce")
-    Main_df["Days_x0020_Pending"] = numeric_days_pending
-    Main_df.dropna(subset=["Days_x0020_Pending"], inplace=True)
-
-    Average_Days_pending = int(Main_df["Days_x0020_Pending"].mean())
-
-    if st.session_state.is_authenticated or st.session_state.tab_clicked:
-        st.session_state.tab_clicked=True
-        st.session_state.is_authenticated=False
-        with card_container(key="Main1"):
-            st.session_state.tab_clicked=True
-            ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
-            if Main_df is not None:
-                cols = st.columns(4)
-                with cols[0]:
-                    ui.card(title="Total Request", content=Total_requests, key="Revcard10").render()
-                with cols[1]:
-                    ui.card(title="Closed Request", content=closed_request , key="Revcard11").render()
-                with cols[2]:
-                    ui.card(title="Pending Request", content=pending_request , key="Revcard12").render()
-                with cols[3]:
-                    ui.card(title="Average TAT:", content=Average_Days_pending, key="Revcard13").render()
-
-            with st.expander("View Table"):
-                st.dataframe(Main_df, use_container_width=True)
-
-                metrics = [
-                    {"label": "Total", "value": Total_requests},
-                    {"label": "Closed", "value": closed_request},
-                    {"label": "Pending", "value": pending_request},
-                    {"label": "TAT(days)", "value": Average_Days_pending}
+                selected_columns= [
+                    "ID",
+                    "Title",
+                    "AuthorId",
+                    "Dateofreport",
+                    "DateNumber",
+                    "Typeofmaintenance",
+                    "Details",
+                    "Month",
+                    "FacilitycoordinatorComments",
+                    "Approvedammount",
+                    "Receivedstatus",
+                    "ReceivedAmmount",
+                    "Maintenancestatus",
+                    "ProjectsApproval",
+                    "ProjectComments",
+                    "AdminApproval",
+                    "AdminComments",
+                    "FinanceApproval",
+                    "FinanceComment",
+                    "FacilityApproval",
+                    "Approver",
+                    "LinkEdit",
+                    "AmmountontheQuotation",
+                    "Clinic2",
+                    "Region2",
+                    "CentreManager2",
+                    "Department",
+                    "RITApproval",
+                    "RITComment",
+                    "BiomedicalHeadApproval",
+                    "BiomedicalHeadComments",
+                    "MarketingManagerApproval",
+                    "MarketingManagerComments",
+                    "Phone",
+                    "Days_x0020_Pending",
+                    "Report",
+                    "Qty",
+                    "FacilityQty",
+                    "ProjectsQty",
+                    "AdminQty",
+                    "Laborcost",
+                    "MainItem",
+                    "TimeLine",
+                    "RITlabour",
+                    "FacilityLabor",
+                    "ProjectLabor",
+                    "Adminlabor",
+                    "Disbursement"
                 ]
 
-                fig_data_cards = go.Figure()
+                data = []
+                for item in items:
+                    item_data = {key: item.properties[key] for key in selected_columns}
+                    data.append(item_data)
+                return pd.DataFrame(data)
 
-                for i, metric in enumerate(metrics):
-                    fig_data_cards.add_trace(go.Indicator(
-                        mode="number",
-                        value=metric["value"],
-                        number={'font': {'size': 25, 'color': 'white'}},
-                        domain={'row': i, 'column': 0},
-                        title={'text': metric["label"],'font': {'size': 20,'color': 'white'}},
-                        align="center"
-                    ))
+            except Exception as e:
+                st.error("Failed to load data from SharePoint. Please check your credentials and try again.")
+                st.error(f"Error details: {e}")
+                return None
 
-                fig_data_cards.update_layout(
-                    grid={'rows': len(metrics), 'columns': 1, 'pattern': "independent"},
-                    template="plotly_white",
-                    height=100*len(metrics),
-                    paper_bgcolor='rgba(0, 131, 184, 1)',
-                    plot_bgcolor='rgba(0, 137, 184, 1)',
-                    uniformtext=dict(minsize=40, mode='hide'),
-                    margin=dict(l=20, r=20, t=50, b=5)
-                )
+        sharepoint_url = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReports"
+        list_name = "Maintenance Report"
+        username = "biosafety@blisshealthcare.co.ke"
+        password = "NaSi#2024"
 
-                st.markdown(
-                    """
-                    <style>
-                    .st-cd {
-                        border: 1px solid #e6e9ef;
-                        border-radius: 5px;
-                        padding: 10px;
-                        margin-bottom: 10px;
-                    }
-                    </style>
-                    """,
-                    unsafe_allow_html=True
-                )
+        Main_df = load_data(username, password, sharepoint_url, list_name)
+
+        Total_requests = int(Main_df.shape[0])
+
+        pending_requests_calc =  Main_df [Main_df ["Maintenancestatus"] == "Pending"]
+        pending_request = int(pending_requests_calc.shape[0])
+
+        closed_requests_calc =  Main_df [ Main_df ["Maintenancestatus"] == "Closed"]
+        closed_request = int(closed_requests_calc.shape[0])
+
+        numeric_days_pending = Main_df["Days_x0020_Pending"].apply(pd.to_numeric, errors="coerce")
+        Main_df["Days_x0020_Pending"] = numeric_days_pending
+        Main_df.dropna(subset=["Days_x0020_Pending"], inplace=True)
+
+        Average_Days_pending = int(Main_df["Days_x0020_Pending"].mean())
+
+        if st.session_state.is_authenticated or st.session_state.tab_clicked:
+            st.session_state.tab_clicked=True
+            st.session_state.is_authenticated=False
+            with card_container(key="Main1"):
+                st.session_state.tab_clicked=True
+                ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
+                if Main_df is not None:
+                    cols = st.columns(4)
+                    with cols[0]:
+                        ui.card(title="Total Request", content=Total_requests, key="Revcard10").render()
+                    with cols[1]:
+                        ui.card(title="Closed Request", content=closed_request , key="Revcard11").render()
+                    with cols[2]:
+                        ui.card(title="Pending Request", content=pending_request , key="Revcard12").render()
+                    with cols[3]:
+                        ui.card(title="Average TAT:", content=Average_Days_pending, key="Revcard13").render()
+
+                with st.expander("View Table"):
+                    st.dataframe(Main_df, use_container_width=True)
+
+                    metrics = [
+                        {"label": "Total", "value": Total_requests},
+                        {"label": "Closed", "value": closed_request},
+                        {"label": "Pending", "value": pending_request},
+                        {"label": "TAT(days)", "value": Average_Days_pending}
+                    ]
+
+                    fig_data_cards = go.Figure()
+
+                    for i, metric in enumerate(metrics):
+                        fig_data_cards.add_trace(go.Indicator(
+                            mode="number",
+                            value=metric["value"],
+                            number={'font': {'size': 25, 'color': 'white'}},
+                            domain={'row': i, 'column': 0},
+                            title={'text': metric["label"],'font': {'size': 20,'color': 'white'}},
+                            align="center"
+                        ))
+
+                    fig_data_cards.update_layout(
+                        grid={'rows': len(metrics), 'columns': 1, 'pattern': "independent"},
+                        template="plotly_white",
+                        height=100*len(metrics),
+                        paper_bgcolor='rgba(0, 131, 184, 1)',
+                        plot_bgcolor='rgba(0, 137, 184, 1)',
+                        uniformtext=dict(minsize=40, mode='hide'),
+                        margin=dict(l=20, r=20, t=50, b=5)
+                    )
+
+                    st.markdown(
+                        """
+                        <style>
+                        .st-cd {
+                            border: 1px solid #e6e9ef;
+                            border-radius: 5px;
+                            padding: 10px;
+                            margin-bottom: 10px;
+                        }
+                        </style>
+                        """,
+                        unsafe_allow_html=True
+                    )
