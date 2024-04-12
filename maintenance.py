@@ -234,7 +234,7 @@ def app():
 
         if st.session_state.is_authenticated or st.session_state.tab_clicked:
             st.session_state.tab_clicked=True
-            st.session_state.is_authenticated=False
+            st.session_state.is_authenticated=True
             with card_container(key="Main1"):
                 st.session_state.tab_clicked=True
                 ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
