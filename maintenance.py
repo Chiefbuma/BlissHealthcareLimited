@@ -243,15 +243,17 @@ def app():
                         
             Main_df = load_data(username, password, sharepoint_url, list_name)
             
-            if 'is_authenticated' not in st.session_state:
-                st.session_state.is_authenticated = True
-                st.session_state.logged_in= True
                 # Initialize session state if it doesn't exist
             
-            if ui.tabs or st.session_state.is_authenticated:
-                st.session_state.is_authenticated=True
+            if 'is_authenticated' not in st.session_state:
+               st.session_state.is_authenticated = False
+
+            if st.session_state.is_authenticated or st.session_state.tab_clicked:
+                st.session_state.is_authenticated = True
+                st.session_state.tab_clicked = False
                 ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
-                    
+            else:
+                st.session_state.is_authenticated = False   
                 #Region = st.selectbox("Region:", options=[""] + list(Main_df["Region2"].unique()))
                 #Location = st.selectbox("Medical Centre:", options=[""] + list(Main_df["Clinic2"].unique()))
                 #Status = st.selectbox("Request Status:", options=[""] + list(Main_df["Maintenancestatus"].unique()))
