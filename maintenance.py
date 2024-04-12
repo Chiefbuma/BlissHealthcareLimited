@@ -288,6 +288,7 @@ def app():
             st.session_state.tab_clicked=True
             st.session_state.is_authenticated=False
             with card_container(key="Main1"):
+                st.session_state.tab_clicked=True
                 ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
                 if Main_df is not None:
                     cols = st.columns(4)
