@@ -249,44 +249,44 @@ def app():
         username = "biosafety@blisshealthcare.co.ke"
         password = "NaSi#2024"
        
-        with card_container(key="Main1"):
+     
                         
-            Main_df = load_data(username, password, sharepoint_url, list_name)
-            
-            # Initialize session state if it doesn't exist
+        Main_df = load_data(username, password, sharepoint_url, list_name)
         
+        # Initialize session state if it doesn't exist
+    
+    
+        #Region = st.selectbox("Region:", options=[""] + list(Main_df["Region2"].unique()))
+        #Location = st.selectbox("Medical Centre:", options=[""] + list(Main_df["Clinic2"].unique()))
+        #Status = st.selectbox("Request Status:", options=[""] + list(Main_df["Maintenancestatus"].unique()))
+        #if Region == "" and Location == "" and Status == "":
+            #df_mainselected = Main_df
+        #else:
+            #df_mainselected = Main_df.query("Clinic2 == @Location or Region2 == @Region or Maintenancestatus == @Status")
+
+        Total_requests = int(Main_df.shape[0])  # Count all rows in the filtered DataFrame
+
+        # Filter the DataFrame to include only rows where "Maintenancestatus" is "Pending"
+        pending_requests_calc =  Main_df [Main_df ["Maintenancestatus"] == "Pending"]
+
+        # Count the number of rows in the filtered DataFrame
+        pending_request = int(pending_requests_calc.shape[0])
+
+        # Filter the DataFrame to include only rows where "Maintenancestatus" is "Closed"
+        closed_requests_calc =  Main_df [ Main_df ["Maintenancestatus"] == "Closed"]
+
+        # Count the number of rows in the filtered DataFrame
+        closed_request = int(closed_requests_calc.shape[0])
+
+        # Filter out rows with non-numeric values in "Days_x0020_Pending" column
+        numeric_days_pending = Main_df["Days_x0020_Pending"].apply(pd.to_numeric, errors="coerce")
+        Main_df["Days_x0020_Pending"] = numeric_days_pending
+        Main_df.dropna(subset=["Days_x0020_Pending"], inplace=True)
+
+        # Calculate average days pending
+        Average_Days_pending = int(Main_df["Days_x0020_Pending"].mean())
         
-            #Region = st.selectbox("Region:", options=[""] + list(Main_df["Region2"].unique()))
-            #Location = st.selectbox("Medical Centre:", options=[""] + list(Main_df["Clinic2"].unique()))
-            #Status = st.selectbox("Request Status:", options=[""] + list(Main_df["Maintenancestatus"].unique()))
-            #if Region == "" and Location == "" and Status == "":
-                #df_mainselected = Main_df
-            #else:
-                #df_mainselected = Main_df.query("Clinic2 == @Location or Region2 == @Region or Maintenancestatus == @Status")
-
-            Total_requests = int(Main_df.shape[0])  # Count all rows in the filtered DataFrame
-
-            # Filter the DataFrame to include only rows where "Maintenancestatus" is "Pending"
-            pending_requests_calc =  Main_df [Main_df ["Maintenancestatus"] == "Pending"]
-
-            # Count the number of rows in the filtered DataFrame
-            pending_request = int(pending_requests_calc.shape[0])
-
-            # Filter the DataFrame to include only rows where "Maintenancestatus" is "Closed"
-            closed_requests_calc =  Main_df [ Main_df ["Maintenancestatus"] == "Closed"]
-
-            # Count the number of rows in the filtered DataFrame
-            closed_request = int(closed_requests_calc.shape[0])
-
-            # Filter out rows with non-numeric values in "Days_x0020_Pending" column
-            numeric_days_pending = Main_df["Days_x0020_Pending"].apply(pd.to_numeric, errors="coerce")
-            Main_df["Days_x0020_Pending"] = numeric_days_pending
-            Main_df.dropna(subset=["Days_x0020_Pending"], inplace=True)
-
-            # Calculate average days pending
-            Average_Days_pending = int(Main_df["Days_x0020_Pending"].mean())
-            
-            
+        with card_container(key="Main1"):
 
             if Main_df is not None:
                 cols = st.columns(4)
@@ -303,52 +303,52 @@ def app():
             with st.expander("View Table"):
                 st.dataframe(Main_df, use_container_width=True)
                 
-        # Define the metrics
-            metrics = [
-                {"label": "Total", "value": Total_requests},
-                {"label": "Closed", "value": closed_request},
-                {"label": "Pending", "value": pending_request},
-                {"label": "TAT(days)", "value": Average_Days_pending}
-            ]
+            # Define the metrics
+                metrics = [
+                    {"label": "Total", "value": Total_requests},
+                    {"label": "Closed", "value": closed_request},
+                    {"label": "Pending", "value": pending_request},
+                    {"label": "TAT(days)", "value": Average_Days_pending}
+                ]
 
-            # Create the data cards
-            fig_data_cards = go.Figure()
+                # Create the data cards
+                fig_data_cards = go.Figure()
 
-            for i, metric in enumerate(metrics):
-                fig_data_cards.add_trace(go.Indicator(
-                    mode="number",
-                    value=metric["value"],
-                    number={'font': {'size': 25, 'color': 'white'}},
-                    domain={'row': i, 'column': 0},  # Set the row and column to stack vertically
-                    title={'text': metric["label"],'font': {'size': 20,'color': 'white'}},
-                    align="center"
-                ))
+                for i, metric in enumerate(metrics):
+                    fig_data_cards.add_trace(go.Indicator(
+                        mode="number",
+                        value=metric["value"],
+                        number={'font': {'size': 25, 'color': 'white'}},
+                        domain={'row': i, 'column': 0},  # Set the row and column to stack vertically
+                        title={'text': metric["label"],'font': {'size': 20,'color': 'white'}},
+                        align="center"
+                    ))
 
-            # Update layout
-            fig_data_cards.update_layout(
-                grid={'rows': len(metrics), 'columns': 1, 'pattern': "independent"},
-                template="plotly_white",
-                height=100*len(metrics),  # Adjust the height based on the number of metrics
-                paper_bgcolor='rgba(0, 131, 184, 1)',  # Set background color to transparent
-                plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
-                uniformtext=dict(minsize=40, mode='hide'),
-                margin=dict(l=20, r=20, t=50, b=5)
-                
-                )
+                # Update layout
+                fig_data_cards.update_layout(
+                    grid={'rows': len(metrics), 'columns': 1, 'pattern': "independent"},
+                    template="plotly_white",
+                    height=100*len(metrics),  # Adjust the height based on the number of metrics
+                    paper_bgcolor='rgba(0, 131, 184, 1)',  # Set background color to transparent
+                    plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
+                    uniformtext=dict(minsize=40, mode='hide'),
+                    margin=dict(l=20, r=20, t=50, b=5)
+                    
+                    )
 
-            st.markdown(
-                """
-                <style>
-                .st-cd {
-                    border: 1px solid #e6e9ef;
-                    border-radius: 5px;
-                    padding: 10px;
-                    margin-bottom: 10px;
-                }
-                </style>
-                """,
-                unsafe_allow_html=True
-)
-        
+                st.markdown(
+                    """
+                    <style>
+                    .st-cd {
+                        border: 1px solid #e6e9ef;
+                        border-radius: 5px;
+                        padding: 10px;
+                        margin-bottom: 10px;
+                    }
+                    </style>
+                    """,
+                    unsafe_allow_html=True
+    )
+            
 
 
