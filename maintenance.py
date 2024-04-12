@@ -101,10 +101,9 @@ def app():
 
                             result, location, region = login_user(staffnumber, password)
                             if result:
-                               
                                 st.success("Logged In successfully")
                                 st.write(f"Location: {location}, Region: {region}")
-                                app()
+
                                 st.session_state.logged_in= True
                                 st.session_state.is_authenticated=True
                                 st.session_state.staffnumber = staffnumber
@@ -127,15 +126,15 @@ def app():
                             st.success("You have created a new account")
                             st.session_state.is_authenticated=True
                             st.session_state.logged_in= True
-                            app()
                            
+
+    
     else:
          form_container.empty()
          
-         
-def app():        
     if st.session_state.is_authenticated:
-        
+        form_container.empty()
+
         @st.cache_resource()
         def load_data(username, password, sharepoint_url, list_name):
             try:
@@ -234,7 +233,7 @@ def app():
 
         if st.session_state.is_authenticated or st.session_state.tab_clicked:
             st.session_state.tab_clicked=True
-            st.session_state.is_authenticated=True
+            st.session_state.is_authenticated=False
             with card_container(key="Main1"):
                 st.session_state.tab_clicked=True
                 ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
