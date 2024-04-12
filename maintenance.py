@@ -291,7 +291,7 @@ def app():
             if Main_df is not None:
                 cols = st.columns(4)
                 with cols[0]:
-                    ui.card(title="Total Request", content=Total_requests, key="Revcard10", style={"height": "150px"}).render()
+                    ui.card(title="Total Request", content=Total_requests, key="Revcard10").render()
                 with cols[1]:
                     ui.card(title="Closed Request", content=closed_request , key="Revcard11").render()
                 with cols[2]:
