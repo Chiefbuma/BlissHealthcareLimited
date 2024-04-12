@@ -283,13 +283,11 @@ def app():
         # Calculate average days pending
         Average_Days_pending = int(Main_df["Days_x0020_Pending"].mean())
         
-        with card_container(key="Main1"):
-            
-            if st.session_state.is_authenticated or st.session_state.tab_clicked:
-                st.session_state.is_authenticated = True
-                st.session_state.tab_clicked = False
+        
+        if st.session_state.is_authenticated or st.session_state.tab_clicked:
+            st.session_state.tab_clicked=True
+            with card_container(key="Main1"):
                 ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
-
                 if Main_df is not None:
                     cols = st.columns(4)
                     with cols[0]:
