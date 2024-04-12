@@ -27,17 +27,6 @@ def app():
     if 'is_authenticated' not in st.session_state:
                st.session_state.is_authenticated = False
 
-    if st.session_state.is_authenticated or st.session_state.tab_clicked:
-        st.session_state.is_authenticated = True
-        st.session_state.tab_clicked = False
-        ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
-    else:
-        st.session_state.is_authenticated = False  
-
-    if 'is_authenticated' not in st.session_state:
-        st.session_state.is_authenticated = False 
-        # Initialize session state if it doesn't exist
-
    
     col1, col2 = st.columns([2,1])
     with col1:
@@ -116,7 +105,6 @@ def app():
 
             if choice == "Login":
                 # Check if the user is logged in
-                
                 with st.form("Login Form"):
                     st.write("Login Form")
                     staffnumber = st.text_input("Staffnumber",key="staff_medical")
@@ -166,11 +154,12 @@ def app():
                         
     if st.session_state.is_authenticated:        
         form_container.empty()  
-        ui.badges(badge_list=[("shadcn", "default"), ("in", "secondary"), ("streamlit", "destructive")], class_name="flex gap-2", key="main_badges1")
-        st.caption("A Streamlit component library for building beautiful apps easily. Bring the power of Shadcn UI to your Streamlit apps!")
-        st.caption("Get started with pip install streamlit-shadcn-ui")
-
-
+        if st.session_state.is_authenticated or st.session_state.tab_clicked:
+            st.session_state.is_authenticated = True
+            st.session_state.tab_clicked = False
+            ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
+        else:
+            st.session_state.is_authenticated = False  
         with ui.element("div", className="flex gap-2", key="buttons_group1"):
             ui.element("button", text="Get Started", className="btn btn-primary", key="btn1")
             ui.element("link_button", text="Github", url="https://github.com/ObservedObserver/streamlit-shadcn-ui", variant="outline", key="btn2")
