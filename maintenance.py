@@ -27,7 +27,7 @@ def app():
         st.session_state.is_authenticated = False
 
 
-    if not st.session_state.is_authenticated and not st.session_state.tab_clicked:
+    if not st.session_state.is_authenticated :
 
         col1, col2 = st.columns([2,1])
         with col1:
