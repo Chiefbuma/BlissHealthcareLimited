@@ -27,10 +27,7 @@ def app():
     if 'is_authenticated' not in st.session_state:
                st.session_state.is_authenticated = False
 
-    if st.session_state.is_authenticated or st.session_state.tab_clicked:
-        st.session_state.is_authenticated = True
-        st.session_state.tab_clicked = False
-        ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
+    
     else:
         st.session_state.is_authenticated = False  
 
@@ -287,68 +284,73 @@ def app():
         Average_Days_pending = int(Main_df["Days_x0020_Pending"].mean())
         
         with card_container(key="Main1"):
-
-            if Main_df is not None:
-                cols = st.columns(4)
-                with cols[0]:
-                    ui.card(title="Total Request", content=Total_requests, key="Revcard10").render()
-                with cols[1]:
-                    ui.card(title="Closed Request", content=closed_request , key="Revcard11").render()
-                with cols[2]:
-                    ui.card(title="Pending Request", content=pending_request , key="Revcard12").render()
-                with cols[3]:
-                    ui.card(title="Average TAT:", content=Average_Days_pending, key="Revcard13").render()  
-                
-            # Display Table
-            with st.expander("View Table"):
-                st.dataframe(Main_df, use_container_width=True)
-                
-            # Define the metrics
-                metrics = [
-                    {"label": "Total", "value": Total_requests},
-                    {"label": "Closed", "value": closed_request},
-                    {"label": "Pending", "value": pending_request},
-                    {"label": "TAT(days)", "value": Average_Days_pending}
-                ]
-
-                # Create the data cards
-                fig_data_cards = go.Figure()
-
-                for i, metric in enumerate(metrics):
-                    fig_data_cards.add_trace(go.Indicator(
-                        mode="number",
-                        value=metric["value"],
-                        number={'font': {'size': 25, 'color': 'white'}},
-                        domain={'row': i, 'column': 0},  # Set the row and column to stack vertically
-                        title={'text': metric["label"],'font': {'size': 20,'color': 'white'}},
-                        align="center"
-                    ))
-
-                # Update layout
-                fig_data_cards.update_layout(
-                    grid={'rows': len(metrics), 'columns': 1, 'pattern': "independent"},
-                    template="plotly_white",
-                    height=100*len(metrics),  # Adjust the height based on the number of metrics
-                    paper_bgcolor='rgba(0, 131, 184, 1)',  # Set background color to transparent
-                    plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
-                    uniformtext=dict(minsize=40, mode='hide'),
-                    margin=dict(l=20, r=20, t=50, b=5)
-                    
-                    )
-
-                st.markdown(
-                    """
-                    <style>
-                    .st-cd {
-                        border: 1px solid #e6e9ef;
-                        border-radius: 5px;
-                        padding: 10px;
-                        margin-bottom: 10px;
-                    }
-                    </style>
-                    """,
-                    unsafe_allow_html=True
-    )
             
+            if st.session_state.is_authenticated or st.session_state.tab_clicked:
+                st.session_state.is_authenticated = True
+                st.session_state.tab_clicked = False
+                ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
+
+                if Main_df is not None:
+                    cols = st.columns(4)
+                    with cols[0]:
+                        ui.card(title="Total Request", content=Total_requests, key="Revcard10").render()
+                    with cols[1]:
+                        ui.card(title="Closed Request", content=closed_request , key="Revcard11").render()
+                    with cols[2]:
+                        ui.card(title="Pending Request", content=pending_request , key="Revcard12").render()
+                    with cols[3]:
+                        ui.card(title="Average TAT:", content=Average_Days_pending, key="Revcard13").render()  
+                    
+                # Display Table
+                with st.expander("View Table"):
+                    st.dataframe(Main_df, use_container_width=True)
+                    
+                # Define the metrics
+                    metrics = [
+                        {"label": "Total", "value": Total_requests},
+                        {"label": "Closed", "value": closed_request},
+                        {"label": "Pending", "value": pending_request},
+                        {"label": "TAT(days)", "value": Average_Days_pending}
+                    ]
+
+                    # Create the data cards
+                    fig_data_cards = go.Figure()
+
+                    for i, metric in enumerate(metrics):
+                        fig_data_cards.add_trace(go.Indicator(
+                            mode="number",
+                            value=metric["value"],
+                            number={'font': {'size': 25, 'color': 'white'}},
+                            domain={'row': i, 'column': 0},  # Set the row and column to stack vertically
+                            title={'text': metric["label"],'font': {'size': 20,'color': 'white'}},
+                            align="center"
+                        ))
+
+                    # Update layout
+                    fig_data_cards.update_layout(
+                        grid={'rows': len(metrics), 'columns': 1, 'pattern': "independent"},
+                        template="plotly_white",
+                        height=100*len(metrics),  # Adjust the height based on the number of metrics
+                        paper_bgcolor='rgba(0, 131, 184, 1)',  # Set background color to transparent
+                        plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
+                        uniformtext=dict(minsize=40, mode='hide'),
+                        margin=dict(l=20, r=20, t=50, b=5)
+                        
+                        )
+
+                    st.markdown(
+                        """
+                        <style>
+                        .st-cd {
+                            border: 1px solid #e6e9ef;
+                            border-radius: 5px;
+                            padding: 10px;
+                            margin-bottom: 10px;
+                        }
+                        </style>
+                        """,
+                        unsafe_allow_html=True
+        )
+                
 
 
