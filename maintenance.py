@@ -244,7 +244,8 @@ def app():
             Main_df = load_data(username, password, sharepoint_url, list_name)
             
             if 'is_authenticated' not in st.session_state:
-                st.session_state.is_authenticated = False 
+                st.session_state.is_authenticated = True
+                st.session_state.logged_in= True
                 # Initialize session state if it doesn't exist
             
             if ui.tabs or st.session_state.is_authenticated:
