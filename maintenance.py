@@ -217,7 +217,8 @@ def app():
 
         Main_df = load_data(username, password, sharepoint_url, list_name)
 
-        Total_requests = int(Main_df.shape[0])
+        Total_Request_calc=Main_df["Title"].nunique()
+        Total_requests = int(Total_Request_calc[0])
 
         pending_requests_calc =  Main_df [Main_df ["Maintenancestatus"] == "Pending"]
         pending_request = int(pending_requests_calc.shape[0])
