@@ -154,7 +154,7 @@ def app():
         Main_df["Days"] = numeric_days_pending
         Main_df.dropna(subset=["Days"], inplace=True)
 
-        Average_Days_pending = int(Main_df["Days"].mean())
+        
 
         if st.session_state.is_authenticated or st.session_state.tab_clicked:
             st.session_state.tab_clicked=True
@@ -171,7 +171,7 @@ def app():
                     with cols[2]:
                         ui.card(title="Pending Request", content=pending_request , key="Revcard12").render()
                     with cols[3]:
-                        ui.card(title="Average TAT:", content=Average_Days_pending, key="Revcard13").render()
+                        ui.card(title="Average TAT:", content=pending_request, key="Revcard13").render()
 
                 with st.expander("View Table"):
                     st.dataframe(Main_df, use_container_width=True)
