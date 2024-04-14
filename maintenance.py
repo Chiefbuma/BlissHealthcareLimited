@@ -146,13 +146,17 @@ def app():
         Dir_Approved_request=  Director_Approved["ID"].nunique()
         Director_pending = Main_df[(Main_df["Approver"]=="DIRECTOR") & (Main_df["Projects Approval"] == "Approved")]
         Dir_pending_request=  Director_pending["ID"].nunique()
+        Director_Rejected=  Main_df [Main_df ["Admin Approval"]=="Rejected"]
+        Dir_rejecetd_request= Director_Rejected["ID"].nunique()
         
         
-        Ops_pending=  Main_df [Main_df ["RIT Approval"]=="Approved"]
+        Ops_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
         Ops_pending_value= '{:,.0f}'.format(Ops_pending["Approved amount"].sum())
-        Ops_Approved_request=  Ops_pending["ID"].nunique()
+        Ops_Approved_request= Ops_Approved["ID"].nunique()
         Ops_pending = Main_df[(Main_df["Approver"]=="OPERATIONS")]
         Ops_pending_request=  Ops_pending["ID"].nunique()
+        Ops_rejected=  Main_df [Main_df ["RIT Approval"]=="Rejected"]
+        Dir_rejecetd_request= Ops_rejected["ID"].nunique()
         
         
         Fac_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
@@ -160,6 +164,8 @@ def app():
         Fac_Approved_request= Fac_Approved["ID"].nunique()
         Fac_pending = Main_df[(Main_df["Approver"]=="FACILITY") & (Main_df["RIT Approval"] == "Approved")]
         Fac_pending_request=  Fac_pending["ID"].nunique()
+        Fac_rejected=  Main_df [Main_df ["Facility Approval"]=="Rejected"]
+        Fac_rejected_request=  Fac_rejected["ID"].nunique()
         
         
         Pro_Approved=  Main_df [Main_df ["Projects Approval"]=="Approved"]
@@ -167,6 +173,9 @@ def app():
         Pro_Approved_request= Pro_Approved["ID"].nunique()
         Pro_pending = Main_df[(Main_df["Approver"]=="PROJECTS") & (Main_df["Facility Approval"] == "Approved")]
         Pro_pending_request=  Pro_pending["ID"].nunique()
+        Pro_rejected=  Main_df [Main_df ["Projects Approval"]=="Rejected"]
+        Pro_rejected_request=  Pro_rejected["ID"].nunique()
+        
         
         st.write(Dir_Approved_value)
         st.write(Main_df.columns)
@@ -191,10 +200,10 @@ def app():
         Main_df.dropna(subset=["Days"], inplace=True)
 
         data = [
-            {"Approver": "Director", "Approved No.":Dir_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_pending_request },
-             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Pro_Approved_value , "Pending Requets":Pro_pending_request },
-             {"Approver": "Facility", "Approved No.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request },
-             {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_pending_value, "Pending Requets":Ops_pending_request }
+            {"Approver": "Director", "Approved Requests.":Dir_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_pending_request,"Rejected Request": Dir_rejecetd_request },
+             {"Approver": "Projects", "Approved Requests.":Pro_Approved_request, "Approved Value":Pro_Approved_value , "Pending Requets":Pro_pending_request,"Rejected Request": Pro_rejected_request },
+             {"Approver": "Facility", "Approved Requests.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request,"Rejected Request": Fac_rejected_request },
+             {"Approver": "Operations", "Approved Requests.":Ops_Approved_request, "Approved Value":Ops_pending_value, "Pending Requets":Ops_pending_request ,"Rejected Request": Ops_pending_request}
             # Add more records as needed
         ]
 
