@@ -141,13 +141,15 @@ def app():
         # create DataFrame from clients list
         Main_df = pd.DataFrame(clients)
         
-        Test_pending=  Main_df [Main_df ["RIT Approval"]=="Approved"]
-        Test_pending_value= Test_pending["Approved amount"].sum()
+        Director_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
+        Dir_Approved_value =  Director_Approved["Approved amount"].sum()
+        
+        
         
         Ops_pending=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Ops_pending_value= Ops_pending["Approved amount"].sum()
         
-  
+        
         
         
         st.write(Test_pending_value)
@@ -178,9 +180,7 @@ def app():
         
        
         
-        Director_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
-        Dir_Approved_request = int(Director_Approved.shape[0])
-        Dir_Approved_value= Director_Approved["Approved amount"].sum()
+        
         
         Director_Rejected=  Main_df [Main_df ["RIT Approval"]=="Rejected"]
         Dir_Rejecetd_request = int(Director_Rejected.shape[0])
@@ -230,8 +230,8 @@ def app():
         
         
         data = [
-            {"Approver": "Director", "Approved No.":Dir_Approved_request, "Approved Value":Test_pending_value, "Pending Requets": Test_pending_value, "Pending Value": Test_pending_value },
-             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Test_pending_value, "Pending Requets":Pro_pending_request, "Pending Value":Pro_pending_value },
+            {"Approver": "Director", "Approved No.":Dir_Approved_value, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_Approved_value, "Pending Value": Dir_Approved_value },
+             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets":Pro_pending_request, "Pending Value":Pro_pending_value },
              {"Approver": "Facility", "Approved No.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request, "Pending Value":Fac_pending_value },
              {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_Approved_value, "Pending Requets":Ops_Approved_value, "Pending Value":Ops_pending_value }
             # Add more records as needed
