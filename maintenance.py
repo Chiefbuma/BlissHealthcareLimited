@@ -141,7 +141,7 @@ def app():
         # create DataFrame from clients list
         Main_df = pd.DataFrame(clients)
         
-        Test_pending=  Main_df [Main_df ["Admin Approval"]=="Approved"]
+        Test_pending=  Main_df [Main_df ["RIT Approval"]=="Approved"]
         Test_pending_value= Test_pending["Approved amount"].sum()
         
         Director_pending= Main_df [Main_df ["RIT Approval"].isnull()]
