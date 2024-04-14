@@ -169,8 +169,8 @@ def app():
         Dir_pending_value=Director_pending.groupby('ID')["Approved amount"].sum().sum()
         
         Director_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
-        Dir_Approved_request = int(Main_df.shape[0])
-        Dir_Approved_value= Director_Approved.groupby('ID')["Approved amount"].sum().sum()
+        Dir_Approved_request = int(Director_Approved.shape[0])
+        Dir_Approved_value= Director_Approved.groupby('ID')["Amount on the Quotation"].sum().sum()
         
         Director_Rejected=  Main_df [Main_df ["RIT Approval"]=="Rejected"]
         Dir_Rejecetd_request = int(Director_Rejected.shape[0])
