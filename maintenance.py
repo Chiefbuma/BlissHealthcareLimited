@@ -141,8 +141,8 @@ def app():
         # create DataFrame from clients list
         Main_df = pd.DataFrame(clients)
 
-        st.write(Main_df)
-        st.write(Main_df.columns)
+        #st.write(Main_df)
+        #st.write(Main_df.columns)
 
         Total_requests = Main_df["ID"].nunique()
         
@@ -150,6 +150,9 @@ def app():
 
         pending_requests_calc =  Main_df [Main_df ["MainStatus"] == "Pending"]
         pending_request = int(pending_requests_calc.shape[0])
+        
+        
+        pending_value=pending_requests_calc.groupby('ID')["Amount on the Quotation"].sum().sum()
 
         closed_requests_calc =  Main_df [ Main_df ["MainStatus"] == "Closed"]
         closed_request = int(closed_requests_calc.shape[0])
@@ -173,9 +176,9 @@ def app():
                     with cols[1]:
                         ui.card(title="Closed Request", content=closed_request , key="Revcard11").render()
                     with cols[2]:
-                        ui.card(title="Pending Request", content=pending_request , key="Revcard12").render()
+                        ui.card(title="Pending Request", content=pending_request, key="Revcard12").render()
                     with cols[3]:
-                        ui.card(title="Value:", content=Total_Value, key="Revcard13").render()
+                        ui.card(title="Value:", content=Total_Value & pending_value, key="Revcard13").render()
 
                 with st.expander("View Table"):
                     st.dataframe(Main_df, use_container_width=True)
