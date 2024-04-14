@@ -14,11 +14,6 @@ from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
 from sharepoint import SharePoint
 from openpyxl import Workbook
-from urllib3.contrib import appengine as gaecontrib
-
-
-
-
 import main
 from postgrest import APIError
 
