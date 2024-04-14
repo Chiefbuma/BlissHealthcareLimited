@@ -13,14 +13,5 @@ streamlit==1.32.1
 streamlit_option_menu==0.3.12
 streamlit_shadcn_ui==0.1.18
 supabase==2.4.0
-certifi==2021.5.30
-cffi==1.14.5
-chardet==4.0.0
-cryptography==3.4.7
-et-xmlfile==1.1.0
-idna==2.10
-lxml==4.6.3
 ntlm-auth==1.5.0
-openpyxl==3.0.7
-pycparser==2.20
 SharePlum==0.5.1
