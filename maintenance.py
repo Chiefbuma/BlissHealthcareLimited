@@ -244,7 +244,7 @@ def app():
                         with cols[1]:
                             with card_container(key="chart1"):
                                 st.vega_lite_chart(generate_sales_data(), {
-                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 4 },
+                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6 },
                                     'encoding': {
                                         'x': {'field': 'Month', 'type': 'ordinal'},
                                         'y': {'field': 'Sales', 'type': 'quantitative', 'axis': {'grid': False}},
