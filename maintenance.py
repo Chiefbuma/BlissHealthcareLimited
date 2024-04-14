@@ -143,6 +143,11 @@ def app():
 
         st.write(Main_df)
         st.write(Main_df.columns)
+        
+        Director_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
+        
+        st.write( Director_Approved)
+        
 
         #ALL SUMMARY
         Total_requests = Main_df["ID"].nunique()
@@ -162,6 +167,7 @@ def app():
         Main_df["Days"] = numeric_days_pending
         Main_df.dropna(subset=["Days"], inplace=True)
 
+        
         #DIRECTOR SUMMARTY
         
         Director_pending=  Main_df [Main_df ["RIT Approval"].isnull()]
@@ -223,7 +229,7 @@ def app():
         
         
         data = [
-            {"Approver": "Director", "Approved No.":Dir_Approved_request, "Approved Value":pending_value, "Pending Requets":Dir_pending_request, "Pending Value":Dir_pending_value },
+            {"Approver": "Director", "Approved No.":Dir_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets":Dir_pending_request, "Pending Value":Dir_pending_value },
              {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Pro_Approved_value, "Pending Requets":Pro_pending_request, "Pending Value":Pro_pending_value },
              {"Approver": "Facility", "Approved No.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request, "Pending Value":Fac_pending_value },
              {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_Approved_value, "Pending Requets":Ops_pending_request, "Pending Value":Ops_pending_value }
