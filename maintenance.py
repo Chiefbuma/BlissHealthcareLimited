@@ -150,11 +150,11 @@ def app():
         closed_requests_calc =  Main_df [ Main_df ["MainStatus"] == "Closed"]
         closed_request = int(closed_requests_calc.shape[0])
 
-        numeric_days_pending = Main_df["Days_x0020_Pending"].apply(pd.to_numeric, errors="coerce")
-        Main_df["Days_x0020_Pending"] = numeric_days_pending
-        Main_df.dropna(subset=["Days_x0020_Pending"], inplace=True)
+        numeric_days_pending = Main_df["Days"].apply(pd.to_numeric, errors="coerce")
+        Main_df["Days"] = numeric_days_pending
+        Main_df.dropna(subset=["Days"], inplace=True)
 
-        Average_Days_pending = int(Main_df["Days_x0020_Pending"].mean())
+        Average_Days_pending = int(Main_df["Days"].mean())
 
         if st.session_state.is_authenticated or st.session_state.tab_clicked:
             st.session_state.tab_clicked=True
