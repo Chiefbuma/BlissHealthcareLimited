@@ -200,10 +200,10 @@ def app():
         Main_df.dropna(subset=["Days"], inplace=True)
 
         data = [
-            {"Approver": "Director", "Approved Requests.":Dir_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_pending_request,"Rejected Request": Dir_rejecetd_request },
-             {"Approver": "Projects", "Approved Requests.":Pro_Approved_request, "Approved Value":Pro_Approved_value , "Pending Requets":Pro_pending_request,"Rejected Request": Pro_rejected_request },
-             {"Approver": "Facility", "Approved Requests.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request,"Rejected Request": Fac_rejected_request },
-             {"Approver": "Operations", "Approved Requests.":Ops_Approved_request, "Approved Value":Ops_Approved_value, "Pending Requets":Ops_pending_request ,"Rejected Request": Ops_rejecetd_request}
+            {"Approver": "Director", "Approved.":Dir_Approved_request, "Value":Dir_Approved_value, "Pending": Dir_pending_request,"Rejected": Dir_rejecetd_request },
+             {"Approver": "Projects", "Approved.":Pro_Approved_request, "Value":Pro_Approved_value , "Pending":Pro_pending_request,"Rejected": Pro_rejected_request },
+             {"Approver": "Facility", "Approved.":Fac_Approved_request, "Value":Fac_Approved_value, "Pending":Fac_pending_request,"Rejected": Fac_rejected_request },
+             {"Approver": "Operations", "Approved.":Ops_Approved_request, "Value":Ops_Approved_value, "Pending":Ops_pending_request ,"Rejected": Ops_rejecetd_request}
             # Add more records as needed
         ]
 
