@@ -4,18 +4,11 @@ from shareplum.site import Version
 import json
 import os
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-config_path = '\\'.join([ROOT_DIR, 'config.json'])
 
-# read json config file
-with open(config_path) as config_file:
-    config = json.load(config_file)
-    config = config['share_point']
-
-USERNAME = config['user']
-PASSWORD = config['password']
-SHAREPOINT_URL = config['url']
-SHAREPOINT_SITE = config['site']
+USERNAME = "biosafety@blisshealthcare.co.ke"
+PASSWORD = "NaSi#2024"
+SHAREPOINT_URL = "https://blissgvske.sharepoint.com"
+SHAREPOINT_SITE = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReports/"
 
 
 class SharePoint:
