@@ -12,6 +12,10 @@ import streamlit_option_menu as option_menu
 import streamlit_shadcn_ui as ui
 from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
+from sharepoint import SharePoint
+from openpyxl import Workbook
+
+
 
 import main
 from postgrest import APIError
@@ -134,88 +138,13 @@ def app():
          
     if st.session_state.is_authenticated:
         form_container.empty()
+        # get clients sharepoint list
+        clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
 
-        @st.cache_resource()
-        def load_data(username, password, sharepoint_url, list_name):
-            try:
-                user_credentials = UserCredential(username, password)
-                ctx = ClientContext(sharepoint_url).with_credentials(user_credentials)
-                web = ctx.web
-                ctx.load(web)
-                ctx.execute_query()
-                target_list = ctx.web.lists.get_by_title(list_name)
-                items = target_list.get_items()
-                ctx.load(items)
-                ctx.execute_query()
+        # create DataFrame from clients list
+        Main_df = pd.DataFrame(clients)
 
-                selected_columns= [
-                    "ID",
-                    "Title",
-                    "AuthorId",
-                    "Dateofreport",
-                    "DateNumber",
-                    "Typeofmaintenance",
-                    "Details",
-                    "Month",
-                    "FacilitycoordinatorComments",
-                    "Approvedammount",
-                    "Receivedstatus",
-                    "ReceivedAmmount",
-                    "Maintenancestatus",
-                    "ProjectsApproval",
-                    "ProjectComments",
-                    "AdminApproval",
-                    "AdminComments",
-                    "FinanceApproval",
-                    "FinanceComment",
-                    "FacilityApproval",
-                    "Approver",
-                    "LinkEdit",
-                    "AmmountontheQuotation",
-                    "Clinic2",
-                    "Region2",
-                    "CentreManager2",
-                    "Department",
-                    "RITApproval",
-                    "RITComment",
-                    "BiomedicalHeadApproval",
-                    "BiomedicalHeadComments",
-                    "MarketingManagerApproval",
-                    "MarketingManagerComments",
-                    "Phone",
-                    "Days_x0020_Pending",
-                    "Report",
-                    "Qty",
-                    "FacilityQty",
-                    "ProjectsQty",
-                    "AdminQty",
-                    "Laborcost",
-                    "MainItem",
-                    "TimeLine",
-                    "RITlabour",
-                    "FacilityLabor",
-                    "ProjectLabor",
-                    "Adminlabor",
-                    "Disbursement"
-                ]
-
-                data = []
-                for item in items:
-                    item_data = {key: item.properties[key] for key in selected_columns}
-                    data.append(item_data)
-                return pd.DataFrame(data)
-
-            except Exception as e:
-                st.error("Failed to load data from SharePoint. Please check your credentials and try again.")
-                st.error(f"Error details: {e}")
-                return None
-
-        sharepoint_url = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReports"
-        list_name = "Maintenance Report"
-        username = "biosafety@blisshealthcare.co.ke"
-        password = "NaSi#2024"
-
-        Main_df = load_data(username, password, sharepoint_url, list_name)
+        st.write(Main_df)
 
         Total_requests = Main_df["Title"].nunique()
        
