@@ -242,7 +242,7 @@ def app():
                             with card_container(key="table1"):
                              ui.table(data=Approval_df, maxHeight=300)
                         with cols[1]:
-                            with card_container(key="chart1"):
+                            with card_container(key="chart1", maxHeight=300):
                                 st.vega_lite_chart(generate_sales_data(), {
                                     'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
                                     'encoding': {
