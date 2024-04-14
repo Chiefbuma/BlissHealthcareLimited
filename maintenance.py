@@ -253,10 +253,12 @@ def app():
                     with cols[3]:
                         total_pending_value = f"Total Value: {Total_Value}, Pending Value: {pending_value}"
                         ui.card(title="Value:", content=total_pending_value, key="Revcard13").render()
-                ui.table(data=Approval_df, maxHeight=300)
-                
-                with st.expander("View Table"):
-                    st.dataframe(Main_df, use_container_width=True)
+
+                    with card_container(key="table1"):
+                        ui.table(data=Approval_df, maxHeight=300)
+                        
+                        with st.expander("View Table"):
+                            st.dataframe(Main_df, use_container_width=True)
 
                     metrics = [
                         {"label": "Total", "value": Total_requests},
