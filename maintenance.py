@@ -143,7 +143,6 @@ def app():
         
         
 
-        st.write(Test_pending_value)
         st.write(Main_df.columns)
         
 
