@@ -144,10 +144,10 @@ def app():
 
         Total_requests = Main_df["Title"].nunique()
        
-        pending_requests_calc =  Main_df [Main_df ["Maintenancestatus"] == "Pending"]
+        pending_requests_calc =  Main_df [Main_df ["MainStatus"] == "Pending"]
         pending_request = int(pending_requests_calc.shape[0])
 
-        closed_requests_calc =  Main_df [ Main_df ["Maintenancestatus"] == "Closed"]
+        closed_requests_calc =  Main_df [ Main_df ["MainStatus"] == "Closed"]
         closed_request = int(closed_requests_calc.shape[0])
 
         numeric_days_pending = Main_df["Days_x0020_Pending"].apply(pd.to_numeric, errors="coerce")
