@@ -141,6 +141,9 @@ def app():
         # create DataFrame from clients list
         Main_df = pd.DataFrame(clients)
         
+        def generate_sales_data(category_counts):
+           return pd.DataFrame({'Category': category_counts['Category'], 'No.': category_counts['No.']})
+
         
         # Filter the Main_df DataFrame to get the "departmental report" column
         departmental_report_df = Main_df["Departmental report"]
@@ -229,6 +232,8 @@ def app():
         def generate_sales_data(category_counts):
             return pd.DataFrame({'Category': category_counts['Category'], 'No.': category_counts['No.']})
 
+        
+        
         
 
         if st.session_state.is_authenticated or st.session_state.tab_clicked:
