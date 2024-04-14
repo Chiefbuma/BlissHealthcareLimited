@@ -151,20 +151,22 @@ def app():
         Ops_pending=  Main_df [Main_df ["RIT Approval"]=="Approved"]
         Ops_pending_value= '{:,.0f}'.format(Ops_pending["Approved amount"].sum())
         Ops_Approved_request=  Ops_pending["ID"].nunique()
+        Ops_pending = Main_df[(Main_df["Approver"]=="OPERATIONS")]
+        Ops_pending_request=  Ops_pending["ID"].nunique()
         
         
         Fac_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
         Fac_Approved_value = '{:,.0f}'.format(Fac_Approved["Approved amount"].sum())
         Fac_Approved_request= Fac_Approved["ID"].nunique()
+        Fac_pending = Main_df[(Main_df["Approver"]=="FACILITY") & (Main_df["RIT Approval"] == "Approved")]
+        Fac_pending_request=  Fac_pending["ID"].nunique()
         
         
         Pro_Approved=  Main_df [Main_df ["Projects Approval"]=="Approved"]
         Pro_Approved_value = '{:,.0f}'.format(Pro_Approved["Approved amount"].sum())
         Pro_Approved_request= Pro_Approved["ID"].nunique()
-        
-        
-        
-        
+        Pro_pending = Main_df[(Main_df["Approver"]=="PROJECTS") & (Main_df["Facility Approval"] == "Approved")]
+        Pro_pending_request=  Pro_pending["ID"].nunique()
         
         st.write(Dir_Approved_value)
         st.write(Main_df.columns)
@@ -188,21 +190,16 @@ def app():
         Main_df["Days"] = numeric_days_pending
         Main_df.dropna(subset=["Days"], inplace=True)
 
-                
-        
         data = [
             {"Approver": "Director", "Approved No.":Dir_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_pending_request },
-             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Pro_Approved_value , "Pending Requets":Pro_Approved_value },
-             {"Approver": "Facility", "Approved No.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_Approved_value },
-             {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_pending_value, "Pending Requets":Ops_pending_value }
+             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Pro_Approved_value , "Pending Requets":Pro_pending_request },
+             {"Approver": "Facility", "Approved No.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request },
+             {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_pending_value, "Pending Requets":Ops_pending_request }
             # Add more records as needed
         ]
 
         # Creating a DataFrame
         Approval_df = pd.DataFrame(data)
-
-        
-        
 
         if st.session_state.is_authenticated or st.session_state.tab_clicked:
             st.session_state.tab_clicked=True
