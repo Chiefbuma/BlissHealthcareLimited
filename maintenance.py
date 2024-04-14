@@ -141,14 +141,10 @@ def app():
         # create DataFrame from clients list
         Main_df = pd.DataFrame(clients)
         
-        Test_pending=  Main_df [Main_df ["RIT Approval"]=="Approved"]
-        Test_pending_value= Test_pending["Approved amount"].sum()
+        Director_pending=  Main_df [Main_df ["RIT Approval"]=="Approved"]
+        Dir_pending_value= Director_pending["Approved amount"].sum()
         
-        Director_pending= Main_df [Main_df ["RIT Approval"].isnull()]
-        Dir_pending_request = int(Director_pending.shape[0])
-        Dir_pending_value=Director_pending["Approved amount"].sum()
-
-        st.write(Test_pending_value)
+        st.write(Dir_pending_value)
         st.write(Main_df.columns)
         
 
