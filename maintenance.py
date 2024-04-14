@@ -211,7 +211,7 @@ def app():
         Approval_df = pd.DataFrame(data)
         
         # Filter the Main_df DataFrame to get the "departmental report" column
-        departmental_report_df = Main_df["departmental report"]
+        departmental_report_df = Main_df["Departmental report"]
 
         # Get unique categories and their counts
         category_counts = departmental_report_df.value_counts().reset_index()
