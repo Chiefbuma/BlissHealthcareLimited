@@ -251,7 +251,6 @@ def app():
                                         'y': {'field': 'Sales', 'type': 'quantitative', 'axis': {'grid': False}},
                                     },
                                 }, use_container_width=True, height=300)
-                                st.markdown("<br>", unsafe_allow_html=True)
                         
                     with st.expander("View Table"):
                         st.dataframe(Main_df, use_container_width=True)
