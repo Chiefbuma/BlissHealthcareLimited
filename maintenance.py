@@ -144,9 +144,9 @@ def app():
         Director_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
         Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
         Dir_Approved_request=  Director_Approved["ID"].nunique()
-        Director_pending = Main_df[Main_df["RIT Approval"].isnull()]
+        Director_pending = Main_df[Main_df["Approver"]=="DIRECTOR"]
         Dir_pending_request=  Director_pending["ID"].nunique()
-        Dir_pending_value = '{:,.0f}'.format(Director_pending["Approved amount"].sum())
+        
         
         
         Ops_pending=  Main_df [Main_df ["Admin Approval"]=="Approved"]
@@ -192,10 +192,10 @@ def app():
                 
         
         data = [
-            {"Approver": "Director", "Approved No.":Dir_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_pending_request, "Pending Value": Dir_pending_value },
-             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Pro_Approved_value , "Pending Requets":Pro_Approved_value , "Pending Value":Pro_Approved_value},
-             {"Approver": "Facility", "Approved No.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_Approved_value, "Pending Value":Fac_Approved_value },
-             {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_pending_value, "Pending Requets":Ops_pending_value, "Pending Value":Ops_pending_value }
+            {"Approver": "Director", "Approved No.":Dir_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_pending_request },
+             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Pro_Approved_value , "Pending Requets":Pro_Approved_value },
+             {"Approver": "Facility", "Approved No.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_Approved_value },
+             {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_pending_value, "Pending Requets":Ops_pending_value }
             # Add more records as needed
         ]
 
