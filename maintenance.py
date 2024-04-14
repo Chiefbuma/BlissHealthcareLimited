@@ -171,61 +171,61 @@ def app():
         
         Director_pending=  Main_df [Main_df ["RIT Approval"].isnull()]
         Dir_pending_request = int(Director_pending.shape[0])
-        Dir_pending_value=Director_pending.groupby('ID')["Approved amount"].sum().sum()
+        Dir_pending_value=Director_pending["Approved amount"].sum()
        
         
         Director_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
         Dir_Approved_request = int(Director_Approved.shape[0])
-        Dir_Approved_value= Director_Approved["Approved amount"].sum().sum()
+        Dir_Approved_value= Director_Approved["Approved amount"].sum()
         
         Director_Rejected=  Main_df [Main_df ["RIT Approval"]=="Rejected"]
         Dir_Rejecetd_request = int(Director_Rejected.shape[0])
-        Dir_Rejected_value= Director_Rejected["Approved amount"].sum().sum()
+        Dir_Rejected_value= Director_Rejected["Approved amount"].sum()
         
         
         #OPERATIONS  SUMMARTY
         
         Ops_pending=  Main_df [Main_df ["Admin Approval"].isnull()]
         Ops_pending_request = Ops_pending.shape[0]
-        Ops_pending_value=Ops_pending["Approved amount"].sum().sum()
+        Ops_pending_value=Ops_pending["Approved amount"].sum()
         
         Ops_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Ops_Approved_request = int(Ops_Approved.shape[0])
-        Ops_Approved_value= Ops_Approved["Approved amount"].sum().sum()
+        Ops_Approved_value= Ops_Approved["Approved amount"].sum()
         
         Ops_Rejected=  Main_df [Main_df ["Admin Approval"]=="Rejected"]
         Ops_Rejecetd_request = int(Ops_Rejected.shape[0])
-        Ops_Rejected_value= Ops_Rejected["Approved amount"].sum().sum()
+        Ops_Rejected_value= Ops_Rejected["Approved amount"].sum()
         
         
         #FACILITY  SUMMARTY
         
         Fac_pending=  Main_df [Main_df ["Facility Approval"].isnull()]
         Fac_pending_request = Fac_pending.shape[0]
-        Fac_pending_value= Fac_pending["Approved amount"].sum().sum()
+        Fac_pending_value= Fac_pending["Approved amount"].sum()
         
         Fac_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
         Fac_Approved_request = Fac_Approved.shape[0]
-        Fac_Approved_value= Fac_Approved["Approved amount"].sum().sum()
+        Fac_Approved_value= Fac_Approved["Approved amount"].sum()
         
         Fac_Rejected=  Main_df [Main_df ["Facility Approval"]=="Rejected"]
         Fac_Rejecetd_request = int(Fac_Rejected.shape[0])
-        Fac_Rejected_value= Fac_Rejected["Approved amount"].sum().sum()
+        Fac_Rejected_value= Fac_Rejected["Approved amount"].sum()
         
         
         #PROJECTS SUMMARTY
         
         Pro_pending=  Main_df [Main_df ["Facility Approval"].isnull()]
         Pro_pending_request = int( Pro_pending.shape[0])
-        Pro_pending_value= Pro_pending["Approved amount"].sum().sum()
+        Pro_pending_value= Pro_pending["Approved amount"].sum()
         
         Pro_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
         Pro_Approved_request = int(Pro_Approved.shape[0])
-        Pro_Approved_value= Pro_Approved["Approved amount"].sum().sum()
+        Pro_Approved_value= Pro_Approved["Approved amount"].sum()
         
         Pro_Rejected=  Main_df [Main_df ["Facility Approval"]=="Rejected"]
         Pro_Rejecetd_request = int(Pro_Rejected.shape[0])
-        Pro_Rejected_value= Pro_Rejected["Approved amount"].sum().sum()
+        Pro_Rejected_value= Pro_Rejected["Approved amount"].sum()
         
         
         data = [
