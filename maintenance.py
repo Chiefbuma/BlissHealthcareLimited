@@ -228,10 +228,12 @@ def app():
                         ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()
 
                     with card_container(key="table1"):
-                        ui.table(data=Approval_df, maxHeight=300)
+                        cols = st.columns(2)
+                        with cols[0]:
+                           ui.table(data=Approval_df, maxHeight=300)
                         
-                        with st.expander("View Table"):
-                            st.dataframe(Main_df, use_container_width=True)
+                    with st.expander("View Table"):
+                        st.dataframe(Main_df, use_container_width=True)
 
                     metrics = [
                         {"label": "Total", "value": Total_requests},
