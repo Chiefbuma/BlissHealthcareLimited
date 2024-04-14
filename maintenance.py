@@ -143,8 +143,7 @@ def app():
         
         Test_pending=  Main_df [Main_df ["RIT Approval"]=="Approved"]
         Test_pending_value= Test_pending["Approved amount"].sum()
-        Dir_Approved_request = int(Test_pending_value.shape[0])
-
+        
         st.write(Test_pending_value)
         st.write(Main_df.columns)
         
@@ -228,7 +227,7 @@ def app():
         
         
         data = [
-            {"Approver": "Director", "Approved No.":Dir_Approved_request, "Approved Value":Test_pending_value, "Pending Requets":Dir_Approved_request, "Pending Value":Dir_Approved_request },
+            {"Approver": "Director", "Approved No.":Dir_Approved_request, "Approved Value":Test_pending_value, "Pending Requets": Test_pending_value, "Pending Value": Test_pending_value },
              {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Test_pending_value, "Pending Requets":Pro_pending_request, "Pending Value":Pro_pending_value },
              {"Approver": "Facility", "Approved No.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request, "Pending Value":Fac_pending_value },
              {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_Approved_value, "Pending Requets":Ops_pending_request, "Pending Value":Ops_pending_value }
