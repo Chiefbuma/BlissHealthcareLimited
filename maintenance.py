@@ -209,6 +209,15 @@ def app():
 
         # Creating a DataFrame
         Approval_df = pd.DataFrame(data)
+        
+        
+        def generate_sales_data():
+            np.random.seed(0)  # For reproducible results
+            months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            sales = np.random.randint(1000, 5000, size=len(months))
+            return pd.DataFrame({'Month': months, 'Sales': sales})
+
+        
 
         if st.session_state.is_authenticated or st.session_state.tab_clicked:
             st.session_state.tab_clicked=True
@@ -232,6 +241,15 @@ def app():
                         with cols[0]:
                             with card_container(key="table1"):
                              ui.table(data=Approval_df, maxHeight=300)
+                        with cols[1]:
+                            with card_container(key="chart1"):
+                                st.vega_lite_chart(generate_sales_data(), {
+                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
+                                    'encoding': {
+                                        'x': {'field': 'Month', 'type': 'ordinal'},
+                                        'y': {'field': 'Sales', 'type': 'quantitative', 'axis': {'grid': False}},
+                                    },
+                                }, use_container_width=True)
                         
                     with st.expander("View Table"):
                         st.dataframe(Main_df, use_container_width=True)
