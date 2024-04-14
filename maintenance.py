@@ -145,9 +145,13 @@ def app():
         Dir_Approved_value =  Director_Approved["Approved amount"].sum()
         
         
-        
         Ops_pending=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Ops_pending_value= Ops_pending["Approved amount"].sum()
+        
+        
+        Fac_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
+        Fac_Approved_value =  Fac_Approved["Approved amount"].sum()
+        
         
         
         
@@ -205,9 +209,6 @@ def app():
         Fac_pending_request = Fac_pending.shape[0]
         Fac_pending_value= Fac_pending["Approved amount"].sum()
         
-        Fac_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
-        Fac_Approved_request = Fac_Approved.shape[0]
-        Fac_Approved_value= Fac_Approved["Approved amount"].sum()
         
         Fac_Rejected=  Main_df [Main_df ["Facility Approval"]=="Rejected"]
         Fac_Rejecetd_request = int(Fac_Rejected.shape[0])
@@ -232,7 +233,7 @@ def app():
         data = [
             {"Approver": "Director", "Approved No.":Dir_Approved_value, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_Approved_value, "Pending Value": Dir_Approved_value },
              {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets":Pro_pending_request, "Pending Value":Pro_pending_value },
-             {"Approver": "Facility", "Approved No.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request, "Pending Value":Fac_pending_value },
+             {"Approver": "Facility", "Approved No.":Fac_Approved_value, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request, "Pending Value":Fac_pending_value },
              {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_Approved_value, "Pending Requets":Ops_Approved_value, "Pending Value":Ops_pending_value }
             # Add more records as needed
         ]
