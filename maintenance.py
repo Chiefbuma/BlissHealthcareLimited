@@ -178,7 +178,9 @@ def app():
                     with cols[2]:
                         ui.card(title="Pending Request", content=pending_request, key="Revcard12").render()
                     with cols[3]:
-                        ui.card(title="Value:", content=Total_Value & pending_value, key="Revcard13").render()
+                        total_pending_value = f"Total Value: {Total_Value}, Pending Value: {pending_value}"
+                        ui.card(title="Value:", content=total_pending_value, key="Revcard13").render()
+
 
                 with st.expander("View Table"):
                     st.dataframe(Main_df, use_container_width=True)
