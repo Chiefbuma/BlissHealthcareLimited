@@ -166,11 +166,11 @@ def app():
         
         Director_pending=  Main_df [Main_df ["RIT Approval"].isnull()]
         Dir_pending_request = int(Director_pending.shape[0])
-        Dir_pending_value=Director_pending.groupby('ID')["Approved amount"].sum().sum()
+        Dir_pending_value=Director_pending.groupby('ID')["Amount on the Quotation"].sum().sum()
         
         Director_Approved=  Main_df [Main_df ["RIT Approval"].str.contains("Approved", na=False)]
         Dir_Approved_request = int(Director_Approved.shape[0])
-        Dir_Approved_value= Director_Approved.groupby('ID')["Approved amount"].sum().sum()
+        Dir_Approved_value= Director_Approved.groupby('ID')["Amount on the Quotationt"].sum().sum()
         
         Director_Rejected=  Main_df [Main_df ["RIT Approval"]=="Rejected"]
         Dir_Rejecetd_request = int(Director_Rejected.shape[0])
@@ -185,7 +185,7 @@ def app():
         
         Ops_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Ops_Approved_request = int(Ops_Approved.shape[0])
-        Ops_Approved_value= Ops_Approved.groupby('ID')["Approved amount"].sum().sum()
+        Ops_Approved_value= Ops_Approved.groupby('ID')["Amount on the Quotation"].sum().sum()
         
         Ops_Rejected=  Main_df [Main_df ["Admin Approval"]=="Rejected"]
         Ops_Rejecetd_request = int(Ops_Rejected.shape[0])
