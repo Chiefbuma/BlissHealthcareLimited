@@ -226,11 +226,8 @@ def app():
         
         
         
-        def generate_sales_data():
-            np.random.seed(0)  # For reproducible results
-            months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-            sales = np.random.randint(1000, 5000, size=len(months))
-            return pd.DataFrame({'Month': months, 'Sales': sales})
+        def generate_sales_data(category_counts):
+            return pd.DataFrame({'Category': category_counts['Category'], 'No.': category_counts['No.']})
 
         
 
@@ -259,11 +256,11 @@ def app():
                         with cols[1]:
                             with card_container(key="chart1"):
                                 st.markdown("<br>", unsafe_allow_html=True)
-                                st.vega_lite_chart(generate_sales_data(), {
-                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6 },
+                                st.vega_lite_chart(generate_sales_data(category_counts), {
+                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6},
                                     'encoding': {
-                                        'x': {'field': 'Month', 'type': 'ordinal'},
-                                        'y': {'field': 'Sales', 'type': 'quantitative', 'axis': {'grid': False}},
+                                        'x': {'field': 'Category', 'type': 'ordinal'},
+                                        'y': {'field': 'No.', 'type': 'quantitative', 'axis': {'grid': False}},
                                     },
                                 }, use_container_width=True, height=300)
                         
