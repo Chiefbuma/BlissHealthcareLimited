@@ -144,7 +144,7 @@ def app():
         st.write(Main_df)
         st.write(Main_df.columns)
         
-        Director_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
+        Director_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         
         st.write( Director_Approved)
         
