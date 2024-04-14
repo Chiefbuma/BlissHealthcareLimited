@@ -149,7 +149,7 @@ def app():
         
         Total_Value = Main_df.groupby('ID')["Amount on the Quotation"].sum().sum()
 
-        pending_requests_calc =  Main_df [Main_df ["MainStatus"] == "Pending"]
+        pending_requests_calc =  Main_df [Main_df ["RIT Approval"] == "Pending"]
         pending_request = int(pending_requests_calc.shape[0])
         
         
