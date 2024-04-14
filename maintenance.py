@@ -146,7 +146,7 @@ def app():
 
         Total_requests = Main_df["ID"].nunique()
         
-        Total_Value = Main_df.groupby('ID')['Ammount on the Quotation'].sum().sum()
+        Total_Value = Main_df.groupby('ID')["Amount on the Quotation"].sum().sum()
 
         pending_requests_calc =  Main_df [Main_df ["MainStatus"] == "Pending"]
         pending_request = int(pending_requests_calc.shape[0])
