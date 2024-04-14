@@ -166,11 +166,11 @@ def app():
         
         Director_pending=  Main_df [Main_df ["RIT Approval"].isnull()]
         Dir_pending_request = int(Director_pending.shape[0])
-        Dir_pending_value=Director_pending.groupby('ID')["Amount on the Quotation"].sum().sum()
+        Dir_pending_value=Director_pending.groupby('ID')["Approved amount"].sum().sum()
         
-        Director_Approved=  Main_df [Main_df ["RIT Approval"].str.contains("Approved", na=False)]
+        Director_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
         Dir_Approved_request = int(Director_Approved.shape[0])
-        Dir_Approved_value= Director_Approved.groupby('ID')["Amount on the Quotationt"].sum().sum()
+        Dir_Approved_value= Director_Approved.groupby('ID')["Approved amount"].sum().sum()
         
         Director_Rejected=  Main_df [Main_df ["RIT Approval"]=="Rejected"]
         Dir_Rejecetd_request = int(Director_Rejected.shape[0])
@@ -180,12 +180,12 @@ def app():
         #OPERATIONS  SUMMARTY
         
         Ops_pending=  Main_df [Main_df ["Admin Approval"].isnull()]
-        Ops_pending_request = int(Ops_pending.shape[0])
+        Ops_pending_request = Ops_pending.shape[0]
         Ops_pending_value=Ops_pending.groupby('ID')["Approved amount"].sum().sum()
         
         Ops_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Ops_Approved_request = int(Ops_Approved.shape[0])
-        Ops_Approved_value= Ops_Approved.groupby('ID')["Amount on the Quotation"].sum().sum()
+        Ops_Approved_value= Ops_Approved.groupby('ID')["Approved amount"].sum().sum()
         
         Ops_Rejected=  Main_df [Main_df ["Admin Approval"]=="Rejected"]
         Ops_Rejecetd_request = int(Ops_Rejected.shape[0])
@@ -195,11 +195,11 @@ def app():
         #FACILITY  SUMMARTY
         
         Fac_pending=  Main_df [Main_df ["Facility Approval"].isnull()]
-        Fac_pending_request = int( Fac_pending.shape[0])
+        Fac_pending_request = Fac_pending.shape[0]
         Fac_pending_value= Fac_pending.groupby('ID')["Approved amount"].sum().sum()
         
         Fac_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
-        Fac_Approved_request = int(Fac_Approved.shape[0])
+        Fac_Approved_request = Fac_Approved.shape[0]
         Fac_Approved_value= Fac_Approved.groupby('ID')["Approved amount"].sum().sum()
         
         Fac_Rejected=  Main_df [Main_df ["Facility Approval"]=="Rejected"]
