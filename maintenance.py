@@ -182,63 +182,13 @@ def app():
         Main_df["Days"] = numeric_days_pending
         Main_df.dropna(subset=["Days"], inplace=True)
 
-        
-        #DIRECTOR SUMMARTY
-        
-        
-       
-        
-        
-        
-        Director_Rejected=  Main_df [Main_df ["RIT Approval"]=="Rejected"]
-        Dir_Rejecetd_request = int(Director_Rejected.shape[0])
-        Dir_Rejected_value= Director_Rejected["Approved amount"].sum()
-        
-        
-        #OPERATIONS  SUMMARTY
-        
-        
-        Ops_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
-        Ops_Approved_request = int(Ops_Approved.shape[0])
-        Ops_Approved_value= Ops_Approved["Approved amount"].sum()
-        
-        Ops_Rejected=  Main_df [Main_df ["Admin Approval"]=="Rejected"]
-        Ops_Rejecetd_request = int(Ops_Rejected.shape[0])
-        Ops_Rejected_value= Ops_Rejected["Approved amount"].sum()
-        
-        
-        #FACILITY  SUMMARTY
-        
-        Fac_pending=  Main_df [Main_df ["Facility Approval"].isnull()]
-        Fac_pending_request = Fac_pending.shape[0]
-        Fac_pending_value= Fac_pending["Approved amount"].sum()
-        
-        
-        Fac_Rejected=  Main_df [Main_df ["Facility Approval"]=="Rejected"]
-        Fac_Rejecetd_request = int(Fac_Rejected.shape[0])
-        Fac_Rejected_value= Fac_Rejected["Approved amount"].sum()
-        
-        
-        #PROJECTS SUMMARTY
-        
-        Pro_pending=  Main_df [Main_df ["Facility Approval"].isnull()]
-        Pro_pending_request = int( Pro_pending.shape[0])
-        Pro_pending_value= Pro_pending["Approved amount"].sum()
-        
-        Pro_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
-        Pro_Approved_request = int(Pro_Approved.shape[0])
-        Pro_Approved_value= Pro_Approved["Approved amount"].sum()
-        
-        Pro_Rejected=  Main_df [Main_df ["Facility Approval"]=="Rejected"]
-        Pro_Rejecetd_request = int(Pro_Rejected.shape[0])
-        Pro_Rejected_value= Pro_Rejected["Approved amount"].sum()
-        
+                
         
         data = [
             {"Approver": "Director", "Approved No.":Dir_Approved_value, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_Approved_value, "Pending Value": Dir_Approved_value },
-             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Pro_Approved_value , "Pending Requets":Pro_Approved_value , "Pending Value":Pro_Approved_value},
-             {"Approver": "Facility", "Approved No.":Fac_Approved_value, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request, "Pending Value":Fac_pending_value },
-             {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_Approved_value, "Pending Requets":Ops_Approved_value, "Pending Value":Ops_pending_value }
+             {"Approver": "Projects", "Approved No.":Pro_Approved_value, "Approved Value":Pro_Approved_value , "Pending Requets":Pro_Approved_value , "Pending Value":Pro_Approved_value},
+             {"Approver": "Facility", "Approved No.":Fac_Approved_value, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_Approved_value, "Pending Value":Fac_Approved_value },
+             {"Approver": "Operations", "Approved No.":Ops_pending_value, "Approved Value":Ops_pending_value, "Pending Requets":Ops_pending_value, "Pending Value":Ops_pending_value }
             # Add more records as needed
         ]
 
