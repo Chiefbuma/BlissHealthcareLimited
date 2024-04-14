@@ -242,7 +242,8 @@ def app():
                             with card_container(key="table1"):
                              ui.table(data=Approval_df, maxHeight=300)
                         with cols[1]:
-                            with card_container(key="chart1",height=350):
+                            with card_container(key="chart1"):
+                                st.markdown("<br>", unsafe_allow_html=True)
                                 st.vega_lite_chart(generate_sales_data(), {
                                     'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6 },
                                     'encoding': {
@@ -250,6 +251,7 @@ def app():
                                         'y': {'field': 'Sales', 'type': 'quantitative', 'axis': {'grid': False}},
                                     },
                                 }, use_container_width=True, height=300)
+                                st.markdown("<br>", unsafe_allow_html=True)
                         
                     with st.expander("View Table"):
                         st.dataframe(Main_df, use_container_width=True)
