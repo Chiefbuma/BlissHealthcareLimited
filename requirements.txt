@@ -23,7 +23,7 @@ lxml==4.6.3
 ntlm-auth==1.5.0
 openpyxl==3.0.7
 pycparser==2.20
-requests==2.26.0
+requests
 requests-ntlm==1.1.0
 requests-toolbelt==0.9.1
 SharePlum==0.5.1
