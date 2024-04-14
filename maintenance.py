@@ -144,6 +144,7 @@ def app():
         st.write(Main_df)
         st.write(Main_df.columns)
 
+        #ALL SUMMARY
         Total_requests = Main_df["ID"].nunique()
         
         Total_Value = Main_df.groupby('ID')["Amount on the Quotation"].sum().sum()
@@ -161,6 +162,78 @@ def app():
         Main_df["Days"] = numeric_days_pending
         Main_df.dropna(subset=["Days"], inplace=True)
 
+        #DIRECTOR SUMMARTY
+        
+        Director_pending=  Main_df [Main_df ["RIT Approval"].isnull()]
+        Dir_pending_request = int(Director_pending.shape[0])
+        Dir_pending_value=Director_pending.groupby('ID')["Approved amount"].sum().sum()
+        
+        Director_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
+        Dir_Approved_request = int(Director_Approved.shape[0])
+        Dir_Approved_value= Director_Approved.groupby('ID')["Approved amount"].sum().sum()
+        
+        Director_Rejected=  Main_df [Main_df ["RIT Approval"]=="Rejected"]
+        Dir_Rejecetd_request = int(Director_Rejected.shape[0])
+        Dir_Rejected_value= Director_Rejected.groupby('ID')["Approved amount"].sum().sum()
+        
+        
+        #OPERATIONS  SUMMARTY
+        
+        Ops_pending=  Main_df [Main_df ["Admin Approval"].isnull()]
+        Ops_pending_request = int(Ops_pending.shape[0])
+        Ops_pending_value=Ops_pending.groupby('ID')["Approved amount"].sum().sum()
+        
+        Ops_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
+        Ops_Approved_request = int(Ops_Approved.shape[0])
+        Ops_Approved_value= Ops_Approved.groupby('ID')["Approved amount"].sum().sum()
+        
+        Ops_Rejected=  Main_df [Main_df ["Admin Approval"]=="Rejected"]
+        Ops_Rejecetd_request = int(Ops_Rejected.shape[0])
+        Ops_Rejected_value= Ops_Rejected.groupby('ID')["Approved amount"].sum().sum()
+        
+        
+        #FACILITY  SUMMARTY
+        
+        Fac_pending=  Main_df [Main_df ["Facility Approval"].isnull()]
+        Fac_pending_request = int( Fac_pending.shape[0])
+        Fac_pending_value= Fac_pending.groupby('ID')["Approved amount"].sum().sum()
+        
+        Fac_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
+        Fac_Approved_request = int(Fac_Approved.shape[0])
+        Fac_Approved_value= Fac_Approved.groupby('ID')["Approved amount"].sum().sum()
+        
+        Fac_Rejected=  Main_df [Main_df ["Facility Approval"]=="Rejected"]
+        Fac_Rejecetd_request = int(Fac_Rejected.shape[0])
+        Fac_Rejected_value= Fac_Rejected.groupby('ID')["Approved amount"].sum().sum()
+        
+        
+        #PROJECTS SUMMARTY
+        
+        Pro_pending=  Main_df [Main_df ["Facility Approval"].isnull()]
+        Pro_pending_request = int( Pro_pending.shape[0])
+        Pro_pending_value= Pro_pending.groupby('ID')["Approved amount"].sum().sum()
+        
+        Pro_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
+        Pro_Approved_request = int(Pro_Approved.shape[0])
+        Pro_Approved_value= Pro_Approved.groupby('ID')["Approved amount"].sum().sum()
+        
+        Pro_Rejected=  Main_df [Main_df ["Facility Approval"]=="Rejected"]
+        Pro_Rejecetd_request = int(Pro_Rejected.shape[0])
+        Pro_Rejected_value= Pro_Rejected.groupby('ID')["Approved amount"].sum().sum()
+        
+        
+        data = [
+            {"Approver": "Director", "Approved No.":Dir_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets":Dir_pending_request, "Pending Value":Dir_pending_value },
+             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Pro_Approved_value, "Pending Requets":Pro_pending_request, "Pending Value":Pro_pending_value },
+             {"Approver": "Facility", "Approved No.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request, "Pending Value":Fac_pending_value },
+             {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_Approved_value, "Pending Requets":Ops_pending_request, "Pending Value":Ops_pending_value }
+            # Add more records as needed
+        ]
+
+        # Creating a DataFrame
+        Approval_df = pd.DataFrame(data)
+
+        
         
 
         if st.session_state.is_authenticated or st.session_state.tab_clicked:
@@ -180,8 +253,8 @@ def app():
                     with cols[3]:
                         total_pending_value = f"Total Value: {Total_Value}, Pending Value: {pending_value}"
                         ui.card(title="Value:", content=total_pending_value, key="Revcard13").render()
-
-
+                ui.table(data=Approval_df, maxHeight=300)
+                
                 with st.expander("View Table"):
                     st.dataframe(Main_df, use_container_width=True)
 
