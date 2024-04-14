@@ -152,6 +152,10 @@ def app():
         Fac_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
         Fac_Approved_value =  Fac_Approved["Approved amount"].sum()
         
+        Pro_Approved=  Main_df [Main_df ["Projects Approval"]=="Approved"]
+        Pro_Approved_value =   Pro_Approved["Approved amount"].sum()
+        
+        
         
         
         
@@ -232,7 +236,7 @@ def app():
         
         data = [
             {"Approver": "Director", "Approved No.":Dir_Approved_value, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_Approved_value, "Pending Value": Dir_Approved_value },
-             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets":Pro_pending_request, "Pending Value":Pro_pending_value },
+             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Pro_Approved_value , "Pending Requets":Pro_Approved_value , "Pending Value":Pro_Approved_value},
              {"Approver": "Facility", "Approved No.":Fac_Approved_value, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request, "Pending Value":Fac_pending_value },
              {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_Approved_value, "Pending Requets":Ops_Approved_value, "Pending Value":Ops_pending_value }
             # Add more records as needed
