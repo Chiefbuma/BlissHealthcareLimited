@@ -135,6 +135,7 @@ def app():
     if st.session_state.is_authenticated:
         form_container.empty()
         # get clients sharepoint list
+       
         clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
 
         # create DataFrame from clients list
@@ -142,7 +143,7 @@ def app():
 
         st.write(Main_df)
 
-        Total_requests = Main_df["Title"].nunique()
+        Total_requests = Main_df["ID"].nunique()
        
         pending_requests_calc =  Main_df [Main_df ["MainStatus"] == "Pending"]
         pending_request = int(pending_requests_calc.shape[0])
