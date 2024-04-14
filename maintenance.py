@@ -230,7 +230,7 @@ def app():
         
         data = [
             {"Approver": "Director", "Approved No.":Dir_Approved_request, "Approved Value":Dir_pending_value, "Pending Requets":Dir_pending_request, "Pending Value":Dir_pending_value },
-             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value":Test_pending_value, "Pending Requets":Pro_pending_request, "Pending Value":Pro_pending_value },
+             {"Approver": "Projects", "Approved No.":Pro_Approved_request, "Approved Value": Dir_pending_value, "Pending Requets":Pro_pending_request, "Pending Value":Pro_pending_value },
              {"Approver": "Facility", "Approved No.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request, "Pending Value":Fac_pending_value },
              {"Approver": "Operations", "Approved No.":Ops_Approved_request, "Approved Value":Ops_Approved_value, "Pending Requets":Ops_pending_request, "Pending Value":Ops_pending_value }
             # Add more records as needed
