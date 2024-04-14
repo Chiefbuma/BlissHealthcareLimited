@@ -156,7 +156,7 @@ def app():
         Ops_pending = Main_df[(Main_df["Approver"]=="OPERATIONS")]
         Ops_pending_request=  Ops_pending["ID"].nunique()
         Ops_rejected=  Main_df [Main_df ["RIT Approval"]=="Rejected"]
-        Dir_rejecetd_request= Ops_rejected["ID"].nunique()
+        Ops_rejecetd_request= Ops_rejected["ID"].nunique()
         
         
         Fac_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
@@ -203,7 +203,7 @@ def app():
             {"Approver": "Director", "Approved Requests.":Dir_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_pending_request,"Rejected Request": Dir_rejecetd_request },
              {"Approver": "Projects", "Approved Requests.":Pro_Approved_request, "Approved Value":Pro_Approved_value , "Pending Requets":Pro_pending_request,"Rejected Request": Pro_rejected_request },
              {"Approver": "Facility", "Approved Requests.":Fac_Approved_request, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_pending_request,"Rejected Request": Fac_rejected_request },
-             {"Approver": "Operations", "Approved Requests.":Ops_Approved_request, "Approved Value":Ops_Approved_value, "Pending Requets":Ops_pending_request ,"Rejected Request": Ops_pending_request}
+             {"Approver": "Operations", "Approved Requests.":Ops_Approved_request, "Approved Value":Ops_Approved_value, "Pending Requets":Ops_pending_request ,"Rejected Request": Ops_rejecetd_request}
             # Add more records as needed
         ]
 
