@@ -225,8 +225,7 @@ def app():
                     with cols[2]:
                         ui.card(title="Pending Request", content=pending_request, key="Revcard12").render()
                     with cols[3]:
-                        total_pending_value = f"Total Value: {Total_Value}, Pending Value: {pending_value}"
-                        ui.card(title="Value:", content=total_pending_value, key="Revcard13").render()
+                        ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()
 
                     with card_container(key="table1"):
                         ui.table(data=Approval_df, maxHeight=300)
