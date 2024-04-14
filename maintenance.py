@@ -144,19 +144,11 @@ def app():
                 ctx.load(web)
                 ctx.execute_query()
                 target_list = ctx.web.lists.get_by_title(list_name)
-                
-                items = []
-                query = target_list.get_items()
-                ctx.load(query)
+                items = target_list.get_items()
+                ctx.load(items)
                 ctx.execute_query()
 
-                while query.has_next():
-                    items += list(query)
-                    query = query.next()
-                    ctx.load(query)
-                    ctx.execute_query()
-
-                selected_columns = [
+                selected_columns= [
                     "ID",
                     "Title",
                     "AuthorId",
