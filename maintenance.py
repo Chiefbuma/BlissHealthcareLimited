@@ -144,7 +144,9 @@ def app():
         st.write(Main_df)
 
         Total_requests = Main_df["ID"].nunique()
-       
+        
+        Total_Value = Main_df.groupby('ID')['AmmountontheQuotation'].sum().sum()
+
         pending_requests_calc =  Main_df [Main_df ["MainStatus"] == "Pending"]
         pending_request = int(pending_requests_calc.shape[0])
 
@@ -172,7 +174,7 @@ def app():
                     with cols[2]:
                         ui.card(title="Pending Request", content=pending_request , key="Revcard12").render()
                     with cols[3]:
-                        ui.card(title="Average TAT:", content=pending_request, key="Revcard13").render()
+                        ui.card(title="Value:", content=Total_Value, key="Revcard13").render()
 
                 with st.expander("View Table"):
                     st.dataframe(Main_df, use_container_width=True)
