@@ -142,20 +142,21 @@ def app():
         Main_df = pd.DataFrame(clients)
         
         Director_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
-        Dir_Approved_value =  Director_Approved["Approved amount"].sum()
+        Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
+        Dir_Approved_request=  Director_Approved["ID"].nunique()
         
         
         Ops_pending=  Main_df [Main_df ["Admin Approval"]=="Approved"]
-        Ops_pending_value= Ops_pending["Approved amount"].sum()
-        
+        Ops_pending_value= '{:,.0f}'.format(Ops_pending["Approved amount"].sum())
+    
         
         Fac_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
-        Fac_Approved_value = '{:,}'.format(Fac_Approved["Approved amount"].sum())
+        Fac_Approved_value = '{:,.0f}'.format(Fac_Approved["Approved amount"].sum())
         
         Pro_Approved=  Main_df [Main_df ["Projects Approval"]=="Approved"]
-        Pro_Approved_value = '{:,}'.format(Pro_Approved["Approved amount"].sum())
+        Pro_Approved_value = '{:,.0f}'.format(Pro_Approved["Approved amount"].sum())
         
-         
+        
         
         
         
@@ -185,7 +186,7 @@ def app():
                 
         
         data = [
-            {"Approver": "Director", "Approved No.":Dir_Approved_value, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_Approved_value, "Pending Value": Dir_Approved_value },
+            {"Approver": "Director", "Approved No.":Dir_Approved_request, "Approved Value":Dir_Approved_value, "Pending Requets": Dir_Approved_value, "Pending Value": Dir_Approved_value },
              {"Approver": "Projects", "Approved No.":Pro_Approved_value, "Approved Value":Pro_Approved_value , "Pending Requets":Pro_Approved_value , "Pending Value":Pro_Approved_value},
              {"Approver": "Facility", "Approved No.":Fac_Approved_value, "Approved Value":Fac_Approved_value, "Pending Requets":Fac_Approved_value, "Pending Value":Fac_Approved_value },
              {"Approver": "Operations", "Approved No.":Ops_pending_value, "Approved Value":Ops_pending_value, "Pending Requets":Ops_pending_value, "Pending Value":Ops_pending_value }
