@@ -145,7 +145,7 @@ def app():
 
         Total_requests = Main_df["ID"].nunique()
         
-        Total_Value = Main_df.groupby('ID')['AmmountontheQuotation'].sum().sum()
+        Total_Value = Main_df.groupby('ID')['Ammount on the Quotation'].sum().sum()
 
         pending_requests_calc =  Main_df [Main_df ["MainStatus"] == "Pending"]
         pending_request = int(pending_requests_calc.shape[0])
@@ -183,7 +183,7 @@ def app():
                         {"label": "Total", "value": Total_requests},
                         {"label": "Closed", "value": closed_request},
                         {"label": "Pending", "value": pending_request},
-                        {"label": "TAT(days)", "value": Average_Days_pending}
+                        {"label": "Value", "value": Total_Value}
                     ]
 
                     fig_data_cards = go.Figure()
