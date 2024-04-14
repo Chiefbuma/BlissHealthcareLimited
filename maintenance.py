@@ -144,7 +144,7 @@ def app():
         Director_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
         Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
         Dir_Approved_request=  Director_Approved["ID"].nunique()
-        Director_pending=  Main_df [Main_df ["RIT Approval"].isnull]
+        Director_pending = Main_df[Main_df["RIT Approval"].isnull()]
         Dir_pending_request=  Director_pending["ID"].nunique()
         Dir_pending_value = '{:,.0f}'.format(Director_pending["Approved amount"].sum())
         
