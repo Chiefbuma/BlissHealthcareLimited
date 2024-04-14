@@ -141,8 +141,8 @@ def app():
         # create DataFrame from clients list
         Main_df = pd.DataFrame(clients)
 
-        #st.write(Main_df)
-        #st.write(Main_df.columns)
+        st.write(Main_df)
+        st.write(Main_df.columns)
 
         Total_requests = Main_df["ID"].nunique()
         
