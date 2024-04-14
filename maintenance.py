@@ -153,7 +153,7 @@ def app():
         Ops_Approved=  Main_df [Main_df ["RIT Approval"]=="Approved"]
         Ops_Approved_value= '{:,.0f}'.format(Ops_Approved["Approved amount"].sum())
         Ops_Approved_request= Ops_Approved["ID"].nunique()
-        Ops_pending = Main_df[(Main_df["Approver"]=="OPERATIONS")]& (Main_df["RIT Approval"].isnull())
+        Ops_pending = Main_df[(Main_df["Approver"] == "OPERATIONS") & (Main_df["RIT Approval"].isnull())]
         Ops_pending_request=  Ops_pending["ID"].nunique()
         Ops_rejected=  Main_df [Main_df ["RIT Approval"]=="Rejected"]
         Ops_rejecetd_request= Ops_rejected["ID"].nunique()
