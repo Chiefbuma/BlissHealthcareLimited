@@ -150,10 +150,10 @@ def app():
         
         
         Fac_Approved=  Main_df [Main_df ["Facility Approval"]=="Approved"]
-        Fac_Approved_value =  Fac_Approved["Approved amount"].sum()
+        Fac_Approved_value = '{:,}'.format(Fac_Approved["Approved amount"].sum())
         
         Pro_Approved=  Main_df [Main_df ["Projects Approval"]=="Approved"]
-        Pro_Approved_value =   Pro_Approved["Approved amount"].sum()
+        Pro_Approved_value =   Pro_Approved["Approved amount"].sum().apply(lambda x: '{:,}'.format(x))
         
         
         
