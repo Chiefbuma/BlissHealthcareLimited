@@ -27,4 +27,4 @@ requests==2.27.1
 requests-ntlm==1.1.0
 requests-toolbelt==0.9.1
 SharePlum==0.5.1
-urllib3==1.26.5
+urllib3==1.26.8
