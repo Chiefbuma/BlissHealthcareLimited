@@ -263,7 +263,7 @@ def app():
                              ui.table(data=Approval_df, maxHeight=300)
                       
                 with st.expander("MAINTENANACE REPORT"):             
-                    with card_container(key="gallery1", use_container_width=True):
+                    with card_container(key="gallery1"):
                         st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
                         @st.cache_data
                         def load_data():
