@@ -281,7 +281,7 @@ def app():
                             'Amount on the Quotation': 'Quote',
                             'Approved amount': 'Approved',
                             'Approver': 'Pending with',
-                            'MainStatus': 'Status'
+                            'MainStatus': 'Status',
                             'LinkEdit': 'Link'
                         })
                         st.data_editor(
