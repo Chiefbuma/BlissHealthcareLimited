@@ -279,7 +279,7 @@ def app():
                             'Clinic': 'Facility',
                             'Report': 'Issue',
                             'Amount on the Quotation': 'Quoted',
-                            'Approved amount': 'Approved',
+                            'Approved amount': 'Last Approved',
                             'Approver': 'Pending with',
                             'MainStatus': 'Status',
                             'LinkEdit': 'Link'
