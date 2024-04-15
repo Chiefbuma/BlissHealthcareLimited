@@ -275,7 +275,7 @@ def app():
 
                                     data_df['LinkEdit'] = data_df['LinkEdit'].str.split(', ')
                                     
-                                    data_df['LinkEdit'] = data_df['LinkEdit'].str.replace('?ID=', '&ID=')
+                                   
                                     data_df['LinkEdit'] = data_df['LinkEdit'].apply(lambda x: f'<a href="{x}">Approve here</a>')
                                    
                                     
