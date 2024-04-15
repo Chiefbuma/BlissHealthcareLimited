@@ -275,31 +275,19 @@ def app():
                                                    
                                     # Display the gallery-like table
                                     for index, row in Main_df.iterrows():
-                                        Sn = index + 1
-                                        ID = row['ID']
-                                        Date = row['Date of report']
-                                        Facility = row['Clinic']
-                                        Category = row['Departmental report']
-                                        Department = row['Department']
-                                        Issue = row['Report']
-                                        Amount = row['Amount on the Quotation']
-                                        Labour = row['Labor']
-                                        Link = row['LinkEdit']
-                                        Approver = row['Approver']
-                                        
-                                     
                                         # Display the values as a tables
-                                        st.write(f"## Item {Sn}")
-                                        st.write(f"**ID:** {ID}")
-                                        st.write(f"**Date:** {Date}")
-                                        st.write(f"**Facility:** {Facility}")
-                                        st.write(f"**Category:** {Category}")
-                                        st.write(f"**Department:** {Department}")
-                                        st.write(f"**Issue:** {Issue}")
-                                        st.write(f"**Amount:** {Amount}")
-                                        st.write(f"**Labour:** {Labour}")
-                                        st.write(f"**Link:** [{Link}](Link)")
-                                        st.write(f"**Approver:** {Approver}")
+                                        st.write(f"## Item {row['Date of report']}")
+                                        st.write(f"**ID:** {row['ID']}")
+                                        st.write(f"**Date:** {row['Date of report']}")
+                                        st.write(f"**Facility:** {row['Clinic']}")
+                                        st.write(f"**Category:** {row['Departmental report']}")
+                                        st.write(f"**Department:** {row['Department']}")
+                                        st.write(f"**Issue:** {row['Report']}")
+                                        st.write(f"**Amount:** {row['Labor']}")
+                                        st.write(f"**Labour:** {row['Labor']}")
+                                        st.write(f"**Approver:** {row['Approver']}")
+                                        st.write(f"**Link:** [{row['LinkEdit']}")
+                                        
                                         st.write("---")
                                         
                                         
