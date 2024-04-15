@@ -265,7 +265,7 @@ def app():
                                 
                                 st.vega_lite_chart(category_counts, {
                                     'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6,'width': 'container',
-                                             'height': 150},
+                                             'height': 300},
                                     'encoding': {
                                         'x': {'field': 'Category', 'type': 'ordinal'},
                                         'y': {'field': 'No.', 'type': 'quantitative', 'axis': {'grid': False}},
