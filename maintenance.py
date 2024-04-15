@@ -297,7 +297,7 @@ def app():
                                                 "Issue": Issue,
                                                 "Amount": Amount,
                                                 "Labour": Labour,
-                                                "Link": Link,
+                                                "Link": f'<a href="{Link}" target="_blank">Click here</a>',
                                                 "Approver": Approver
                                             })
                                         
