@@ -299,7 +299,7 @@ def app():
                                                 st.write(f"**Amount:** {Amount}"),
                                                 st.write(f"**Labour:** {Labour}"),
                                                 st.write(f"**Link:** [{Link}](Link)"),
-                                                st.write(f"**Approver:** {Approver}")<
+                                                st.write(f"**Approver:** {Approver}"),
                                                 st.write("---"))
                                         
                                         
