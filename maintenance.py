@@ -301,7 +301,7 @@ def app():
                                             "Link": f'<a href="{Link}" target="_blank">Click here</a>',
                                             "Approver": Approver
                                         }
-                                        ui.table(st.write(table_data, scrollable=True))
+                                        st.table(table_data)
                                      
 
 
