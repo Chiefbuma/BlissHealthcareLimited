@@ -270,19 +270,38 @@ def app():
                                             return pd.DataFrame(clients)
 
                                     Main_df = load_data()
-                                                                    
-                                    data_df = Main_df[['LinkEdit','ID']]
-
-                                    data_df['LinkEdit'] = data_df['LinkEdit'].str.split(', ')
                                     
-                                   
-                                    data_df['LinkEdit'] = data_df['LinkEdit'].apply(lambda x: f'<a href="{x}">Approve here</a>')
-                                   
-                                    
-                                
-
-                                                                      
-                                    st.write(data_df)
+                                    data = []
+                                                   
+                                    # Display the gallery-like table
+                                    for index, row in Main_df.iterrows():
+                                        Sn = index + 1
+                                        ID = row['ID']
+                                        Date = row['Date of report']
+                                        Facility = row['Clinic']
+                                        Category = row['Departmental report']
+                                        Department = row['Department']
+                                        Issue = row['Report']
+                                        Amount = row['Amount on the Quotation']
+                                        Labour = row['Labor']
+                                        Link = row['LinkEdit']
+                                        Approver = row['Approver']
+                                        
+                                        st.table({
+                                                "Sn": Sn,
+                                                "ID": ID,
+                                                "Date": Date,
+                                                "Facility": Facility,
+                                                "Category": Category,
+                                                "Department": Department,
+                                                "Issue": Issue,
+                                                "Amount": Amount,
+                                                "Labour": Labour,
+                                                "Link": Link,
+                                                "Approver": Approver
+                                            })
+                                        
+                                     
 
 
 
