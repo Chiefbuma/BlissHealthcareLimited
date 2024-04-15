@@ -262,42 +262,21 @@ def app():
                              ui.table(data=Approval_df, maxHeight=300)
                         with cols[1]:
                                 with card_container(key="gallery1"):
-                                    @st.cache_data
-                                    def load_data():
-                                            clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                                            return pd.DataFrame(clients)
+                                   
+                                # Sample DataFrame
+                                    data2 = {
+                                        'ID': [1, 2, 3],
+                                        'Name': ['Alice', 'Bob', 'Charlie'],
+                                        'Action': ['Click', 'Click', 'Click']
+                                    }
+                                    final_df = pd.DataFrame(data2)
 
-                                    Main_df = load_data()
-                                    # Display the gallery-like table
-                                    for index, row in Main_df.iterrows():
-                                      
-                                         ID = row['ID']
-                                         Approver = row['Approver']
-                                         Link = row['LinkEdit']
-                                        # Add more columns as needed
+                                    # Display the table with a clickable button
+                                    formatted_data = final_df.copy()
+                                    formatted_data['Action'] = formatted_data['Action'].apply(lambda x: f'<button>{x}</button>')
 
-                                        # Add a button for each row item
-                                    button_clicked = st.button(f"Process Item {index + 1}")
-                                    if button_clicked:
-                                        st.write(f"Processing item {index + 1}...")
-                                        
-                                        
-                                        st.write("---")
-                                        
-                                datanew = [
-                                    {"Approver": Approver,
-                                       
-                                        "Value":Dir_Approved_value,
-                                        "ID": ID,
-                                        "Link": Link },
-                                ]   
-                                        
-                                final_df=pd.DataFrame(datanew )
-                                        
-                                                 
-                                ui.table(data= final_df, maxHeight=300,key="ew")        
-                                        
-                                        
+                                    # Use st.table to display the formatted data
+                                    st.table(formatted_data, format={'Action': 'raw'})     
                                          
                     metrics = [
                         {"label": "Total", "value": Total_requests},
