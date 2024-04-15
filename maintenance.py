@@ -295,7 +295,7 @@ def app():
                                 final_df=pd.DataFrame(datanew )
                                         
                                                  
-                                ui.table(data= Main_df, maxHeight=300,key="ew")        
+                                ui.table(data= final_df, maxHeight=300,key="ew")        
                                         
                                         
                                          
