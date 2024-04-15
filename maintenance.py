@@ -275,20 +275,19 @@ def app():
                                                    
                                     # Display the gallery-like table
                                     for index, row in Main_df.iterrows():
-                                        # Display the values as a tables
-                                        st.write(f"## Item {row['Date of report']}")
-                                        st.write(f"**ID:** {row['ID']}")
-                                        st.write(f"**Date:** {row['Date of report']}")
-                                        st.write(f"**Facility:** {row['Clinic']}")
-                                        st.write(f"**Category:** {row['Departmental report']}")
-                                        st.write(f"**Department:** {row['Department']}")
-                                        st.write(f"**Issue:** {row['Report']}")
-                                        st.write(f"**Amount:** {row['Labor']}")
-                                        st.write(f"**Labour:** {row['Labor']}")
-                                        st.write(f"**Approver:** {row['Approver']}")
-                                        st.write(f"**Link:** [{row['LinkEdit']}")
-                                        
+                                        st.write(f"## Item {index + 1}")
+                                        st.write("**ID:** " + row['ID'])
+                                        st.write("**Date:** " + row['Date of report'])
+                                        st.write("**Facility:** " + row['Clinic'])
+                                        st.write("**Category:** " + row['Departmental report'])
+                                        st.write("**Department:** " + row['Department'])
+                                        st.write("**Issue:** " + row['Report'])
+                                        st.write("**Amount:** " + row['Labor'])
+                                        st.write("**Labour:** " + row['Labor'])
+                                        st.write("**Approver:** " + row['Approver'])
+                                        st.write("**Link:** [" + row['LinkEdit'] + "](" + row['LinkEdit'] + ")")
                                         st.write("---")
+
                                         
                                         
                                         
