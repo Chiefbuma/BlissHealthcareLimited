@@ -227,14 +227,6 @@ def app():
         Approval_df = pd.DataFrame(data)
         
         
-        
-        
-        def generate_sales_data(category_counts):
-            return pd.DataFrame({'Category': category_counts['Category'], 'No.': category_counts['No.']})
-
-        
-        
-        
 
         if st.session_state.is_authenticated or st.session_state.tab_clicked:
             st.session_state.tab_clicked=True
@@ -261,13 +253,15 @@ def app():
                         with cols[1]:
                             with card_container(key="chart1"):
                                 st.markdown("<br>", unsafe_allow_html=True)
-                                st.vega_lite_chart(generate_sales_data(category_counts), {
+                                st.vega_lite_chart(category_counts, {
                                     'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6},
                                     'encoding': {
                                         'x': {'field': 'Category', 'type': 'ordinal'},
                                         'y': {'field': 'No.', 'type': 'quantitative', 'axis': {'grid': False}},
                                     },
                                 }, use_container_width=True, height=300)
+                                
+                                
                         
                     with st.expander("View Table"):
                         st.dataframe(Main_df, use_container_width=True)
