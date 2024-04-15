@@ -276,7 +276,7 @@ def app():
                         Main_df['Date of report'] = pd.to_datetime(Main_df['Date of report']).dt.date
                         
                         
-                        data_df= Main_df[['ID','Date of report','Clinic','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
+                        data_df= Main_df[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
                         
                         # Convert 'bill_date' to datetime type
                         data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
@@ -286,6 +286,7 @@ def app():
                             'ID': 'Ticket',
                             'Date of report':'Date',
                             'Clinic': 'Facility',
+                            'Department':'Department',
                             'Report': 'Issue',
                             'Amount on the Quotation': 'Quoted',
                             'Approved amount': 'Last Approved',
