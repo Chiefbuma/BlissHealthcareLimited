@@ -265,14 +265,16 @@ def app():
                                                                         
                                     data_df = Main_df[['LinkEdit']]
 
-                                    st.data_editor(
-                                            data_df,
-                                            column_config={
-                                                "LinkEdit": st.ColumnDisplayOption.LINK(display_text="Approve here")
-                                            },
-                                            hide_index=True
-                                        )
-                                                                            
+                                    st.dataframe(
+                                        data_df,
+                                        column_configs={
+                                            "LinkEdit": {
+                                                "displayMode": "link",
+                                                "displayText": "Approve here"
+                                            }
+                                        }
+                                    )
+                                    
                                          
                     metrics = [
                         {"label": "Total", "value": Total_requests},
