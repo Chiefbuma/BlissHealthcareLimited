@@ -273,10 +273,9 @@ def app():
                                                                         
                                     data_df = Main_df[['LinkEdit','ID']]
                                     
+                                    HTML(data_df.to_html(render_links=True, escape=False))
                                     
-                                    data_df ['LinkEdit'] =  data_df ['LinkEdit'].apply(lambda x: f'<a href="{x}">Approve here</a>')
-                                    HTML(Main_df.to_html(escape=False))
-                                    
+                                                                      
                                     st.write(data_df)
 
 
