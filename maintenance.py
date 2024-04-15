@@ -141,21 +141,8 @@ def app():
         # create DataFrame from clients list
         Main_df = pd.DataFrame(clients)
         
-        def generate_sales_data(category_counts):
-           return pd.DataFrame({'Category': category_counts['Category'], 'No.': category_counts['No.']})
-
         
-        # Filter the Main_df DataFrame to get the "departmental report" column
-        departmental_report_df = Main_df["Departmental report"]
-
-        # Get unique categories and their counts
-        category_counts = departmental_report_df.value_counts().reset_index()
-
-        # Rename the columns to "Category" and "No."
-        category_counts.columns = ["Category", "No."]
-
-        # Display the new DataFrame
-        st.write(category_counts)
+        
         
         Director_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
@@ -226,6 +213,18 @@ def app():
         # Creating a DataFrame
         Approval_df = pd.DataFrame(data)
         
+        
+        # Filter the Main_df DataFrame to get the "departmental report" column
+        departmental_report_df = Main_df["Departmental report"]
+
+        # Get unique categories and their counts
+        category_counts = departmental_report_df.value_counts().reset_index()
+
+        # Rename the columns to "Category" and "No."
+        category_counts.columns = ["Category", "No."]
+
+        # Display the new DataFrame
+        st.write(category_counts)
         
 
         if st.session_state.is_authenticated or st.session_state.tab_clicked:
