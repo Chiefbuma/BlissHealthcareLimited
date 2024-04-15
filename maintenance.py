@@ -272,9 +272,17 @@ def app():
 
                         Main_df = load_data()
                         
-                        data_df= Main_df[['ID','Approver','Clinic','Department','Report','Amount on the Quotation','Labor','LinkEdit']]
-                    
-
+                        data_df= Main_df[['ID','Clinic','Report','RIT Approval','Facility Approval','Projects Approval','Admin Approval','Approver','LinkEdit']]
+                        data_df = data_df.rename(columns={
+                            'ID': 'ID',
+                            'Clinic': 'Facility',
+                            'Report': 'Issue',
+                            'RIT Approval': 'Operations',
+                            'Facility Approval': 'Cordinator',
+                            'Projects Approval': 'Projects',
+                            'Admin Approval': 'Director',
+                            'LinkEdit': 'Link'
+                        })
                         st.data_editor(
                             data_df,
                             column_config={
