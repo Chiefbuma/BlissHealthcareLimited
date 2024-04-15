@@ -265,17 +265,29 @@ def app():
                                 st.markdown("<br>", unsafe_allow_html=True)
                              
                                 def generate_sales_data():
-                                    np.random.seed(0)  # For reproducible results
-                                    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-                                    sales = np.random.randint(1000, 5000, size=len(months))
-                                    return pd.DataFrame({'Month': months, 'Sales': sales})
+                                    clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                                    
+                                    clients_df=pd.DataFrame( clients)
+                                                                        # Filter the Main_df DataFrame to get the "departmental report" column
+                                    departmental_report_df =  clients_df["Departmental report"]
+
+                                    # Assuming departmental_report_df is your DataFrame
+                                    category_counts =  departmental_report_df.value_counts().reset_index()
+                                    
+                                    # Rename the columns to "Category" and "No."
+                                    category_counts.columns = ["Category", "No."]
+                                    
+                                    # Convert "No." column to integers
+                                    category_counts["No."] = category_counts["No."].astype(int)
+                                    
+                                    return pd.DataFrame(category_counts)
 
                                 with card_container(key="chart1"):
                                     st.vega_lite_chart(generate_sales_data(), {
                                         'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
                                         'encoding': {
-                                            'x': {'field': 'Month', 'type': 'ordinal'},
-                                            'y': {'field': 'Sales', 'type': 'quantitative', 'axis': {'grid': False}},
+                                            'x': {'field': 'Category', 'type': 'ordinal'},
+                                            'y': {'field': 'No.', 'type': 'quantitative', 'axis': {'grid': False}},
                                         },
                                     }, use_container_width=True)
                                 
