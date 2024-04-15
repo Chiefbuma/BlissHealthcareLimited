@@ -263,14 +263,19 @@ def app():
                              ui.table(data=Approval_df, maxHeight=300)
                         with cols[1]:
                                 with card_container(key="gallery1"):
+                                    
+                                    @st.cache_data
+                                    def load_data():
+                                            clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                                            return pd.DataFrame(clients)
+
+                                    Main_df = load_data()
                                                                         
                                     data_df = Main_df[['LinkEdit']]
                                     
                                     
-                                    Main_df['LinkEdit'] = Main_df['LinkEdit'].apply(lambda x: f'<a href="{x}">Approve here</a>')
+                                    data_df ['LinkEdit'] =  data_df ['LinkEdit'].apply(lambda x: f'<a href="{x}">Approve here</a>')
                                     HTML(Main_df.to_html(escape=False))
-                                    
-                                    
                                     
                                     st.write(Main_df)
 
