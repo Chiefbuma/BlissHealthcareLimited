@@ -270,10 +270,7 @@ def app():
                                             return pd.DataFrame(clients)
 
                                     Main_df = load_data()
-                                                                        
-                                    
-                                    
-                                    HTML( Main_df.to_html(render_links=True, escape=False))
+                                                                    
                                     
                                                                       
                                     st.write(Main_df)
