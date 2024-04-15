@@ -272,8 +272,15 @@ def app():
 
                         Main_df = load_data()
                         
+                        # Convert 'bill_date' to datetime type
+                        Main_df['Date of report'] = pd.to_datetime(Main_df['Date of report']).dt.date
+                        
                         
                         data_df= Main_df[['ID','Date of report','Clinic','Report','Amount on the Quotation','Approved amount','Approver','MainStatus','LinkEdit']]
+                        
+                        # Convert 'bill_date' to datetime type
+                        data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
+                    
                         
                         data_df = data_df.rename(columns={
                             'ID': 'Ticket',
