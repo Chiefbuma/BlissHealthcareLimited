@@ -264,7 +264,7 @@ def app():
                         with cols[1]:
                                
                                 with card_container(key="gallery1"):
-                                        with st.markdown('<div style="overflow-y: scroll; height: 50px;">', unsafe_allow_html=True):
+                                        with st.markdown('<div style="overflow-y: scroll; height: 300px;">', unsafe_allow_html=True):
                                     
                                             @st.cache_data
                                             def load_data():
