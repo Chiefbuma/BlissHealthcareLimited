@@ -286,7 +286,7 @@ def app():
                                         hide_index=True
                                     )
 
-                                
+                                    ui.table(data=data_df, maxHeight=300)
 
 
 
