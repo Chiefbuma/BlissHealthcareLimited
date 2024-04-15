@@ -275,7 +275,6 @@ def app():
                                                    
                                     # Display the gallery-like table
                                     for index, row in Main_df.iterrows():
-                                        Sn = index + 1
                                         ID = row['ID']
                                         Date = row['Date of report']
                                         Facility = row['Clinic']
@@ -289,7 +288,6 @@ def app():
 
                                         # Display the values as a table
                                         table_data = {
-                                            "Sn": Sn,
                                             "ID": ID,
                                             "Date": Date,
                                             "Facility": Facility,
