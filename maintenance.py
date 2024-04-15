@@ -296,7 +296,12 @@ def app():
                                         },
                                         hide_index=True,
                                             )
-                                    ui.table(data=data_df, maxHeight=300)
+                                    
+                                                                        # Format the Link column as clickable links
+                                    data_df['apps'] =  data_df['apps'].apply(lambda x: f'<a href="{x}">{x}</a>')
+                                    
+                                   
+                                    ui.table(data=data_df,format={'Link': 'raw'}, maxHeight=300)
                                     
                                          
                     metrics = [
