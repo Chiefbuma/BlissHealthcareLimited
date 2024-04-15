@@ -261,32 +261,32 @@ def app():
                         with cols[0]:
                             with card_container(key="table1"):
                              ui.table(data=Approval_df, maxHeight=300)
-                        with cols[1]:
-                               
-                                with card_container(key="gallery1"):
-                                    st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
-                                    @st.cache_data
-                                    def load_data():
-                                        clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                                        return pd.DataFrame(clients)
+                      
+                with st.expander("MAINTENANACE REPORT"):             
+                    with card_container(key="gallery1", use_container_width=True):
+                        st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
+                        @st.cache_data
+                        def load_data():
+                            clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                            return pd.DataFrame(clients)
 
-                                    Main_df = load_data()
-                                    
-                                    data_df= Main_df[['ID','Approver','Clinic','Department','Report','Amount on the Quotation','Labor','LinkEdit']]
+                        Main_df = load_data()
+                        
+                        data_df= Main_df[['ID','Approver','Clinic','Department','Report','Amount on the Quotation','Labor','LinkEdit']]
+                    
+
+                        st.data_editor(
+                            data_df,
+                            column_config={
+                                "LinkEdit": st.column_config.LinkColumn(
+                                    "LinkEdit",
+                                    display_text="Approve here"
+                                )
+                            },
+                            hide_index=True
+                        )
+
                                 
-
-                                    st.data_editor(
-                                        data_df,
-                                        column_config={
-                                            "LinkEdit": st.column_config.LinkColumn(
-                                                "LinkEdit",
-                                                display_text="Approve here"
-                                            )
-                                        },
-                                        hide_index=True
-                                    )
-
-                                    ui.table(data=data_df, maxHeight=300)
 
 
 
