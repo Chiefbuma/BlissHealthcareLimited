@@ -158,7 +158,11 @@ def app():
 
         # Display the new DataFrame
         st.write(category_counts) 
-                
+                                
+
+        
+         
+         
                 
         Director_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
@@ -225,7 +229,10 @@ def app():
              {"Approver": "Operations", "Approved.":Ops_Approved_request, "Value":Ops_Approved_value, "Pending":Ops_pending_request ,"Rejected": Ops_rejecetd_request}
             # Add more records as needed
         ]
-
+        New_df=pd.DataFrame(data)
+        
+        st.write(New_df)
+        
         # Creating a DataFrame
         Approval_df = pd.DataFrame(data)
         
@@ -260,12 +267,12 @@ def app():
                                 
                                 
                                 
-                                st.vega_lite_chart(data, {
+                                st.vega_lite_chart(category_counts, {
                                     'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6,'width': 'container',
                                              'height': 300},
                                     'encoding': {
-                                        'x': {'field': 'Approver', 'type': 'ordinal'},
-                                        'y': {'field': 'Value', 'type': 'quantitative', 'axis': {'grid': False}},
+                                        'x': {'field': 'Category', 'type': 'ordinal'},
+                                        'y': {'field': 'No.', 'type': 'quantitative', 'axis': {'grid': False}},
                                     },
                                 }, use_container_width=True)
                         
