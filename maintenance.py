@@ -276,7 +276,7 @@ def app():
                                     formatted_data['Action'] = formatted_data['Action'].apply(lambda x: f'<button>{x}</button>')
 
                                     # Use st.table to display the formatted data
-                                    st.table(formatted_data, format={'Action': 'raw'})     
+                                    st.table(formatted_data)     
                                          
                     metrics = [
                         {"label": "Total", "value": Total_requests},
