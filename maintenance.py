@@ -271,7 +271,7 @@ def app():
 
                                     Main_df = load_data()
                                                                         
-                                    data_df = Main_df[['LinkEdit','ID']]
+                                    data_df = Main_df[['LinkEdit','Report']]
                                     
                                     HTML(data_df.to_html(render_links=True, escape=False))
                                     
