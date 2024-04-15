@@ -301,7 +301,7 @@ def app():
                                     display_text="View"
                                 )
                             },
-                            hide_index=True
+                            hide_index=False
                         )
 
                                 
