@@ -271,12 +271,12 @@ def app():
 
                                     Main_df = load_data()
                                                                         
-                                    data_df = Main_df[['LinkEdit','Report']]
                                     
-                                    HTML(data_df.to_html(render_links=True, escape=False))
+                                    
+                                    HTML( Main_df.to_html(render_links=True, escape=False))
                                     
                                                                       
-                                    st.write(data_df)
+                                    st.write(Main_df)
 
 
 
