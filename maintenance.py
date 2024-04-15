@@ -287,20 +287,20 @@ def app():
                                         Link = row['LinkEdit']
                                         Approver = row['Approver']
                                         
-                                        st.table(
-                                                # Display the values as a table
-                                                st.write(f"## Item {Sn}"),
-                                                st.write(f"**ID:** {ID}"),
-                                                st.write(f"**Date:** {Date}"),
-                                                st.write(f"**Facility:** {Facility}"),
-                                                st.write(f"**Category:** {Category}"),
-                                                st.write(f"**Department:** {Department}"),
-                                                st.write(f"**Issue:** {Issue}"),
-                                                st.write(f"**Amount:** {Amount}"),
-                                                st.write(f"**Labour:** {Labour}"),
-                                                st.write(f"**Link:** [{Link}](Link)"),
-                                                st.write(f"**Approver:** {Approver}"),
-                                                st.write("---"))
+                                     
+                                        # Display the values as a tables
+                                        st.write(f"## Item {Sn}")
+                                        st.write(f"**ID:** {ID}")
+                                        st.write(f"**Date:** {Date}")
+                                        st.write(f"**Facility:** {Facility}")
+                                        st.write(f"**Category:** {Category}")
+                                        st.write(f"**Department:** {Department}")
+                                        st.write(f"**Issue:** {Issue}")
+                                        st.write(f"**Amount:** {Amount}")
+                                        st.write(f"**Labour:** {Labour}")
+                                        st.write(f"**Link:** [{Link}](Link)")
+                                        st.write(f"**Approver:** {Approver}")
+                                        st.write("---")
                                         
                                         
                                         
