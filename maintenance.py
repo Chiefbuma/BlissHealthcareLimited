@@ -264,9 +264,10 @@ def app():
                             with card_container(key="chart1"):
                                 st.markdown("<br>", unsafe_allow_html=True)
                              
-                                st.vega_lite_chart(New_df,  {
-                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6,'width': 'container',
-                                             'height': 300},
+                                st.vega_lite_chart(New_df, {
+                                            'width': 'container',
+                                            'height': 400,
+                                            'mark':'circle',
                                             'encoding':{
                                                 'x':{
                                                 'field':'Approver',
