@@ -265,7 +265,7 @@ def app():
                                                                         
                                     data_df = Main_df[['LinkEdit']]
 
-                                    st.dataframe(
+                                    st.data_editor(
                                         data_df,
                                         column_configs={
                                             "LinkEdit": {
