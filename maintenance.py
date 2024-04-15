@@ -292,7 +292,9 @@ def app():
                                         # Add the row data to the table_data list
                                         Approval_data.append([Sn, ID, Date, Facility, Category, Department, Issue, Amount, Labour, Link, Approver])
                                         
-                                        st.write(Approval_data)
+                                        
+                                        NewMain_df=pd.DataFrame(Approval_data)
+                                        st.write(NewMain_df)
                                                             
                     metrics = [
                         {"label": "Total", "value": Total_requests},
