@@ -264,31 +264,63 @@ def app():
                                 with card_container(key="gallery1"):
                                     @st.cache_data
                                     def load_data():
-                                            clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                                            return pd.DataFrame(clients)
+                                        clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                                        return pd.DataFrame(clients)
 
                                     Main_df = load_data()
+                                    
                                     # Display the gallery-like table
                                     Approval_data = []
                                     for index, row in Main_df.iterrows():
-                                        Sn=({index + 1})
-                                        ID=({row['ID']})
-                                        Date=({row['Date of report']})
-                                        Facility=({row['Clinic']})
-                                        Category=({row['Departmental report']})
-                                        Department=({row['Department']})
-                                        Issue=({row['Report']})
-                                        Amount=({row['Amount on the Quotation']})
-                                        Labour=({row['Labor']})
-                                        Link=({row['LinkEdit']})
-                                        Approver=({row['Approver']})
-                                        # Add more columns as needed
-
-                                        # Add the row data to the table_data list
-                                        Approval_data.append([Sn, ID, Date, Facility, Category, Department, Issue, Amount, Labour, Link, Approver])
+                                        Sn = index + 1
+                                        ID = row['ID']
+                                        Date = row['Date of report']
+                                        Facility = row['Clinic']
+                                        Category = row['Departmental report']
+                                        Department = row['Department']
+                                        Issue = row['Report']
+                                        Amount = row['Amount on the Quotation']
+                                        Labour = row['Labor']
+                                        Link = row['LinkEdit']
+                                        Approver = row['Approver']
                                         
+                                        # Add a button for each row item
+                                        button_clicked = st.button(f"Process Item {Sn}")
+                                        if button_clicked:
+                                            st.write(f"Processing item {Sn}...")
+                                        
+                                        # Add the row data to the Approval_data list
+                                        Approval_data.append({
+                                            "Sn": Sn,
+                                            "ID": ID,
+                                            "Date": Date,
+                                            "Facility": Facility,
+                                            "Category": Category,
+                                            "Department": Department,
+                                            "Issue": Issue,
+                                            "Amount": Amount,
+                                            "Labour": Labour,
+                                            "Link": Link,
+                                            "Approver": Approver
+                                        })
+                                                                    
+                                    # Define the columns for the table
+                                    columns = [
+                                        {"dataKey": "Sn", "title": "Sn"},
+                                        {"dataKey": "ID", "title": "ID"},
+                                        {"dataKey": "Date", "title": "Date"},
+                                        {"dataKey": "Facility", "title": "Facility"},
+                                        {"dataKey": "Category", "title": "Category"},
+                                        {"dataKey": "Department", "title": "Department"},
+                                        {"dataKey": "Issue", "title": "Issue"},
+                                        {"dataKey": "Amount", "title": "Amount"},
+                                        {"dataKey": "Labour", "title": "Labour"},
+                                        {"dataKey": "Link", "title": "Link"},
+                                        {"dataKey": "Approver", "title": "Approver"}
+                                    ]
                                     
-                                    ui.table(data=Approval_data, maxHeight=300)  
+                                    # Display the table
+                                    ui.table(data=Approval_data, columns=columns)
                                         
                                                             
                     metrics = [
