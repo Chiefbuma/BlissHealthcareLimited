@@ -144,12 +144,11 @@ def app():
         def generate_sales_data(category_counts):
            return pd.DataFrame({'Category': category_counts['Category'], 'No.': category_counts['No.']})
 
-        
         # Filter the Main_df DataFrame to get the "departmental report" column
         departmental_report_df = Main_df["Departmental report"]
 
-        # Get unique categories and their counts
-        category_counts = departmental_report_df.value_counts().reset_index()
+        # Assuming departmental_report_df is your DataFrame
+        category_counts = departmental_report_df.value_counts().reset_index(drop=True)
 
         # Rename the columns to "Category" and "No."
         category_counts.columns = ["Category", "No."]
