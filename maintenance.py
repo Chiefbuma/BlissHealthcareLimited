@@ -275,18 +275,33 @@ def app():
                                                    
                                     # Display the gallery-like table
                                     for index, row in Main_df.iterrows():
-                                        st.write(f"## Item {index + 1}")
-                                        st.write("**Facility:** " + row['Clinic'])
-                                        st.write("**Category:** " + row['Departmental report'])
-                                        st.write("**Department:** " + row['Department'])
-                                        st.write("**Issue:** " + row['Report'])
-                                        st.write("**Approver:** " + row['Approver'])
-                                        st.write("**Link:** [" + row['LinkEdit'] + "](" + row['LinkEdit'] + ")")
-                                        st.write("---")
+                                        Sn = index + 1
+                                        ID = row['ID']
+                                        Date = row['Date of report']
+                                        Facility = row['Clinic']
+                                        Category = row['Departmental report']
+                                        Department = row['Department']
+                                        Issue = row['Report']
+                                        Amount = row['Amount on the Quotation']
+                                        Labour = row['Labor']
+                                        Link = row['LinkEdit']
+                                        Approver = row['Approver']
 
-                                        
-                                        
-                                        
+                                        # Display the values as a table
+                                        table_data = {
+                                            "Sn": Sn,
+                                            "ID": ID,
+                                            "Date": Date,
+                                            "Facility": Facility,
+                                            "Category": Category,
+                                            "Department": Department,
+                                            "Issue": Issue,
+                                            "Amount": Amount,
+                                            "Labour": Labour,
+                                            "Link": f'<a href="{Link}" target="_blank">Click here</a>',
+                                            "Approver": Approver
+                                        }
+                                        st.table(table_data)
                                      
 
 
