@@ -253,7 +253,8 @@ def app():
                             with card_container(key="chart1"):
                                 st.markdown("<br>", unsafe_allow_html=True)
                                 st.vega_lite_chart(category_counts, {
-                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6},
+                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6,'width': 'container',
+                                             'height': 300,},
                                     'encoding': {
                                         'x': {'field': 'Category', 'type': 'ordinal'},
                                         'y': {'field': 'No.', 'type': 'quantitative', 'axis': {'grid': False}},
