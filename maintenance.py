@@ -277,7 +277,6 @@ def app():
                                     for index, row in Main_df.iterrows():
                                         st.write(f"## Item {index + 1}")
                                         st.write("**ID:** " + row['ID'])
-                                        st.write("**Date:** " + row['Date of report'])
                                         st.write("**Facility:** " + row['Clinic'])
                                         st.write("**Category:** " + row['Departmental report'])
                                         st.write("**Department:** " + row['Department'])
