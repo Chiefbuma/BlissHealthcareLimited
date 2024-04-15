@@ -286,8 +286,8 @@ def app():
                         st.data_editor(
                             data_df,
                             column_config={
-                                "LinkEdit": st.column_config.LinkColumn(
-                                    "LinkEdit",
+                                "Link": st.column_config.LinkColumn(
+                                    "Link",
                                     display_text="Approve here"
                                 )
                             },
