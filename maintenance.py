@@ -261,49 +261,7 @@ def app():
                             with card_container(key="table1"):
                              ui.table(data=Approval_df, maxHeight=300)
                         with cols[1]:
-                            with card_container(key="chart1"):
-                                st.markdown("<br>", unsafe_allow_html=True)
-                             
-                                def generate_sales_data():
-                                    clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                                    
-                                    clients_df=pd.DataFrame( clients)
-                                                                        # Filter the Main_df DataFrame to get the "departmental report" column
-                                    departmental_report_df =  clients_df["Departmental report"]
-
-                                    # Assuming departmental_report_df is your DataFrame
-                                    category_counts =  departmental_report_df.value_counts().reset_index()
-                                    
-                                    # Rename the columns to "Category" and "No."
-                                    category_counts.columns = ["Category", "No."]
-                                    
-                                    # Convert "No." column to integers
-                                    category_counts["No."] = category_counts["No."].astype(int)
-                                    
-                                    return pd.DataFrame(category_counts)
-
-                                with card_container(key="chart1"):
-                                    st.vega_lite_chart(generate_sales_data(), {
-                                        'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
-                                        'encoding': {
-                                            'x': {'field': 'Month', 'type': 'ordinal'},
-                                            'y': {'field': 'Sales', 'type': 'quantitative', 'axis': {'grid': False}},
-                                        },
-                                    }, use_container_width=True)
-                                
-                                
-                                st.vega_lite_chart(New_df, {
-                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6,'width': 'container',
-                                             'height': 300},
-                                    'encoding': {
-                                        'x': {'field': 'Category', 'type': 'ordinal'},
-                                        'y': {'field': 'No.', 'type': 'quantitative', 'axis': {'grid': False}},
-                                    },
-                                }, use_container_width=True)
-                        
-                        
-                        with cols[2]:
-                            with card_container(key="gallery1"):
+                                with card_container(key="gallery1"):
                                     # Display the gallery-like table
                                     for index, row in Main_df.iterrows():
                                         st.write(f"## Item {index + 1}")
@@ -316,10 +274,10 @@ def app():
                                         button_clicked = st.button(f"Process Item {index + 1}")
                                         if button_clicked:
                                             st.write(f"Processing item {index + 1}...")
-                                                                
-                with st.expander("View Table"):
-                    st.dataframe(Main_df, use_container_width=True)
-
+                                        
+                                        
+                                        st.write("---")
+                                                            
                     metrics = [
                         {"label": "Total", "value": Total_requests},
                         {"label": "Closed", "value": closed_request},
