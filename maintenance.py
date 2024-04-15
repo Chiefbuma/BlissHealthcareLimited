@@ -289,39 +289,10 @@ def app():
                                         if button_clicked:
                                             st.write(f"Processing item {Sn}...")
                                         
-                                        # Add the row data to the Approval_data list
-                                        Approval_data.append({
-                                            "Sn": Sn,
-                                            "ID": ID,
-                                            "Date": Date,
-                                            "Facility": Facility,
-                                            "Category": Category,
-                                            "Department": Department,
-                                            "Issue": Issue,
-                                            "Amount": Amount,
-                                            "Labour": Labour,
-                                            "Link": Link,
-                                            "Approver": Approver
-                                        })
-                                                                    
-                                    # Define the columns for the table
-                                    columns = [
-                                        {"dataKey": "Sn", "title": "Sn"},
-                                        {"dataKey": "ID", "title": "ID"},
-                                        {"dataKey": "Date", "title": "Date"},
-                                        {"dataKey": "Facility", "title": "Facility"},
-                                        {"dataKey": "Category", "title": "Category"},
-                                        {"dataKey": "Department", "title": "Department"},
-                                        {"dataKey": "Issue", "title": "Issue"},
-                                        {"dataKey": "Amount", "title": "Amount"},
-                                        {"dataKey": "Labour", "title": "Labour"},
-                                        {"dataKey": "Link", "title": "Link"},
-                                        {"dataKey": "Approver", "title": "Approver"}
-                                    ]
-                                    
-                                    # Display the table
-                                    ui.table(data=Approval_data, columns=columns)
+                                        # Add the row data to the table_data list
+                                        Approval_data.append([Sn, ID, Date, Facility, Category, Department, Issue, Amount, Labour, Link, Approver])
                                         
+                                        st.write(Approval_data)
                                                             
                     metrics = [
                         {"label": "Total", "value": Total_requests},
