@@ -143,22 +143,7 @@ def app():
 
         Main_df = load_data()
 
-        
-        # Filter the Main_df DataFrame to get the "departmental report" column
-        departmental_report_df = Main_df["Departmental report"]
-
-        # Assuming departmental_report_df is your DataFrame
-        category_counts = departmental_report_df.value_counts().reset_index()
-        
-             # Rename the columns to "Category" and "No."
-        category_counts.columns = ["Category", "No."]
-        
-           # Convert "No." column to integers
-        category_counts["No."] = category_counts["No."].astype(int)
-
-        # Display the new DataFrame
-        st.write(category_counts)
-        
+                
         Director_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
         Dir_Approved_request=  Director_Approved["ID"].nunique()
@@ -255,6 +240,29 @@ def app():
                         with cols[1]:
                             with card_container(key="chart1"):
                                 st.markdown("<br>", unsafe_allow_html=True)
+                                
+                                @st.cache_data
+                                def load_data():
+                                    Take_df = load_data()
+                                    return Take_df
+                                
+                                Graph_df = load_data()
+                                
+                                # Filter the Main_df DataFrame to get the "departmental report" column
+                                departmental_report_df = Graph_df["Departmental report"]
+
+                                # Assuming departmental_report_df is your DataFrame
+                                category_counts =  Graph_df.value_counts().reset_index()
+                                
+                                    # Rename the columns to "Category" and "No."
+                                category_counts.columns = ["Category", "No."]
+                                
+                                # Convert "No." column to integers
+                                category_counts["No."] = category_counts["No."].astype(int)
+
+                                # Display the new DataFrame
+                                st.write(category_counts)
+                                
                                 st.vega_lite_chart(category_counts, {
                                     'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6,'width': 'container',
                                              'height': 150},
