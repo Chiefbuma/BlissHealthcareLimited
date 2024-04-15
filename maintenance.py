@@ -256,7 +256,7 @@ def app():
                         ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()
 
                     with card_container(key="table2"):
-                        cols = st.columns(2)
+                        cols = st.columns(3)
                         with cols[0]:
                             with card_container(key="table1"):
                              ui.table(data=Approval_df, maxHeight=300)
@@ -301,8 +301,24 @@ def app():
                                     },
                                 }, use_container_width=True)
                         
-                    with st.expander("View Table"):
-                        st.dataframe(Main_df, use_container_width=True)
+                        
+                        with cols[2]:
+                            with card_container(key="gallery1"):
+                                    # Display the gallery-like table
+                                    for index, row in Main_df.iterrows():
+                                        st.write(f"## Item {index + 1}")
+                                        st.write(f"**ID:** {row['ID']}")
+                                        st.write(f"**Approver:** {row['Approver']}")
+                                        st.write(f"**Link:** {row['LinkEdit']}")
+                                        # Add more columns as needed
+
+                                        # Add a button for each row item
+                                        button_clicked = st.button(f"Process Item {index + 1}")
+                                        if button_clicked:
+                                            st.write(f"Processing item {index + 1}...")
+                                                                
+                with st.expander("View Table"):
+                    st.dataframe(Main_df, use_container_width=True)
 
                     metrics = [
                         {"label": "Total", "value": Total_requests},
