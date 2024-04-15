@@ -276,23 +276,13 @@ def app():
                                     data_df['LinkEdit'] = data_df['LinkEdit'].str.split(', ')
                                     
                                     data_df['LinkEdit'] = data_df['LinkEdit'].str.replace('?ID=', '&ID=')
+                                    data_df['LinkEdit'] = data_df['LinkEdit'].apply(lambda x: f'<a href="{x}">Approve here</a>')
                                    
-                                    # Create a new DataFrame to hold each URL as a separate row
-                                    expanded_data = []
-                                    for idx, row in data_df.iterrows():
-                                        for url in row['LinkEdit']:
-                                            expanded_data.append({'ID': row['ID'], 'LinkEdit': url})
-
-                                    expanded_df = pd.DataFrame(expanded_data)
-
-                                    # Create the hyperlink column
-                                    expanded_df['LinkEdit'] = expanded_df['LinkEdit'].apply(lambda x: f'<a href="{x}">Approve here</a>')
-
-                                    # Display the HTML
-                                    HTML(expanded_df.to_html(escape=False))
+                                    
+                                    HTML(data_df.to_html(escape=False))
 
                                                                       
-                                    st.write(expanded_df)
+                                    st.write(data_df)
 
 
 
