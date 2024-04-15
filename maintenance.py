@@ -148,7 +148,7 @@ def app():
         departmental_report_df = Main_df["Departmental report"]
 
         # Assuming departmental_report_df is your DataFrame
-        category_counts = departmental_report_df.value_counts().reset_index(drop=True)
+        category_counts = departmental_report_df.value_counts().reset_index()
 
         # Rename the columns to "Category" and "No."
         category_counts.columns = ["Category", "No."]
