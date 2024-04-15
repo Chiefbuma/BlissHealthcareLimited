@@ -272,37 +272,22 @@ def app():
                                         return pd.DataFrame(clients)
 
                                     Main_df = load_data()
+                                    
+                                    data_df= Main_df[['LinkEdit']]
+                                
 
-                                    # Display the gallery-like table
-                                    for index, row in Main_df.iterrows():
-                                        ID = row['ID']
-                                        Date = row['Date of report']
-                                        Facility = row['Clinic']
-                                        Category = row['Departmental report']
-                                        Department = row['Department']
-                                        Issue = row['Report']
-                                        Amount = row['Amount on the Quotation']
-                                        Labour = row['Labor']
-                                        Link = row['LinkEdit']
-                                        Approver = row['Approver']
+                                    st.data_editor(
+                                        data_df,
+                                        column_config={
+                                            "LinkEdit": st.column_config.LinkColumn(
+                                                "LinkEdit",
+                                                display_text="Approve here"
+                                            )
+                                        },
+                                        hide_index=True
+                                    )
 
-                                        # Display the values as a table
-                                        st.write(f"**ID:** {ID}")
-                                        st.write(f"**Date:** {Date}")
-                                        st.write(f"**Facility:** {Facility}")
-                                        st.write(f"**Category:** {Category}")
-                                        st.write(f"**Department:** {Department}")
-                                        st.write(f"**Issue:** {Issue}")
-                                        st.write(f"**Amount:** {Amount}")
-                                        st.write(f"**Labour:** {Labour}")
-                                        st.markdown(f"**Link:** [{Link}])")
-                                        st.write(f"**Approver:** {Approver}")
-
-                                        st.markdown("---")
-
-                                    st.markdown('</div>', unsafe_allow_html=True)
-
-                              
+                                st.write(data_df) 
 
 
 
