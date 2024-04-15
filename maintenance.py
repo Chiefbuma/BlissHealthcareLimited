@@ -272,7 +272,7 @@ def app():
 
                         Main_df = load_data()
                         
-                        data_df= Main_df[['ID','Date of report','Clinic','Report','Amount on the Quotation','Approved amount','Approver','LinkEdit']]
+                        data_df= Main_df[['ID','Date of report','Clinic','Report','Amount on the Quotation','Approved amount','Approver','MainStatus','LinkEdit']]
                         data_df = data_df.rename(columns={
                             'ID': 'Ticket',
                             'Date of report':'Date',
