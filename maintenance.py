@@ -263,20 +263,19 @@ def app():
                         with cols[1]:
                                 with card_container(key="gallery1"):
                                    
-                                # Sample DataFrame
-                                    data2 = {
-                                        'ID': [1, 2, 3],
-                                        'Name': ['Alice', 'Bob', 'Charlie'],
-                                        'Action': ['Click', 'Click', 'Click']
-                                    }
-                                    final_df = pd.DataFrame(data2)
-
-                                    # Display the table with a clickable button
-                                    formatted_data = final_df.copy()
-                                    formatted_data['Action'] = formatted_data['Action'].apply(lambda x: f'<button>{x}</button>')
-
-                                    # Use st.table to display the formatted data
-                                    st.table(formatted_data)     
+                                    st.data_editor(
+                                           Main_df,
+                                            column_config={
+                                                "LinkEdit": st.column_config.LinkColumn(
+                                                    "Link",
+                                                   
+                                                    validate="^https://[a-z]+\.streamlit\.app$",
+                                                    max_chars=100,
+                                                    display_text="https://(.*?)\.streamlit\.app"
+                                                ),
+                                            },
+                                            hide_index=True,
+                                        )    
                                          
                     metrics = [
                         {"label": "Total", "value": Total_requests},
