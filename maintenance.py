@@ -289,7 +289,7 @@ def app():
                             column_config={
                                 "Link": st.column_config.LinkColumn(
                                     "Link",
-                                    display_text="Approve"
+                                    display_text="View"
                                 )
                             },
                             hide_index=True
