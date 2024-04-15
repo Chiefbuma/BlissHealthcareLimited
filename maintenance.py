@@ -149,6 +149,9 @@ def app():
 
         # Assuming departmental_report_df is your DataFrame
         category_counts = departmental_report_df.value_counts().reset_index()
+        
+        # Convert "No." column to integers
+        category_counts["No."] = category_counts["No."].astype(int)
 
         # Rename the columns to "Category" and "No."
         category_counts.columns = ["Category", "No."]
