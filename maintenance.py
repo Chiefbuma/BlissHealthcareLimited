@@ -270,19 +270,18 @@ def app():
                             clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
                             return pd.DataFrame(clients)
 
-                        Mainstatus_df = load_data()
+                        Main_df = load_data()
                         
-                        Mainstatus_df['Previous'] = Mainstatus_df['Approved amount'].astype(str) + ' ' + Mainstatus_df['Approver']
                         
-                        data_df= Mainstatus_df[['ID','Date of report','Clinic','Report','Amount on the Quotation','Previous','Approved amount','Approver','MainStatus','LinkEdit']]
-
+                        data_df= Main_df[['ID','Date of report','Clinic','Report','Amount on the Quotation','Approved amount','Approver','MainStatus','LinkEdit']]
+                        
                         data_df = data_df.rename(columns={
                             'ID': 'Ticket',
                             'Date of report':'Date',
                             'Clinic': 'Facility',
                             'Report': 'Issue',
                             'Amount on the Quotation': 'Quoted',
-                            'Previous': 'Last Approved',
+                            'Approved amount': 'Last Approved',
                             'Approver': 'Pending with',
                             'MainStatus': 'Status',
                             'LinkEdit': 'Link'
