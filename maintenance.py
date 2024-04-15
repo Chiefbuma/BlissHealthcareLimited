@@ -284,13 +284,13 @@ def app():
                                         
                                         st.write("---")
                                         
-                                        datanew = [
-                                            {"Approver": Approver,
-                                             "Item":Item, 
-                                             "Value":Dir_Approved_value,
-                                             "ID": ID,
-                                             "Link": Link },
-                                        ]   
+                                datanew = [
+                                    {"Approver": Approver,
+                                        "Item":Item, 
+                                        "Value":Dir_Approved_value,
+                                        "ID": ID,
+                                        "Link": Link },
+                                ]   
                                         
                                 final_df=pd.DataFrame(datanew )
                                         
