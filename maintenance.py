@@ -296,7 +296,7 @@ def app():
                                             st.write(f"**Issue:** {Issue}")
                                             st.write(f"**Amount:** {Amount}")
                                             st.write(f"**Labour:** {Labour}")
-                                            st.write(f"**Link:** [Click here]({Link})")
+                                            st.markdown(f"**Link:** [{Link}](<{Link}>)")
                                             st.write(f"**Approver:** {Approver}")
 
                                             st.markdown("---")
