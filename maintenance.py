@@ -264,37 +264,25 @@ def app():
                                 with card_container(key="gallery1"):
                                     @st.cache_data
                                     def load_data():
-                                        clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                                        return pd.DataFrame(clients)
+                                            clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                                            return pd.DataFrame(clients)
 
                                     Main_df = load_data()
-                                    
                                     # Display the gallery-like table
-                                    Approval_data = []
                                     for index, row in Main_df.iterrows():
-                                        Sn = index + 1
-                                        ID = row['ID']
-                                        Date = row['Date of report']
-                                        Facility = row['Clinic']
-                                        Category = row['Departmental report']
-                                        Department = row['Department']
-                                        Issue = row['Report']
-                                        Amount = row['Amount on the Quotation']
-                                        Labour = row['Labor']
-                                        Link = row['LinkEdit']
-                                        Approver = row['Approver']
-                                        
+                                        st.write(f"## Item {index + 1}")
+                                        st.write(f"**ID:** {row['ID']}")
+                                        st.write(f"**Approver:** {row['Approver']}")
+                                        st.write(f"**Link:** {row['LinkEdit']}")
+                                        # Add more columns as needed
+
                                         # Add a button for each row item
-                                        button_clicked = st.button(f"Process Item {Sn}")
+                                        button_clicked = st.button(f"Process Item {index + 1}")
                                         if button_clicked:
-                                            st.write(f"Processing item {Sn}...")
-                                        
-                                        # Add the row data to the table_data list
-                                        Approval_data.append([Sn, ID, Date, Facility, Category, Department, Issue, Amount, Labour, Link, Approver])
+                                            st.write(f"Processing item {index + 1}...")
                                         
                                         
-                                        NewMain_df=pd.DataFrame(Approval_data)
-                                        st.write(NewMain_df)
+                                        st.write("---")
                                                             
                     metrics = [
                         {"label": "Total", "value": Total_requests},
