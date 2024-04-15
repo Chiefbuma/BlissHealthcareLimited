@@ -284,16 +284,11 @@ def app():
                                         Approver=({row['Approver']})
                                         # Add more columns as needed
 
-                                        # Add a button for each row item
-                                        button_clicked = st.button(f"Process Item {index + 1}")
-                                        if button_clicked:
-                                            st.write(f"Processing item {index + 1}...")
-                                        
                                         # Add the row data to the table_data list
                                         Approval_data.append([Sn, ID, Date, Facility, Category, Department, Issue, Amount, Labour, Link, Approver])
                                         
                                     
-                                    ui.table(Approval_data, maxHeight=300)  
+                                    ui.table(data=Approval_data, maxHeight=300)  
                                         
                                                             
                     metrics = [
