@@ -276,6 +276,8 @@ def app():
                         data_df= Main_df[['ID','Date of report','Clinic','Report','Amount on the Quotation','Approved amount','Approver','MainStatus','LinkEdit']]
                         
                         data_df['Previous'] = data_df['Approved amount'].astype(str) + ' ' + data_df['Approver']
+                        
+                        data_df= Main_df[['ID','Date of report','Clinic','Report','Amount on the Quotation','Previous','Approved amount','Approver','MainStatus','LinkEdit']]
 
                         data_df = data_df.rename(columns={
                             'ID': 'Ticket',
