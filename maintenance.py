@@ -296,6 +296,8 @@ def app():
                                         },
                                         hide_index=True,
                                             )
+                                    ui.table(data=data_df, maxHeight=300)
+                                    
                                          
                     metrics = [
                         {"label": "Total", "value": Total_requests},
