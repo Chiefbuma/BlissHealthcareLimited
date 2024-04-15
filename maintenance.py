@@ -263,19 +263,39 @@ def app():
                         with cols[1]:
                                 with card_container(key="gallery1"):
                                    
+                                    data_df = pd.DataFrame(
+                                                {
+                                                    "apps": [
+                                                        "https://roadmap.streamlit.app",
+                                                        "https://extras.streamlit.app",
+                                                        "https://issues.streamlit.app",
+                                                        "https://30days.streamlit.app",
+                                                    ],
+                                                    "creator": [
+                                                        "https://github.com/streamlit",
+                                                        "https://github.com/arnaudmiribel",
+                                                        "https://github.com/streamlit",
+                                                        "https://github.com/streamlit",
+                                                    ],
+                                                }
+                                            )
+
                                     st.data_editor(
-                                           Main_df,
-                                            column_config={
-                                                "LinkEdit": st.column_config.LinkColumn(
-                                                    "Link",
-                                                   
-                                                    validate="^https://[a-z]+\.streamlit\.app$",
-                                                    max_chars=100,
-                                                    display_text="https://(.*?)\.streamlit\.app"
-                                                ),
-                                            },
-                                            hide_index=True,
-                                        )    
+                                        data_df,
+                                        column_config={
+                                            "apps": st.column_config.LinkColumn(
+                                                "Trending apps",
+                                                help="The top trending Streamlit apps",
+                                                validate="^https://[a-z]+\.streamlit\.app$",
+                                                max_chars=100,
+                                                display_text="https://(.*?)\.streamlit\.app"
+                                            ),
+                                            "creator": st.column_config.LinkColumn(
+                                                "App Creator", display_text="Open profile"
+                                            ),
+                                        },
+                                        hide_index=True,
+                                            )
                                          
                     metrics = [
                         {"label": "Total", "value": Total_requests},
