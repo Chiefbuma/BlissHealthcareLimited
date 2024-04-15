@@ -272,14 +272,18 @@ def app():
 
                         Main_df = load_data()
                         
+                        
                         data_df= Main_df[['ID','Date of report','Clinic','Report','Amount on the Quotation','Approved amount','Approver','MainStatus','LinkEdit']]
+                        
+                        data_df['Previous'] = data_df['Approved amount'].astype(str) + ' ' + data_df['Approver']
+
                         data_df = data_df.rename(columns={
                             'ID': 'Ticket',
                             'Date of report':'Date',
                             'Clinic': 'Facility',
                             'Report': 'Issue',
                             'Amount on the Quotation': 'Quoted',
-                            'Approved amount': 'Last Approved',
+                            'Previous': 'Last Approved',
                             'Approver': 'Pending with',
                             'MainStatus': 'Status',
                             'LinkEdit': 'Link'
