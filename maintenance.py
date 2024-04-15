@@ -272,7 +272,7 @@ def app():
 
                                     Main_df = load_data()
                                     
-                                    data_df= Main_df[['LinkEdit']]
+                                    data_df= Main_df[['ID','Approver','Clinic','Department','Report','Amount on the Quotation','Labor','LinkEdit']]
                                 
 
                                     st.data_editor(
