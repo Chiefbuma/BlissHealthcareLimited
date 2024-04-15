@@ -278,7 +278,7 @@ def app():
                             'Date of report':'Date',
                             'Clinic': 'Facility',
                             'Report': 'Issue',
-                            'Amount on the Quotation': 'Quote',
+                            'Amount on the Quotation': 'Quoted',
                             'Approved amount': 'Approved',
                             'Approver': 'Pending with',
                             'MainStatus': 'Status',
