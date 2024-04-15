@@ -269,20 +269,22 @@ def app():
 
                                     Main_df = load_data()
                                     # Display the gallery-like table
+                                    data_list = []
                                     for index, row in Main_df.iterrows():
-                                        st.write(f"## Item {index + 1}")
-                                        st.write(f"**ID:** {row['ID']}")
-                                        st.write(f"**Approver:** {row['Approver']}")
-                                        st.write(f"**Link:** {row['LinkEdit']}")
-                                        # Add more columns as needed
+                                            data = {
+                                                "Item": index + 1,
+                                                "ID": row['ID'],
+                                                "Approver": row['Approver'],
+                                                "Link": row['LinkEdit']
+                                                # Add more columns as needed
+                                            }
+                                            data_list.append(data)
 
-                                        # Add a button for each row item
-                                        button_clicked = st.button(f"Process Item {index + 1}")
-                                        if button_clicked:
-                                            st.write(f"Processing item {index + 1}...")
-                                        
-                                        
-                                        st.write("---")
+                                        # Convert the list of dictionaries into a DataFrame
+                                    df = pd.DataFrame(data_list)
+
+                                        # Display the DataFrame
+                                    st.write(df)
                                                             
                     metrics = [
                         {"label": "Total", "value": Total_requests},
