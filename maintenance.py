@@ -136,14 +136,14 @@ def app():
         form_container.empty()
         # get clients sharepoint list
        
-        clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
+        @st.cache
+        def load_data():
+                clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                return pd.DataFrame(clients)
 
-        # create DataFrame from clients list
-        Main_df = pd.DataFrame(clients)
+        Main_df = load_data()
+
         
-        def generate_sales_data(category_counts):
-           return pd.DataFrame({'Category': category_counts['Category'], 'No.': category_counts['No.']})
-
         # Filter the Main_df DataFrame to get the "departmental report" column
         departmental_report_df = Main_df["Departmental report"]
 
@@ -252,7 +252,7 @@ def app():
                         with cols[1]:
                             with card_container(key="chart1"):
                                 st.markdown("<br>", unsafe_allow_html=True)
-                                st.vega_lite_chart(generate_sales_data(category_counts), {
+                                st.vega_lite_chart(category_counts, {
                                     'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6},
                                     'encoding': {
                                         'x': {'field': 'Category', 'type': 'ordinal'},
