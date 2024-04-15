@@ -15,6 +15,7 @@ from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
 from sharepoint import SharePoint
 import main
 from postgrest import APIError
+from IPython.display import HTML
 
 def app():
     if 'is_authenticated' not in st.session_state:
@@ -264,16 +265,17 @@ def app():
                                 with card_container(key="gallery1"):
                                                                         
                                     data_df = Main_df[['LinkEdit']]
+                                    
+                                    
+                                    data_df['LinkEdit'] = data_df['LinkEdit'].apply(lambda x: f'<a href="{x}">Approve here</a>')
+                                    HTML(data_df.to_html(escape=False))
+                                    
+                                    
+                                    
+                                    st.write(data_df)
 
-                                    st.data_editor(
-                                        data_df,
-                                        column_configs={
-                                            "LinkEdit": {
-                                                "displayMode": "link",
-                                                "displayText": "Approve here"
-                                            }
-                                        }
-                                    )
+
+
                                     
                                          
                     metrics = [
