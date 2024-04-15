@@ -136,7 +136,7 @@ def app():
         form_container.empty()
         # get clients sharepoint list
        
-        @st.cache
+        @st.cache_data
         def load_data():
                 clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
                 return pd.DataFrame(clients)
