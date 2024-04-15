@@ -262,6 +262,12 @@ def app():
                              ui.table(data=Approval_df, maxHeight=300)
                         with cols[1]:
                                 with card_container(key="gallery1"):
+                                    @st.cache_data
+                                    def load_data():
+                                            clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                                            return pd.DataFrame(clients)
+
+                                    Main_df = load_data()
                                     # Display the gallery-like table
                                     for index, row in Main_df.iterrows():
                                         st.write(f"## Item {index + 1}")
