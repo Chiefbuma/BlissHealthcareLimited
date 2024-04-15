@@ -292,7 +292,7 @@ def app():
                                              "Link": Link },
                                         ]   
                                         
-                                        final_df=pd.DataFrame(data)
+                                final_df=pd.DataFrame(data)
                                         
                                                  
                                 ui.table(data= final_df, maxHeight=300)        
