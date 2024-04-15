@@ -274,7 +274,9 @@ def app():
                                     data_df = Main_df[['LinkEdit','ID']]
 
                                     data_df['LinkEdit'] = data_df['LinkEdit'].str.split(', ')
-
+                                    
+                                    data_df['LinkEdit'] = data_df['LinkEdit'].str.replace('?ID=', '&ID=')
+                                   
                                     # Create a new DataFrame to hold each URL as a separate row
                                     expanded_data = []
                                     for idx, row in data_df.iterrows():
