@@ -270,20 +270,31 @@ def app():
                                     Main_df = load_data()
                                     # Display the gallery-like table
                                     for index, row in Main_df.iterrows():
-                                        st.write(f"## Item {index + 1}")
-                                        st.write(f"**ID:** {row['ID']}")
-                                        st.write(f"**Approver:** {row['Approver']}")
-                                        st.write(f"**Link:** {row['LinkEdit']}")
+                                       Item={index + 1}
+                                       ID= {row['ID']}
+                                       Approver= {row['Approver']}
+                                       Link= {row['LinkEdit']}
                                         # Add more columns as needed
 
                                         # Add a button for each row item
-                                        button_clicked = st.button(f"Process Item {index + 1}")
-                                        if button_clicked:
-                                            st.write(f"Processing item {index + 1}...")
+                                    button_clicked = st.button(f"Process Item {index + 1}")
+                                    if button_clicked:
+                                        st.write(f"Processing item {index + 1}...")
                                         
                                         
                                         st.write("---")
-                                                            
+                                        
+                                        data = [
+                                            {"Approver": Approver,
+                                             "Item":Item, 
+                                             "Value":Dir_Approved_value,
+                                             "ID": ID,
+                                             "Link": Link },
+                                        ]            
+                                ui.table(data= data, maxHeight=300)        
+                                        
+                                        
+                                         
                     metrics = [
                         {"label": "Total", "value": Total_requests},
                         {"label": "Closed", "value": closed_request},
