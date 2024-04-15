@@ -284,7 +284,7 @@ def app():
                                         
                                         st.write("---")
                                         
-                                        data = [
+                                        datanew = [
                                             {"Approver": Approver,
                                              "Item":Item, 
                                              "Value":Dir_Approved_value,
@@ -292,7 +292,7 @@ def app():
                                              "Link": Link },
                                         ]   
                                         
-                                final_df=pd.DataFrame(data)
+                                final_df=pd.DataFrame(datanew )
                                         
                                                  
                                 ui.table(data= final_df, maxHeight=300,key="ew")        
