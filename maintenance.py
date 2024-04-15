@@ -274,13 +274,14 @@ def app():
                         
                         data_df= Main_df[['ID','Date of report','Clinic','Report','Amount on the Quotation','Approved amount','Approver','LinkEdit']]
                         data_df = data_df.rename(columns={
-                            'Ticket': 'ID',
+                            'ID': 'Ticket',
                             'Date of report':'Date',
                             'Clinic': 'Facility',
                             'Report': 'Issue',
                             'Amount on the Quotation': 'Quote',
                             'Approved amount': 'Approved',
                             'Approver': 'Pending with',
+                            'MainStatus': 'Status'
                             'LinkEdit': 'Link'
                         })
                         st.data_editor(
