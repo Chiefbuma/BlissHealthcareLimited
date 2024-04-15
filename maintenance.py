@@ -266,19 +266,13 @@ def app():
                                     data_df = Main_df[['LinkEdit']]
 
                                     st.data_editor(
-                                        data_df,
-                                        column_config={
-                                            "LinkEdit": st.column_config.LinkColumn(
-                                                "LinkEdit",
-                                                validate="^https://[a-z]+\.apps\.powerapps$",
-                                                max_chars=100,
-                                                display_text="Approve here"
-                                            ),
-                                            
-                                        },
-                                        hide_index=True,
-                                    )
-                                    
+                                            data_df,
+                                            column_config={
+                                                "LinkEdit": st.ColumnDisplayOption.LINK(display_text="Approve here")
+                                            },
+                                            hide_index=True
+                                        )
+                                                                            
                                          
                     metrics = [
                         {"label": "Total", "value": Total_requests},
