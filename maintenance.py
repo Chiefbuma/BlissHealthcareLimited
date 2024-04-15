@@ -276,13 +276,10 @@ def app():
                                     # Display the gallery-like table
                                     for index, row in Main_df.iterrows():
                                         st.write(f"## Item {index + 1}")
-                                        st.write("**ID:** " + row['ID'])
                                         st.write("**Facility:** " + row['Clinic'])
                                         st.write("**Category:** " + row['Departmental report'])
                                         st.write("**Department:** " + row['Department'])
                                         st.write("**Issue:** " + row['Report'])
-                                        st.write("**Amount:** " + row['Labor'])
-                                        st.write("**Labour:** " + row['Labor'])
                                         st.write("**Approver:** " + row['Approver'])
                                         st.write("**Link:** [" + row['LinkEdit'] + "](" + row['LinkEdit'] + ")")
                                         st.write("---")
