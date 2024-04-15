@@ -252,7 +252,7 @@ def app():
                                 departmental_report_df = Graph_df["Departmental report"]
 
                                 # Assuming departmental_report_df is your DataFrame
-                                category_counts =  Graph_df.value_counts().reset_index()
+                                category_counts =  departmental_report_df.value_counts().reset_index()
                                 
                                     # Rename the columns to "Category" and "No."
                                 category_counts.columns = ["Category", "No."]
