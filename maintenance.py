@@ -269,11 +269,19 @@ def app():
 
                                     Main_df = load_data()
                                     # Display the gallery-like table
+                                    Approval_data = []
                                     for index, row in Main_df.iterrows():
-                                        st.write(f"## Item {index + 1}")
-                                        st.write(f"**ID:** {row['ID']}")
-                                        st.write(f"**Approver:** {row['Approver']}")
-                                        st.write(f"**Link:** {row['LinkEdit']}")
+                                        Sn=({index + 1})
+                                        ID=({row['ID']})
+                                        Date=({row['Date of report']})
+                                        Facility=({row['Clinic']})
+                                        Category=({row['Departmental report']})
+                                        Department=({row['Department']})
+                                        Issue=({row['Report']})
+                                        Amount=({row['Amount on the Quotation']})
+                                        Labour=({row['Labor']})
+                                        Link=({row['LinkEdit']})
+                                        Approver=({row['Approver']})
                                         # Add more columns as needed
 
                                         # Add a button for each row item
@@ -281,8 +289,12 @@ def app():
                                         if button_clicked:
                                             st.write(f"Processing item {index + 1}...")
                                         
+                                        # Add the row data to the table_data list
+                                        Approval_data.append([Sn, ID, Date, Facility, Category, Department, Issue, Amount, Labour, Link, Approver])
                                         
-                                        st.write("---")
+                                    
+                                    ui.table(Approval_data, maxHeight=300)  
+                                        
                                                             
                     metrics = [
                         {"label": "Total", "value": Total_requests},
