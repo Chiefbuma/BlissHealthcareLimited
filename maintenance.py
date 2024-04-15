@@ -158,11 +158,7 @@ def app():
 
         # Display the new DataFrame
         st.write(category_counts) 
-                                
-
-        
-         
-         
+                
                 
         Director_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
@@ -264,12 +260,12 @@ def app():
                                 
                                 
                                 
-                                st.vega_lite_chart(category_counts, {
+                                st.vega_lite_chart(data, {
                                     'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6,'width': 'container',
                                              'height': 300},
                                     'encoding': {
-                                        'x': {'field': 'Category', 'type': 'ordinal'},
-                                        'y': {'field': 'No.', 'type': 'quantitative', 'axis': {'grid': False}},
+                                        'x': {'field': 'Approver', 'type': 'ordinal'},
+                                        'y': {'field': 'Value', 'type': 'quantitative', 'axis': {'grid': False}},
                                     },
                                 }, use_container_width=True)
                         
