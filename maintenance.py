@@ -138,17 +138,6 @@ def app():
          
     if st.session_state.is_authenticated:
         
-        
-        with open('style.css') as f:
-            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
-            col1, col2, col3 = st.columns(3)
-            col1.metric("Temperature", "70 °F", "1.2 °F")
-            col2.metric("Wind", "9 mph", "-8%")
-            col3.metric("Humidity", "86%", "4%")
-        
-        
-        
         form_container.empty()
         # get clients sharepoint list
         st.cache_resource
@@ -254,19 +243,16 @@ def app():
             st.session_state.is_authenticated=False
             with card_container(key="Main1"):
                 st.session_state.tab_clicked=True
-                ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
-                if Main_df is not None:
-                    cols = st.columns(4)
+                if Main_df is not None:                        
                     with open('style.css') as f:
-                         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-                    with cols[0]:
-                        ui.card(title="Total Request", content=Total_requests, key="Revcard10").render()
-                        with cols[1]:
-                            ui.card(title="Closed Request", content=closed_request , key="Revcard11").render()
-                        with cols[2]:
-                            ui.card(title="Pending Request", content=pending_request, key="Revcard12").render()
-                        with cols[3]:
-                            ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()
+                        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+                        col1, col2, col3 = st.columns(4)
+                        col1.metric("Total Request", Total_requests)
+                        col2.metric("Closed Request", closed_request)
+                        col3.metric("Pending Request", pending_request)
+                        col4.metric("Approved Value", Dir_Approved_value)
+           
 
                     with card_container(key="table2"):
                         cols = st.columns(2)
