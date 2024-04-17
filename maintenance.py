@@ -256,6 +256,21 @@ def app():
                         ui.card(title="Pending Request", content=pending_request, key="Revcard12").render()
                     with cols[3]:
                         ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()
+                        
+                    # Load CSS file
+                    st.markdown('<style>' + open('style.css').read() + '</style>', unsafe_allow_html=True)
+
+                    # Use custom CSS class for styling
+                    cols = st.columns(4)
+                    with cols[0]:
+                        st.markdown('<div class="custom-card">Content 1</div>', unsafe_allow_html=True)
+                    with cols[1]:
+                        st.markdown('<div class="custom-card">Content 2</div>', unsafe_allow_html=True)
+                    with cols[2]:
+                        st.markdown('<div class="custom-card">Content 3</div>', unsafe_allow_html=True)
+                    with cols[3]:
+                        st.markdown('<div class="custom-card">Content 4</div>', unsafe_allow_html=True)
+
                   
                     with card_container(key="table2"):
                         cols = st.columns(2)
