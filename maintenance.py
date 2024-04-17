@@ -261,32 +261,33 @@ def app():
                     with card_container(key="gallery1"):
                         st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
 
-                        st.cache_data
-                        Main_df = load_data()
+                        st.cache_resource
+                        def load_data():
+                                New = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                                return pd.DataFrame(  New )
+                            
+                        Filtered_df=load_data()
                         
                         # Convert 'bill_date' to datetime type
-                        Main_df['Date of report'] = pd.to_datetime(Main_df['Date of report']).dt.date
+                        Filtered_df['Date of report'] = pd.to_datetime(Filtered_df['Date of report']).dt.date
                         
-                        if Main_df is not None:
-                            col1, col2, col3,col4 = st.columns(4)
-                            with col1:
-                               Ticket = ui.input(default_value="", type='text', placeholder="Ticket", key="input1")
-                               st.markdown("<style>div[data-baseweb='card'] {background-color: blue !important;}</style>", unsafe_allow_html=True)
-                            with col2:
-                               Facility = ui.input(default_value="", type='text', placeholder="Facility", key="input2")
-                            with col3:
-                               Approver = ui.input(default_value="", type='text', placeholder="Approver", key="input3")
-                            with col4:
-                               Issue = ui.input(default_value="", type='text', placeholder="Issue", key="input4")
+                        col1, col2, col3,col4 = st.columns(4)
+                        with col1:
+                            Ticket = ui.input(default_value="", type='text', placeholder="Ticket", key="input1")
+                            st.markdown("<style>div[data-baseweb='card'] {background-color: blue !important;}</style>", unsafe_allow_html=True)
+                        with col2:
+                            Facility = ui.input(default_value="", type='text', placeholder="Facility", key="input2")
+                        with col3:
+                            Approver = ui.input(default_value="", type='text', placeholder="Approver", key="input3")
+                        with col4:
+                            Issue = ui.input(default_value="", type='text', placeholder="Issue", key="input4")
 
-                            if Ticket == "" and Facility == "" and Approver == "" and Issue == "":
-                                
-                                df_mainselected = Main_df
-                            else:
-                                df_mainselected = Main_df.query("Clinic== @Facility or Ticket == @ID or Approver == @Approver or  Issue == @Report")
-                                        
-                        
-                        
+                        if Ticket == "" and Facility == "" and Approver == "" and Issue == "":
+                            
+                            df_mainselected = Filtered_df
+                        else:
+                            df_mainselected = Filtered_df.query("Clinic== @Facility or Ticket == @ID or Approver == @Approver or  Issue == @Report")
+                                   
                         data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
                         
                         # Convert 'bill_date' to datetime type
