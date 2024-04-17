@@ -245,6 +245,8 @@ def app():
                 st.session_state.tab_clicked=True
                 ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
                 if Main_df is not None:
+                    with open('style.css') as f:
+                        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
                     cols = st.columns(4)
                     with cols[0]:
                         ui.card(title="Total Request", content=Total_requests, key="Revcard10").render()
