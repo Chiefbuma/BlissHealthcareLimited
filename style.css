@@ -1,6 +1,18 @@
-div.st-emotion-cache-tjo3bo {
-    background-color: #EEEEEE;
-    border: 2px solid #CCCCCC;
-    padding: 5% 5% 5% 10%;
+.ui.card {
+    background-color: #f0f0f0;
     border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ui.card h2 {
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.ui.card p {
+    color: #666;
+    font-size: 14px;
 }
