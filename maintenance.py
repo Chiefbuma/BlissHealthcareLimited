@@ -158,10 +158,6 @@ def app():
         # Display the new DataFrame
         st.write(category_counts) 
                                 
-
-        
-         
-         
                 
         Director_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
@@ -272,8 +268,27 @@ def app():
                         # Convert 'bill_date' to datetime type
                         Main_df['Date of report'] = pd.to_datetime(Main_df['Date of report']).dt.date
                         
+                        if Main_df is not None:
+                            col1, col2, col3,col4 = st.columns(4)
+                            with col1:
+                               Ticket = ui.input(default_value="", type='text', placeholder="Ticket", key="input1")
+                               st.markdown("<style>div[data-baseweb='card'] {background-color: blue !important;}</style>", unsafe_allow_html=True)
+                            with col2:
+                               Facility = ui.input(default_value="", type='text', placeholder="Facility", key="input2")
+                            with col3:
+                               Approver = ui.input(default_value="", type='text', placeholder="Approver", key="input3")
+                            with col4:
+                               Issue = ui.input(default_value="", type='text', placeholder="Issue", key="input4")
+
+                            if Ticket == "" and Facility == "" and Approver == "" and Issue == "":
+                                
+                                df_mainselected = Main_df
+                            else:
+                                df_mainselected = Main_df.query("Clinic== @Facility or Ticket == @ID or Approver == @Approver or  Issue == @Report")
+                                        
                         
-                        data_df= Main_df[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
+                        
+                        data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
                         
                         # Convert 'bill_date' to datetime type
                         data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
