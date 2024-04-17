@@ -12,6 +12,7 @@ SHAREPOINT_SITE = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReport
 
 
 class SharePoint:
+    
     def auth(self):
         self.authcookie = Office365(
             SHAREPOINT_URL,
