@@ -243,17 +243,18 @@ def app():
             st.session_state.is_authenticated=False
             with card_container(key="Main1"):
                 st.session_state.tab_clicked=True
-                if Main_df is not None:                        
-                    with open('style.css') as f:
-                        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
-                        col1, col2, col3,col4 = st.columns(4)
-                        col1.metric("Total Request", Total_requests)
-                        col2.metric("Closed Request", closed_request)
-                        col3.metric("Pending Requests", pending_request)
-                        col4.metric("Approved Value", Dir_Approved_value)
-           
-
+                ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
+                if Main_df is not None:
+                    cols = st.columns(4)
+                    with cols[0]:
+                        ui.card(title="Total Request", content=Total_requests, key="Revcard10").render()
+                    with cols[1]:
+                        ui.card(title="Closed Request", content=closed_request , key="Revcard11").render()
+                    with cols[2]:
+                        ui.card(title="Pending Request", content=pending_request, key="Revcard12").render()
+                    with cols[3]:
+                        ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()
+                  
                     with card_container(key="table2"):
                         cols = st.columns(2)
                         with cols[0]:
