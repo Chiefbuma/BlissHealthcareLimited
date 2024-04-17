@@ -250,7 +250,7 @@ def app():
                         col1, col2, col3 = st.columns(4)
                         col1.metric("Total Request", Total_requests)
                         col2.metric("Closed Request", closed_request)
-                        col3.metric("Pending Request", pending_request)
+                        col3.metric("Pending Requests", pending_request)
                         col4.metric("Approved Value", Dir_Approved_value)
            
 
