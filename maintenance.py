@@ -20,6 +20,9 @@ from IPython.display import HTML
 def app():
     if 'is_authenticated' not in st.session_state:
         st.session_state.is_authenticated = False
+        
+       
+        
 
     else:
         st.session_state.is_authenticated = False
@@ -134,6 +137,18 @@ def app():
          form_container.empty()
          
     if st.session_state.is_authenticated:
+        
+        
+        with open('style.css') as f:
+            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+            col1, col2, col3 = st.columns(3)
+            col1.metric("Temperature", "70 °F", "1.2 °F")
+            col2.metric("Wind", "9 mph", "-8%")
+            col3.metric("Humidity", "86%", "4%")
+        
+        
+        
         form_container.empty()
         # get clients sharepoint list
         st.cache_resource
