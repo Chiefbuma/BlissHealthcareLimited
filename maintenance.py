@@ -301,7 +301,7 @@ def app():
                             
                             df_mainselected = data_df
                         else:
-                            df_mainselected = data_df.query("Clinic== @Facility or Ticket == @ID or Approver == @Approver or  Issue == @Report")
+                            df_mainselected = data_df.query("Facility== @Facility or Ticket == @Ticket or Approver == @Pending with or  Issue == @Issue")
                                
                         st.data_editor(
                             df_mainselected,
