@@ -257,14 +257,16 @@ def app():
                 ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
                 if Main_df is not None:
                     cols = st.columns(4)
+                    with open('style.css') as f:
+                         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
                     with cols[0]:
                         ui.card(title="Total Request", content=Total_requests, key="Revcard10").render()
-                    with cols[1]:
-                        ui.card(title="Closed Request", content=closed_request , key="Revcard11").render()
-                    with cols[2]:
-                        ui.card(title="Pending Request", content=pending_request, key="Revcard12").render()
-                    with cols[3]:
-                        ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()
+                        with cols[1]:
+                            ui.card(title="Closed Request", content=closed_request , key="Revcard11").render()
+                        with cols[2]:
+                            ui.card(title="Pending Request", content=pending_request, key="Revcard12").render()
+                        with cols[3]:
+                            ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()
 
                     with card_container(key="table2"):
                         cols = st.columns(2)
