@@ -259,10 +259,8 @@ def app():
                 with st.expander("MAINTENANACE REPORT"):             
                     with card_container(key="gallery1"):
                         st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
-                        def load_data():
-                            clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                            return pd.DataFrame(clients)
 
+                        st.cache_data
                         Main_df = load_data()
                         
                         # Convert 'bill_date' to datetime type
