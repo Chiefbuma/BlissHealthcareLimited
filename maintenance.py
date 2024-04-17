@@ -266,10 +266,25 @@ def app():
                                 New = SharePoint().connect_to_list(ls_name='Maintenance Report')
                                 return pd.DataFrame(  New )
                             
-                        Filtered_df=load_data()
+                        df_mainselected=load_data()
+                       
+                        data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
                         
                         # Convert 'bill_date' to datetime type
-                        Filtered_df['Date of report'] = pd.to_datetime(Filtered_df['Date of report']).dt.date
+                        data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
+                    
+                        data_df = data_df.rename(columns={
+                            'ID': 'Ticket',
+                            'Date of report':'Date',
+                            'Clinic': 'Facility',
+                            'Department':'Department',
+                            'Report': 'Issue',
+                            'Amount on the Quotation': 'Quoted',
+                            'Approved amount': 'Last Approved',
+                            'MainStatus': 'Status',
+                            'Approver': 'Pending with',
+                            'LinkEdit': 'Link'
+                        })
                         
                         col1, col2, col3,col4 = st.columns(4)
                         with col1:
@@ -284,30 +299,12 @@ def app():
 
                         if Ticket == "" and Facility == "" and Approver == "" and Issue == "":
                             
-                            df_mainselected = Filtered_df
+                            df_mainselected = data_df
                         else:
-                            df_mainselected = Filtered_df.query("Clinic== @Facility or Ticket == @ID or Approver == @Approver or  Issue == @Report")
-                                   
-                        data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
-                        
-                        # Convert 'bill_date' to datetime type
-                        data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
-                    
-                        
-                        data_df = data_df.rename(columns={
-                            'ID': 'Ticket',
-                            'Date of report':'Date',
-                            'Clinic': 'Facility',
-                            'Department':'Department',
-                            'Report': 'Issue',
-                            'Amount on the Quotation': 'Quoted',
-                            'Approved amount': 'Last Approved',
-                            'MainStatus': 'Status',
-                            'Approver': 'Pending with',
-                            'LinkEdit': 'Link'
-                        })
+                            df_mainselected = data_df.query("Clinic== @Facility or Ticket == @ID or Approver == @Approver or  Issue == @Report")
+                               
                         st.data_editor(
-                            data_df,
+                            df_mainselected,
                             column_config={
                                 "Link": st.column_config.LinkColumn(
                                     "Link",
