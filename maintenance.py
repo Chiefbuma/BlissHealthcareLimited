@@ -175,7 +175,15 @@ def app():
 
         # Display the new DataFrame
         st.write(category_counts) 
-                                
+        
+        st.vega_lite_chart(category_counts, {
+        'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6},
+        'encoding': {
+            'x': {'field': 'Category', 'type': 'ordinal'},
+            'y': {'field': 'No.', 'type': 'quantitative', 'axis': {'grid': False}},
+        },
+        }, use_container_width=True, height=300)     
+                        
                 
         Director_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
@@ -283,6 +291,8 @@ def app():
                                 return pd.DataFrame(  New )
                             
                         df_mainselected=load_data()
+                        
+                        
                        
                         data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
                         
