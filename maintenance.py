@@ -313,29 +313,32 @@ def app():
 
                         # Create five columnss for arranging widgets horizontally
                         col1, col2, col3, col4, col5 = st.columns(5)
+                        
+                        
+                        # Create a dictionary to store filter values
+                        filters = {column: '' for column in filter_columns}
 
                         # Create text input widgets for each filter column and arrange them horizontally
-                        filters = {}
                         with col1:
-                            filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", "")
+                            filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", filters[filter_columns[0]])
                         with col2:
-                            filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", "")
+                            filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", filters[filter_columns[1]])
                         with col3:
-                            filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", "")
+                            filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
                         with col4:
-                            filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", "")
+                            filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
                         with col5:
-                            filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", "")
+                            filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
+
+                        # Add a button to clear all filters
+                        if st.button("Clear Filters"):
+                            filters = {column: '' for column in filter_columns}
 
                         # Apply filters to the DataFrame
                         filtered_df = data_df
-                        
-
-
-                        
-                        for filter_columns, filter_value in filters.items():
+                        for column, filter_value in filters.items():
                             if filter_value:
-                                filtered_df = filtered_df[filtered_df[filter_columns].str.contains(filter_value, case=False)]
+                                filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False)]
 
                         # Display the filtered DataFrame using st.data_editor
                         st.data_editor(
