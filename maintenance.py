@@ -304,11 +304,14 @@ def app():
                             'Approver': 'Approver',
                             'LinkEdit': 'Link'
                         })
+                        # Fill NaN/NA values with an empty string
+                        
+                        data_df.fillna('', inplace=True)
                         
                         # Define the columns to filter
                         filter_columns = ["Ticket", "Approver", "Facility","Issue","Status"]
 
-                        # Create five columns for arranging widgets horizontally
+                        # Create five columnss for arranging widgets horizontally
                         col1, col2, col3, col4, col5 = st.columns(5)
 
                         # Create text input widgets for each filter column and arrange them horizontally
@@ -327,8 +330,8 @@ def app():
                         # Apply filters to the DataFrame
                         filtered_df = data_df
                         
-                         #Drop the index from the DataFrame
-                        data_df = data_df.reset_index(drop=True)
+
+
                         
                         for filter_columns, filter_value in filters.items():
                             if filter_value:
