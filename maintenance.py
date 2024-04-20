@@ -299,7 +299,7 @@ def app():
                             'Department':'Department',
                             'Report': 'Issue',
                             'Amount on the Quotation': 'Quoted',
-                            'Approved amount': 'Last Approved',
+                            'Approved amount': 'Approved',
                             'MainStatus': 'Status',
                             'Approver': 'Approver',
                             'LinkEdit': 'Link'
