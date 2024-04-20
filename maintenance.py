@@ -326,6 +326,10 @@ def app():
 
                         # Apply filters to the DataFrame
                         filtered_df = data_df
+                        
+                         #Drop the index from the DataFrame
+                        data_df = data_df.reset_index(drop=True)
+                        
                         for filter_columns, filter_value in filters.items():
                             if filter_value:
                                 filtered_df = filtered_df[filtered_df[filter_columns].str.contains(filter_value, case=False)]
