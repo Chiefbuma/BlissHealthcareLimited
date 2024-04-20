@@ -306,7 +306,7 @@ def app():
                         })
                         
                         # Define the columns to filter
-                        filter_columns = ["Ticket", "Approver", "Facility"]
+                        filter_columns = ["Ticket", "Facility","Approver", "Status","Issue"]
 
                         # Create text input widgets for each filter column
                         filters = {}
