@@ -264,19 +264,21 @@ def app():
                 with cols[3]:
                     ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()                   
                 with card_container(key="table2"):
-                    @st.cache_data
-                    def get_month_options():
-                        current_year = datetime.now().year
-                        current_month = datetime.now().month
-                        month_names = [
-                            datetime(current_year, month, 1).strftime('%B')
-                            for month in range(1, current_month + 1)
-                        ]
-                        month_names.insert(0, "Select Month")
-                        return month_names
-        
-                    month_options = get_month_options()
-                    choice = ui.select(options=month_options)
+                    cols = st.columns(4)
+                    with cols[3]:
+                        @st.cache_data
+                        def get_month_options():
+                            current_year = datetime.now().year
+                            current_month = datetime.now().month
+                            month_names = [
+                                datetime(current_year, month, 1).strftime('%B')
+                                for month in range(1, current_month + 1)
+                            ]
+                            month_names.insert(0, "Select Month")
+                            return month_names
+            
+                        month_options = get_month_options()
+                        choice = ui.select(options=month_options)
                     cols = st.columns(2)
                     with cols[0]:
                         with card_container(key="table1"):
