@@ -306,7 +306,7 @@ def app():
                         })
                         
                         # Create a multi-select dropdown for selecting columns to filter
-                        selected_columns = st.multiselect(["Ticket", "Approver","Facility", "Issue"])
+                        selected_columns = st.multiselect(["Ticket", "Approver","Facility", "Issue","Status"])
 
                         # Create text input widgets for selected columns
                         filters = {}
