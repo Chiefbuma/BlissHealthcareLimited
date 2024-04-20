@@ -121,7 +121,6 @@ def app():
                         st.session_state.logged_in= True
     else:
         st.session_state.is_authenticated =True
-        form_container.empty()
         # get clients sharepoint list
         st.cache_resource
         def load_data():
