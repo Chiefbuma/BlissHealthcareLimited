@@ -306,18 +306,29 @@ def app():
                         })
                         
                         # Define the columns to filter
-                        filter_columns = ["Ticket", "Facility","Approver", "Status","Issue"]
+                        filter_columns = ["Ticket", "Approver", "Facility"]
 
-                        # Create text input widgets for each filter column
+                        # Create five columns for arranging widgets horizontally
+                        col1, col2, col3, col4, col5 = st.columns(5)
+
+                        # Create text input widgets for each filter column and arrange them horizontally
                         filters = {}
-                        for column in filter_columns:
-                            filters[column] = st.text_input(f"Filter {column}", "")
+                        with col1:
+                            filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", "")
+                        with col2:
+                            filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", "")
+                        with col3:
+                            filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", "")
+                        with col4:
+                            filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", "")
+                        with col5:
+                            filters[filter_columns[5]] = st.text_input(f"Filter {filter_columns[5]}", "")
 
                         # Apply filters to the DataFrame
                         filtered_df = data_df
-                        for column, filter_value in filters.items():
+                        for filter_columns, filter_value in filters.items():
                             if filter_value:
-                                filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False)]
+                                filtered_df = filtered_df[filtered_df[filter_columns].str.contains(filter_value, case=False)]
 
                         # Display the filtered DataFrame using st.data_editor
                         st.data_editor(
@@ -330,8 +341,6 @@ def app():
                             },
                             hide_index=False
                         )
-
-
                                          
                     metrics = [
                         {"label": "Total", "value": Total_requests},
