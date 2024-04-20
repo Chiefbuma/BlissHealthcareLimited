@@ -127,7 +127,6 @@ def app():
         st.session_state.is_authenticated =True
         
         
-        # get clients sharepoint list
         @st.cache_resource
         def init_connection():
             url = "https://effdqrpabawzgqvugxup.supabase.co"
@@ -142,7 +141,7 @@ def app():
             
             st.session_state.logged_in= True
             # Dropdown for selecting the year
-        
+          
             
             current_month = datetime.now().month
             current_month_name = calendar.month_name[current_month]
@@ -161,7 +160,7 @@ def app():
             LastUpdate_df = pd.DataFrame(Lastdateresponse.data)
             LastUpdate_df = LastUpdate_df[['Last_Updated']]  # Assuming 'Last_Updated' is the column you want
             Lastdate = LastUpdate_df.iloc[0]['Last_Updated']
-        
+          
             # Define the function to calculate the fraction of days passed in a month
             def fraction_of_days_in_month(date):
                 # Calculate the total number of days in the month
@@ -171,7 +170,7 @@ def app():
                 fraction_passed = (date.day) / total_days_in_month.day
                 
                 return fraction_passed
-        
+           
             # Create a new figure
             fig3 = go.Figure()
             
@@ -196,7 +195,7 @@ def app():
             #Total_budget_FF = performance_df['Budget_Footfall'].sum()
             #formatted_FF_budget = "{:,.0f}".format(Total_budget_FF)
                         
-
+   
             # For example, let's say you want to add a trace for the "Projection" metric
             fig3.update_layout(
                 template="plotly_white",
@@ -245,7 +244,7 @@ def app():
             Arch_Rev = (MTD_Actual_Footfall/MTD_footfall_budget) * 100
             formatted_arch_ff = "{:.2f}%".format(Arch_Rev)
             
-        
+           
             
             #ALL MONTHS 
             
@@ -285,16 +284,16 @@ def app():
                 )
             
             # Create a new figure
-            #fig6.add_trace(
-            #go.Indicator(
-                #title={'text': "MTD FOOTFALL",'font': {'size': 15,'color': 'green'}},
-                #value= int(Total_budget)
+             #fig6.add_trace(
+             #go.Indicator(
+                 #title={'text': "MTD FOOTFALL",'font': {'size': 15,'color': 'green'}},
+                 #value= int(Total_budget)
             # For example, let's say you want to add a trace for the "Projection" metric
             #fig6.update_layout(
                 #template="plotly_white",
                 #height=80,
                 #font_family="TimesNew Roman",
-            # width=100,
+               # width=100,
                 #paper_bgcolor='rgba(209, 255, 119, 0.1)',  # Set background color to transparent
                 #plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
                 #uniformtext=dict(minsize=40, mode='hide'),
@@ -326,7 +325,7 @@ def app():
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             
             
-            # Rearrange the columns
+              # Rearrange the columns
             MTD_All = performance_df[
                 [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
@@ -339,7 +338,7 @@ def app():
                 [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
-        # Calculate the total values for each column
+           # Calculate the total values for each column
             total_values = {
                 'Scheme': 'TOTAL',
                 'MTD_Budget_Revenue': formatted_Rev_budget ,
@@ -372,12 +371,12 @@ def app():
                             line=dict(width=1)),
                             columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
                 cells=dict(values=[performance_total["Scheme"],
-                                performance_total["MTD_Budget_Revenue"],
-                                performance_total["MTD_Actual_Revenue"],
-                                performance_total["%Arch_REV"],
+                                   performance_total["MTD_Budget_Revenue"],
+                                   performance_total["MTD_Actual_Revenue"],
+                                   performance_total["%Arch_REV"],
                                     performance_total["Total_Revenue_Budget"],
                                     performance_total["Projected_Revenue"],
-                                    performance_total["MTD_Budget_Footfall"],
+                                     performance_total["MTD_Budget_Footfall"],
                                     performance_total["MTD_Actual_Footfall"],
                                     performance_total["%Arch_FF"],
                                     performance_total["Total_Footfall_Budget"],
@@ -397,7 +396,7 @@ def app():
                         line_color='darkslategray',
                         height=25,# Border color
                         line=dict(width=0.3))),
-                    
+                       
             ])
             fig_request_by_type_Rev.update_layout(
                     margin=dict(l=0, r=0, t=0, b=0),
