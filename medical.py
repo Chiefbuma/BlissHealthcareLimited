@@ -41,7 +41,6 @@ def app():
             response = supabase.table('facilities').select("*").execute()
 
             location_df = pd.DataFrame(response.data)
-            # st.write(location_df)
 
             def get_facilities(staffnumber):
                 response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
@@ -125,7 +124,6 @@ def app():
     
     else:
         st.session_state.is_authenticated =True
-        
         
         @st.cache_resource
         def init_connection():
