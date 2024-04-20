@@ -19,9 +19,11 @@ from IPython.display import HTML
 
 
 def app():
+    
     if 'is_authenticated' not in st.session_state:
         st.session_state.is_authenticated = False
         form_container = st.empty()
+        
         col1, col2 = st.columns([2,1])
         with col1:
             menu = ["Login", "Sign up"]
@@ -101,6 +103,8 @@ def app():
                             st.session_state.is_authenticated=True
                             st.session_state.staffnumber = staffnumber
                             st.session_state.password = password
+                            st.session_state.location = location
+
 
                         else:
                             st.warning("Invalid credentials. Please try again.")
@@ -119,6 +123,7 @@ def app():
                         st.success("You have created a new account")
                         st.session_state.is_authenticated=True
                         st.session_state.logged_in= True
+    
     else:
         st.session_state.is_authenticated =True
         # get clients sharepoint list
@@ -227,8 +232,6 @@ def app():
                 st.session_state.tab_clicked=True
                 ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
                 if Main_df is not None:
-                    with open('style.css') as f:
-                        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
                     cols = st.columns(4)
                     with cols[0]:
                         ui.card(title="Total Request", content=Total_requests, key="Revcard10").render()
@@ -239,21 +242,7 @@ def app():
                     with cols[3]:
                         ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()
                         
-                    # Load CSS file
-                    st.markdown('<style>' + open('style.css').read() + '</style>', unsafe_allow_html=True)
-
-                    # Use custom CSS class for styling
-                    cols = st.columns(4)
-                    with cols[0]:
-                        st.markdown('<div class="custom-card">Content 1</div>', unsafe_allow_html=True)
-                    with cols[1]:
-                        st.markdown('<div class="custom-card">Content 2</div>', unsafe_allow_html=True)
-                    with cols[2]:
-                        st.markdown('<div class="custom-card">Content 3</div>', unsafe_allow_html=True)
-                    with cols[3]:
-                        st.markdown('<div class="custom-card">Content 4</div>', unsafe_allow_html=True)
-
-                  
+                                      
                     with card_container(key="table2"):
                         cols = st.columns(2)
                         with cols[0]:

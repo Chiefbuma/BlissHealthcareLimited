@@ -485,13 +485,16 @@ def app():
                     # Set the default value to the previous month
                     default_month_index = current_month - 2  #
             
-                                                    # Select box for searching with default value set to the previous month
-                    search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index)
-                    
-                    if search_text:
-                        filtered_df = Monthly_All[Allperformance_df['Month'].str.contains(search_text, case=False)]
-                    else:
-                        filtered_df = MTD_All
+                  
+
+                # Selectbox for choosing a month
+                search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index, key="search_text")
+            
+                # Use the session state value for filtering the dataframe
+                if st.session_state.search_text:
+                    filtered_df = Monthly_All[Allperformance_df['Month']==search_text]
+                else:
+                    filtered_df = MTD_All
                     st.write(filtered_df, use_container_width=True)
                 
         
