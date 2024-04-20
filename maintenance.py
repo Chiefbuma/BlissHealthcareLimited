@@ -301,7 +301,7 @@ def app():
                             'Amount on the Quotation': 'Quoted',
                             'Approved amount': 'Last Approved',
                             'MainStatus': 'Status',
-                            'Approver': 'Pending with',
+                            'Approver': 'Approver',
                             'LinkEdit': 'Link'
                         })
                         
