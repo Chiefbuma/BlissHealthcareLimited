@@ -265,7 +265,7 @@ def app():
                     ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()                   
                 with card_container(key="table2"):
                     cols = st.columns(2)
-                    with cols[1]:
+                    with cols[0]:
                         @st.cache_data
                         def get_month_options():
                             current_year = datetime.now().year
@@ -279,10 +279,6 @@ def app():
             
                         month_options = get_month_options()
                         choice = ui.select(options=month_options)
-                    cols = st.columns(2)
-                    with cols[0]:
-                        with card_container(key="table1"):
-                            ui.table(data=Approval_df, maxHeight=300)
                         with card_container(key="table1"):
                             def generate_sales_data():
                                 np.random.seed(0)  # For reproducible results
@@ -297,6 +293,9 @@ def app():
                                         'y': {'field': 'Sales', 'type': 'quantitative', 'axis': {'grid': False}},
                                     },
                                 }, use_container_width=True)
+                        with card_container(key="table1"):
+                             ui.table(data=Approval_df, maxHeight=300)
+                            
                             
             # Initialize the session state
             if 'toggle_value' not in st.session_state:
