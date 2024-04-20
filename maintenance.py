@@ -319,7 +319,14 @@ def app():
                         filters = {column: '' for column in filter_columns}
                         
                         
-                        
+                        if st.button("Clear Filters"):
+                            # Clear input text fields
+                            for column in filter_columns:
+                                filters[column] = ''
+                            # Set default values for all input text widgets to blank string
+                            for key in filters.keys():
+                                filters[key] = ""
+
 
                         # Create text input widgets for each filter column and arrange them horizontally
                         with col1:
@@ -334,14 +341,7 @@ def app():
                             filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
 
 
-                        if st.button("Clear Filters"):
-                            # Clear input text fields
-                            for column in filter_columns:
-                                filters[column] = ''
-                            # Set default values for all input text widgets to blank string
-                            for key in filters.keys():
-                                filters[key] = ""
-
+                        
 
                         # Apply filters to the DataFrame
                         filtered_df = data_df
