@@ -253,19 +253,6 @@ def app():
 
         with card_container(key="Main1"):
             st.session_state.tab_clicked=True
-            @st.cache_data
-            def get_month_options():
-                current_year = datetime.now().year
-                current_month = datetime.now().month
-                month_names = [
-                    datetime(current_year, month, 1).strftime('%B')
-                    for month in range(1, current_month + 1)
-                ]
-                month_names.insert(0, "Select Month")
-                return month_names
-
-            month_options = get_month_options()
-            choice = ui.select(options=month_options)
             if Main_df is not None:
                 cols = st.columns(4)
                 with cols[0]:
@@ -275,16 +262,43 @@ def app():
                 with cols[2]:
                     ui.card(title="Pending Request", content=pending_request, key="Revcard12").render()
                 with cols[3]:
-                    ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()
-                    
-                                    
+                    ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()                   
                 with card_container(key="table2"):
                     cols = st.columns(2)
                     with cols[0]:
                         with card_container(key="table1"):
                             ui.table(data=Approval_df, maxHeight=300)
+                    with cols[0]:
+                        @st.cache_data
+                        def get_month_options():
+                            current_year = datetime.now().year
+                            current_month = datetime.now().month
+                            month_names = [
+                                datetime(current_year, month, 1).strftime('%B')
+                                for month in range(1, current_month + 1)
+                            ]
+                            month_names.insert(0, "Select Month")
+                            return month_names
+            
+                        month_options = get_month_options()
+                        choice = ui.select(options=month_options)
                             
-           
+                        with card_container(key="table1"):
+                            def generate_sales_data():
+                                np.random.seed(0)  # For reproducible results
+                                months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                                sales = np.random.randint(1000, 5000, size=len(months))
+                                return pd.DataFrame({'Month': months, 'Sales': sales})
+
+                            with card_container(key="chart1"):
+                                st.vega_lite_chart(generate_sales_data(), {
+                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
+                                    'encoding': {
+                                        'x': {'field': 'Month', 'type': 'ordinal'},
+                                        'y': {'field': 'Sales', 'type': 'quantitative', 'axis': {'grid': False}},
+                                    },
+                                }, use_container_width=True)
+                            
             # Initialize the session state
             if 'toggle_value' not in st.session_state:
                 st.session_state.toggle_value = False
