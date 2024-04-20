@@ -162,28 +162,28 @@ def app():
         
                                 
         # Filter the Main_df DataFrame to get the "departmental report" column
-        departmental_report_df =  Main_df["Departmental report"]
+        departmental_report_df = Main_df.loc[:, "Departmental report"]
 
         # Assuming departmental_report_df is your DataFrame
-        category_counts =  departmental_report_df.value_counts().reset_index()
-        
-            # Rename the columns to "Category" and "No."
+        category_counts = departmental_report_df.value_counts().reset_index()
+
+        # Rename the columns to "Category" and "No."
         category_counts.columns = ["Category", "No."]
-        
+
         # Convert "No." column to integers
         category_counts["No."] = category_counts["No."].astype(int)
 
         # Display the new DataFrame
         st.write(category_counts) 
-        
+
         st.vega_lite_chart(category_counts, {
-        'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6},
-        'encoding': {
-            'x': {'field': 'Category', 'type': 'norminal'},
-            'y': {'field': 'No.', 'type': 'quantitative', 'axis': {'grid': False}},
-        },
-        }, use_container_width=True, height=300)     
-                        
+            'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6},
+            'encoding': {
+                'x': {'field': 'Category', 'type': 'nominal'},
+                'y': {'field': 'No.', 'type': 'quantitative', 'axis': {'grid': False}},
+            },
+        }, use_container_width=True, height=300)
+
                 
         Director_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
