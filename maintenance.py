@@ -362,8 +362,7 @@ def app():
                         hide_index=True
                     )   
             else:
-                st.session_state.load_state=False
-                st.session_state.toggle_value = False
+                card_container.empty()
                 
                                     
             metrics = [
