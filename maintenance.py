@@ -265,135 +265,133 @@ def app():
                         ui.card(title="Pending Request", content=pending_request, key="Revcard12").render()
                     with cols[3]:
                         ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()
-                        
-                                      
+                          
                     with card_container(key="table2"):
                         cols = st.columns(2)
                         with cols[0]:
                             with card_container(key="table1"):
                              ui.table(data=Approval_df, maxHeight=300)
                       
-                with st.expander("MAINTENANACE REPORT"):             
-                    with card_container(key="gallery1"):
-                       
-                        st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
-                        @st.cache_data
-                        def load_data():
-                                New = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                                return pd.DataFrame(  New )
-                            
-                        df_mainselected=load_data()
-                        
-                            
-                        load= st.button("View Report")
-                        
-                        if "load_state" not in st.session_state:
-                            st.session_state.load_state=False
-                        
-                        if load or st.session_state.load_state:
-                            st.session_state.load_state=True
-                            
-                            data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
-                            
-                            # Convert 'bill_date' to datetime type
-                            data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
-                        
-                            data_df = data_df.rename(columns={
-                                'ID': 'Ticket',
-                                'Date of report':'Date',
-                                'Clinic': 'Facility',
-                                'Department':'Department',
-                                'Report': 'Issue',
-                                'Amount on the Quotation': 'Quoted',
-                                'Approved amount': 'Approved',
-                                'MainStatus': 'Status',
-                                'Approver': 'Approver',
-                                'LinkEdit': 'Link'
-                            })
-                            # Fill NaN/NA values with an empty string
-                            
-                            data_df.fillna('', inplace=True)
-                            
-                            # Define the columns to filter
-                            filter_columns = ["Ticket", "Approver", "Facility","Issue","Status"]
+            load=st.button("View Report") 
+            # Create a container
+            card_container = st.card_container() 
+            
+            @st.cache_data
+            def load_data():
+                    New = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                    return pd.DataFrame(  New )
+                
+            df_mainselected=load_data()
+                
+                    
+                    
+            if "load_state" not in st.session_state:
+                st.session_state.load_state=False
+            
+            if load or st.session_state.load_state:
+                st.session_state.load_state=True
+                with card_container(key="gallery1"):
+                    data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
+                    
+                    # Convert 'bill_date' to datetime type
+                    data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
+                
+                    data_df = data_df.rename(columns={
+                        'ID': 'Ticket',
+                        'Date of report':'Date',
+                        'Clinic': 'Facility',
+                        'Department':'Department',
+                        'Report': 'Issue',
+                        'Amount on the Quotation': 'Quoted',
+                        'Approved amount': 'Approved',
+                        'MainStatus': 'Status',
+                        'Approver': 'Approver',
+                        'LinkEdit': 'Link'
+                    })
+                    # Fill NaN/NA values with an empty string
+                    
+                    data_df.fillna('', inplace=True)
+                    
+                    # Define the columns to filter
+                    filter_columns = ["Ticket", "Approver", "Facility","Issue","Status"]
 
-                            # Create five columnss for arranging widgets horizontally
-                            col1, col2, col3, col4, col5 = st.columns(5)
-                            
-                            
-                            # Create a dictionary to store filter values
-                            filters = {column: '' for column in filter_columns}
-                            
+                    # Create five columnss for arranging widgets horizontally
+                    col1, col2, col3, col4, col5 = st.columns(5)
+                    
+                    
+                    # Create a dictionary to store filter values
+                    filters = {column: '' for column in filter_columns}
+                    
 
-                            # Create text input widgets for each filter column and arrange them horizontally
-                            with col1:
-                                filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", filters[filter_columns[0]])
-                            with col2:
-                                filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", filters[filter_columns[1]])
-                            with col3:
-                                filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
-                            with col4:
-                                filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
-                            with col5:
-                                filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
+                    # Create text input widgets for each filter column and arrange them horizontally
+                    with col1:
+                        filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", filters[filter_columns[0]])
+                    with col2:
+                        filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", filters[filter_columns[1]])
+                    with col3:
+                        filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
+                    with col4:
+                        filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
+                    with col5:
+                        filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
 
-                            # Apply filters to the DataFrame
-                            filtered_df = data_df
-                            for column, filter_value in filters.items():
-                                if filter_value:
-                                    filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False)]
+                    # Apply filters to the DataFrame
+                    filtered_df = data_df
+                    for column, filter_value in filters.items():
+                        if filter_value:
+                            filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False)]
 
-                            # Display the filtered DataFrame using st.data_editor
-                            st.data_editor(
-                                filtered_df,
-                                column_config={
-                                    "Link": st.column_config.LinkColumn(
-                                        "Link",
-                                        display_text="View"
-                                    )
-                                },
-                                hide_index=True
-                            )   
-                                         
-                    metrics = [
-                        {"label": "Total", "value": Total_requests},
-                        {"label": "Closed", "value": closed_request},
-                        {"label": "Pending", "value": pending_request},
-                        {"label": "Value", "value": Total_Value}
-                    ]
+                    # Display the filtered DataFrame using st.data_editor
+                    st.data_editor(
+                        filtered_df,
+                        column_config={
+                            "Link": st.column_config.LinkColumn(
+                                "Link",
+                                display_text="View"
+                            )
+                        },
+                        hide_index=True
+                    )   
+                                        
+                metrics = [
+                    {"label": "Total", "value": Total_requests},
+                    {"label": "Closed", "value": closed_request},
+                    {"label": "Pending", "value": pending_request},
+                    {"label": "Value", "value": Total_Value}
+                ]
 
-                    fig_data_cards = go.Figure()
+                fig_data_cards = go.Figure()
 
-                    for i, metric in enumerate(metrics):
-                        fig_data_cards.add_trace(go.Indicator(
-                            mode="number",
-                            value=metric["value"],
-                            number={'font': {'size': 25, 'color': 'white'}},
-                            domain={'row': i, 'column': 0},
-                            title={'text': metric["label"],'font': {'size': 20,'color': 'white'}},
-                            align="center"
-                        ))
+                for i, metric in enumerate(metrics):
+                    fig_data_cards.add_trace(go.Indicator(
+                        mode="number",
+                        value=metric["value"],
+                        number={'font': {'size': 25, 'color': 'white'}},
+                        domain={'row': i, 'column': 0},
+                        title={'text': metric["label"],'font': {'size': 20,'color': 'white'}},
+                        align="center"
+                    ))
 
-                    fig_data_cards.update_layout(
-                        grid={'rows': len(metrics), 'columns': 1, 'pattern': "independent"},
-                        template="plotly_white",
-                        height=100*len(metrics),
-                        paper_bgcolor='rgba(0, 131, 184, 1)',
-                        plot_bgcolor='rgba(0, 137, 184, 1)',
-                        uniformtext=dict(minsize=40, mode='hide'),
-                        margin=dict(l=20, r=20, t=50, b=5)
-                    )
+                fig_data_cards.update_layout(
+                    grid={'rows': len(metrics), 'columns': 1, 'pattern': "independent"},
+                    template="plotly_white",
+                    height=100*len(metrics),
+                    paper_bgcolor='rgba(0, 131, 184, 1)',
+                    plot_bgcolor='rgba(0, 137, 184, 1)',
+                    uniformtext=dict(minsize=40, mode='hide'),
+                    margin=dict(l=20, r=20, t=50, b=5)
+                )
 
-                    st.markdown(
-                        """
-                        <style>
-                        .st-cd {
-                            border: 1px solid #e6e9ef;
-                            border-radius: 5px;
-                            padding: 10px;
-                            margin-bottom: 10px;
-                        }
-                        </style>
-                        """,
-                        unsafe_allow_html=True
-                    )
+                st.markdown(
+                    """
+                    <style>
+                    .st-cd {
+                        border: 1px solid #e6e9ef;
+                        border-radius: 5px;
+                        padding: 10px;
+                        margin-bottom: 10px;
+                    }
+                    </style>
+                    """,
+                    unsafe_allow_html=True
+                )
