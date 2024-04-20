@@ -135,6 +135,7 @@ def app():
         form_container.empty()
         
     if st.session_state.is_authenticated:
+        form_container.empty()
         
         # get clients sharepoint list
         st.cache_resource
@@ -319,7 +320,7 @@ def app():
                             
                             df_mainselected = data_df
                         else:
-                            df_mainselected = data_df.query("Facility== @Facility or Ticket == @Ticket or Approver == @Pending with or  Issue == @Issue")
+                            df_mainselected = data_df.query("Facility == @Facility or Ticket == @Ticket or Approver == @Approver or Issue == @Issue")
                                
                         st.data_editor(
                             df_mainselected,
