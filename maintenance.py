@@ -319,28 +319,29 @@ def app():
                         filters = {column: '' for column in filter_columns}
                         
                         
-                                                # Add a button to clear all filters
-                        if st.button("Clear Filters"):
-                            filters = {column: '' for column in filter_columns}
-                            default=""
+                        
 
                         # Create text input widgets for each filter column and arrange them horizontally
                         with col1:
-                            filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", value=filters[filter_columns[0]], key=f"{filter_columns[0]}_input")
+                            filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", filters[filter_columns[0]])
                         with col2:
-                            filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", value=filters[filter_columns[1]], key=f"{filter_columns[1]}_input")
+                            filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", filters[filter_columns[1]])
                         with col3:
-                            filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", value=filters[filter_columns[2]], key=f"{filter_columns[2]}_input")
+                            filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
                         with col4:
-                            filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}",value=filters[filter_columns[3]], key=f"{filter_columns[3]}_input")
+                            filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
                         with col5:
-                            filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", value=filters[filter_columns[4]], key=f"{filter_columns[4]}_input")
+                            filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
 
 
-
+                        if st.button("Clear Filters"):
                             # Clear input text fields
                             for column in filter_columns:
                                 filters[column] = ''
+                            # Set default values for all input text widgets to blank string
+                            for key in filters.keys():
+                                filters[key] = ""
+
 
                         # Apply filters to the DataFrame
                         filtered_df = data_df
