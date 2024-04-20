@@ -256,8 +256,8 @@ def app():
             @st.cache_data
             def get_month_options():
                 # Get the current year and month
-                current_year = datetime.datetime.now().year
-                current_month = datetime.datetime.now().month
+                current_year = datetime.now().year
+                current_month = datetime.now().month
 
                 # Create a list of month names from January to the current month
                 month_names = [
