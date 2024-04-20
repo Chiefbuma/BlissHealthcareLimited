@@ -16,14 +16,11 @@ from sharepoint import SharePoint
 import main
 from postgrest import APIError
 from IPython.display import HTML
+from medical import region
 
 def app():
     if 'is_authenticated' not in st.session_state:
         st.session_state.is_authenticated = False
-        
-       
-        
-
     else:
         st.session_state.is_authenticated = False
 
@@ -134,10 +131,7 @@ def app():
 
     
     else:
-         form_container.empty()
-         
-    if st.session_state.is_authenticated:
-        
+        st.session_state.is_authenticated =True
         form_container.empty()
         # get clients sharepoint list
         st.cache_resource
