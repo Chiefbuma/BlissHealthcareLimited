@@ -343,7 +343,7 @@ def app():
                                     display_text="View"
                                 )
                             },
-                            hide_index=False
+                            hide_index=True
                         )
                                          
                     metrics = [
