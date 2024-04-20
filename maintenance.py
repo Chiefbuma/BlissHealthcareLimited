@@ -283,14 +283,12 @@ def app():
                     with cols[0]:
                         with card_container(key="table1"):
                             ui.table(data=Approval_df, maxHeight=300)
-                    with cols[1]:
                         with card_container(key="table1"):
                             def generate_sales_data():
                                 np.random.seed(0)  # For reproducible results
                                 months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
                                 sales = np.random.randint(1000, 5000, size=len(months))
                                 return pd.DataFrame({'Month': months, 'Sales': sales})
-
                             with card_container(key="chart1"):
                                 st.vega_lite_chart(generate_sales_data(), {
                                     'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
