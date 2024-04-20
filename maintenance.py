@@ -268,7 +268,7 @@ def app():
                     with cols[0]:
                         with card_container(key="table1"):
                             ui.table(data=Approval_df, maxHeight=300)
-                    with cols[0]:
+                    with cols[1]:
                         @st.cache_data
                         def get_month_options():
                             current_year = datetime.now().year
