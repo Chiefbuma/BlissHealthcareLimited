@@ -361,8 +361,8 @@ def app():
                         },
                         hide_index=True
                     )   
-            else:
-                card_container.empty()
+          
+                
                 
                                     
             metrics = [
