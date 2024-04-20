@@ -162,28 +162,21 @@ def app():
         
                                 
         # Filter the Main_df DataFrame to get the "departmental report" column
-        departmental_report_df = Main_df.loc[:, "Departmental report"]
+        departmental_report_df =  Main_df["Departmental report"]
 
         # Assuming departmental_report_df is your DataFrame
-        category_counts = departmental_report_df.value_counts().reset_index()
-
-        # Rename the columns to "Category" and "No."
+        category_counts =  departmental_report_df.value_counts().reset_index()
+        
+            # Rename the columns to "Category" and "No."
         category_counts.columns = ["Category", "No."]
-
+        
         # Convert "No." column to integers
         category_counts["No."] = category_counts["No."].astype(int)
 
         # Display the new DataFrame
         st.write(category_counts) 
-
-        st.vega_lite_chart(category_counts, {
-            'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 6},
-            'encoding': {
-                'x': {'field': 'Category', 'type': 'nominal'},
-                'y': {'field': 'No.', 'type': 'quantitative', 'axis': {'grid': False}},
-            },
-        }, use_container_width=True, height=300)
-
+        
+                             
                 
         Director_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
@@ -257,11 +250,8 @@ def app():
         # Creating a DataFrame
         Approval_df = pd.DataFrame(data)
         
-        
-
-        if st.session_state.is_authenticated or st.session_state.tab_clicked:
+        if st.session_state.is_authenticated:
             st.session_state.tab_clicked=True
-            st.session_state.is_authenticated=False
             with card_container(key="Main1"):
                 st.session_state.tab_clicked=True
                 ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
@@ -299,9 +289,6 @@ def app():
                         # Convert 'bill_date' to datetime type
                         data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
                     
-                    
-                        
-                    
                         data_df = data_df.rename(columns={
                             'ID': 'Ticket',
                             'Date of report':'Date',
@@ -328,30 +315,22 @@ def app():
                         # Create a dictionary to store filter values
                         filters = {column: '' for column in filter_columns}
                         
-                        
-                        
-
+                        # Check if 'filters' is not in session state and initialize it if not
+                        if 'filters' not in st.session_state:
+                            st.session_state.filters = {}
 
                         # Create text input widgets for each filter column and arrange them horizontally
                         with col1:
-                            filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", filters[filter_columns[0]])
+                            st.session_state.filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", st.session_state.filters.get(filter_columns[0], ""))
                         with col2:
-                            filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", filters[filter_columns[1]])
+                            st.session_state.filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", st.session_state.filters.get(filter_columns[1], ""))
                         with col3:
-                            filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
+                            st.session_state.filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", st.session_state.filters.get(filter_columns[2], ""))
                         with col4:
-                            filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
+                            st.session_state.filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", st.session_state.filters.get(filter_columns[3], ""))
                         with col5:
-                            filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
-
-                        if st.button("Clear Filters"):
-                                # Clear input text fields
-                                for column in filter_columns:
-                                    filters[column] = ''
-                                # Set default values for all input text widgets to blank string
-                                for key in filters.keys():
-                                    filters[key] = ""
-                        
+                            st.session_state.filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", st.session_state.filters.get(filter_columns[4], ""))
+                    
 
                         # Apply filters to the DataFrame
                         filtered_df = data_df
