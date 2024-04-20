@@ -265,7 +265,8 @@ def app():
                         ui.card(title="Pending Request", content=pending_request, key="Revcard12").render()
                     with cols[3]:
                         ui.card(title="Approved Value:", content=Dir_Approved_value, key="Revcard13").render()
-                          
+                        
+                                      
                     with card_container(key="table2"):
                         cols = st.columns(2)
                         with cols[0]:
@@ -275,22 +276,24 @@ def app():
                 load=st.button("View Report") 
                 # Create a container
                 card_container = st.card_container() 
-                
-                @st.cache_data
-                def load_data():
-                        New = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                        return pd.DataFrame(  New )
+                with card_container(key="gallery1"):
                     
-                df_mainselected=load_data()
+                    st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
+                    @st.cache_data
+                    def load_data():
+                            New = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                            return pd.DataFrame(  New )
+                        
+                    df_mainselected=load_data()
                     
+                      
+                    
+                    if "load_state" not in st.session_state:
+                        st.session_state.load_state=False
+                    
+                    if load or st.session_state.load_state:
+                        st.session_state.load_state=True
                         
-                        
-                if "load_state" not in st.session_state:
-                    st.session_state.load_state=False
-                
-                if load or st.session_state.load_state:
-                    st.session_state.load_state=True
-                    with card_container(key="gallery1"):
                         data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
                         
                         # Convert 'bill_date' to datetime type
@@ -352,46 +355,46 @@ def app():
                             },
                             hide_index=True
                         )   
-                                            
-                    metrics = [
-                        {"label": "Total", "value": Total_requests},
-                        {"label": "Closed", "value": closed_request},
-                        {"label": "Pending", "value": pending_request},
-                        {"label": "Value", "value": Total_Value}
-                    ]
+                                        
+                metrics = [
+                    {"label": "Total", "value": Total_requests},
+                    {"label": "Closed", "value": closed_request},
+                    {"label": "Pending", "value": pending_request},
+                    {"label": "Value", "value": Total_Value}
+                ]
 
-                    fig_data_cards = go.Figure()
+                fig_data_cards = go.Figure()
 
-                    for i, metric in enumerate(metrics):
-                        fig_data_cards.add_trace(go.Indicator(
-                            mode="number",
-                            value=metric["value"],
-                            number={'font': {'size': 25, 'color': 'white'}},
-                            domain={'row': i, 'column': 0},
-                            title={'text': metric["label"],'font': {'size': 20,'color': 'white'}},
-                            align="center"
-                        ))
+                for i, metric in enumerate(metrics):
+                    fig_data_cards.add_trace(go.Indicator(
+                        mode="number",
+                        value=metric["value"],
+                        number={'font': {'size': 25, 'color': 'white'}},
+                        domain={'row': i, 'column': 0},
+                        title={'text': metric["label"],'font': {'size': 20,'color': 'white'}},
+                        align="center"
+                    ))
 
-                    fig_data_cards.update_layout(
-                        grid={'rows': len(metrics), 'columns': 1, 'pattern': "independent"},
-                        template="plotly_white",
-                        height=100*len(metrics),
-                        paper_bgcolor='rgba(0, 131, 184, 1)',
-                        plot_bgcolor='rgba(0, 137, 184, 1)',
-                        uniformtext=dict(minsize=40, mode='hide'),
-                        margin=dict(l=20, r=20, t=50, b=5)
-                    )
+                fig_data_cards.update_layout(
+                    grid={'rows': len(metrics), 'columns': 1, 'pattern': "independent"},
+                    template="plotly_white",
+                    height=100*len(metrics),
+                    paper_bgcolor='rgba(0, 131, 184, 1)',
+                    plot_bgcolor='rgba(0, 137, 184, 1)',
+                    uniformtext=dict(minsize=40, mode='hide'),
+                    margin=dict(l=20, r=20, t=50, b=5)
+                )
 
-                    st.markdown(
-                        """
-                        <style>
-                        .st-cd {
-                            border: 1px solid #e6e9ef;
-                            border-radius: 5px;
-                            padding: 10px;
-                            margin-bottom: 10px;
-                        }
-                        </style>
-                        """,
-                        unsafe_allow_html=True
-                    )
+                st.markdown(
+                    """
+                    <style>
+                    .st-cd {
+                        border: 1px solid #e6e9ef;
+                        border-radius: 5px;
+                        padding: 10px;
+                        margin-bottom: 10px;
+                    }
+                    </style>
+                    """,
+                    unsafe_allow_html=True
+                )
