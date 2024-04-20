@@ -306,7 +306,7 @@ def app():
                         })
                         
                         # Define the columns to filter
-                        filter_columns = ["Ticket", "Approver", "Facility"]
+                        filter_columns = ["Ticket", "Approver", "Facility","Issue","Status"]
 
                         # Create five columns for arranging widgets horizontally
                         col1, col2, col3, col4, col5 = st.columns(5)
