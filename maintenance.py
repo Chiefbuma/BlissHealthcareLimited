@@ -255,8 +255,8 @@ def app():
             st.session_state.tab_clicked=True
             @st.cache_data
             def get_month_options():
-                current_year = datetime.datetime.now().year
-                current_month = datetime.datetime.now().month
+                current_year = datetime.now().year
+                current_month = datetime.now().month
                 month_names = [
                     datetime.date(current_year, month, 1).strftime('%B')
                     for month in range(1, current_month + 1)
