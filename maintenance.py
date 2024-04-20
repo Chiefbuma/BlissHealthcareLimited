@@ -273,9 +273,7 @@ def app():
                             with card_container(key="table1"):
                              ui.table(data=Approval_df, maxHeight=300)
                       
-                load=st.button("View Report") 
-                # Create a container
-                card_container = st.card_container() 
+                load=st.button("View Report")           
                 with card_container(key="gallery1"):
                     
                     st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
