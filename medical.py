@@ -148,7 +148,7 @@ def app():
                             st.session_state.is_authenticated=True
                             st.session_state.logged_in= True
                             form_container.empty()
-    else:                                
+                                
         if st.session_state.is_authenticated:
             @st.cache_resource
             def init_connection():
