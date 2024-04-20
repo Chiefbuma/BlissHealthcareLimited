@@ -255,23 +255,17 @@ def app():
             st.session_state.tab_clicked=True
             @st.cache_data
             def get_month_options():
-                # Get the current year and month
-                current_year = datetime.now().year
-                current_month = datetime.now().month
-
-                # Create a list of month names from January to the current month
+                current_year = datetime.datetime.now().year
+                current_month = datetime.datetime.now().month
                 month_names = [
                     datetime.date(current_year, month, 1).strftime('%B')
                     for month in range(1, current_month + 1)
                 ]
-
+                month_names.insert(0, "Select Month")
                 return month_names
 
-            # Get the list of month names
             month_options = get_month_options()
-            
-            # Use the list as options for the select widget
-            choice = ui.select(options=("Select Month", month_options))
+            choice = ui.select(options=month_options)
             if Main_df is not None:
                 cols = st.columns(4)
                 with cols[0]:
