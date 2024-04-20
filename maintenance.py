@@ -361,8 +361,11 @@ def app():
                         },
                         hide_index=True
                     )   
-
-                                      
+            else:
+                st.session_state.load_state=False
+                st.session_state.toggle_value = False
+                
+                                    
             metrics = [
                 {"label": "Total", "value": Total_requests},
                 {"label": "Closed", "value": closed_request},
