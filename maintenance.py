@@ -334,6 +334,10 @@ def app():
                         if st.button("Clear Filters"):
                             filters = {column: '' for column in filter_columns}
 
+                            # Clear input text fields
+                            for column in filter_columns:
+                                filters[column] = ''
+
                         # Apply filters to the DataFrame
                         filtered_df = data_df
                         for column, filter_value in filters.items():
