@@ -315,22 +315,31 @@ def app():
                         # Create a dictionary to store filter values
                         filters = {column: '' for column in filter_columns}
                         
-                        # Check if 'filters' is not in session state and initialize it if not
-                        if 'filters' not in st.session_state:
-                            st.session_state.filters = {}
+                        
+                        
 
                         # Create text input widgets for each filter column and arrange them horizontally
                         with col1:
-                            st.session_state.filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", st.session_state.filters.get(filter_columns[0], ""))
+                            filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", filters[filter_columns[0]])
                         with col2:
-                            st.session_state.filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", st.session_state.filters.get(filter_columns[1], ""))
+                            filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", filters[filter_columns[1]])
                         with col3:
-                            st.session_state.filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", st.session_state.filters.get(filter_columns[2], ""))
+                            filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
                         with col4:
-                            st.session_state.filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", st.session_state.filters.get(filter_columns[3], ""))
+                            filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
                         with col5:
-                            st.session_state.filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", st.session_state.filters.get(filter_columns[4], ""))
-                    
+                            filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
+
+                        
+                        
+                        if st.button("Clear Filters"):
+                                # Clear input text fields
+                                for column in filter_columns:
+                                    filters[column] = ''
+                                # Set default values for all input text widgets to blank string
+                                for key in filters.keys():
+                                    filters[key] = ""
+                        
 
                         # Apply filters to the DataFrame
                         filtered_df = data_df
