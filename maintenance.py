@@ -278,29 +278,27 @@ def app():
                 st.session_state.toggle_value = False
 
             # Create a checkbox to toggle the value
-            switch_value = ui.switch(default_checked=st.session_state.toggle_value, label="Show Table", key="switch1")   
+            toggle_value = ui.switch(default_checked=st.session_state.toggle_value, label="Show Table", key="switch1")   
 
             # Store the value of the toggle in the session state
-            st.session_state.toggle_value = load
+            st.session_state.toggle_value = toggle_value
             
-                      
-            with card_container(key="gallery1"):
-                
-                st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
-                @st.cache_data
-                def load_data():
-                        New = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                        return pd.DataFrame(  New )
-                    
-                df_mainselected=load_data()
-                
-                    
-                
-                if "load_state" not in st.session_state:
+            if "load_state" not in st.session_state:
                     st.session_state.load_state=False
                 
-                if load or st.session_state.load_state:
-                    st.session_state.load_state=True
+            if toggle_value or st.session_state.load_state:
+                st.session_state.load_state=True
+                
+                        
+                with card_container(key="gallery1"):
+                    
+                    st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
+                    @st.cache_data
+                    def load_data():
+                            New = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                            return pd.DataFrame(  New )
+                        
+                    df_mainselected=load_data()
                     
                     data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
                     
@@ -363,8 +361,7 @@ def app():
                         },
                         hide_index=True
                     )   
-                else:
-                    st.session_state.load_state=False
+
                                       
             metrics = [
                 {"label": "Total", "value": Total_requests},
