@@ -305,11 +305,16 @@ def app():
                             'LinkEdit': 'Link'
                         })
                         
-                        # Create a sidebar with checkboxes for column selection
-                        selected_columns = st.sidebar.multiselect("Select Columns to Display", data_df.columns)
+                                            # Create text input widgets for dynamic filtering
+                        filters = {}
+                        for column in data_df.columns:
+                            filters[column] = st.text_input(f"Filter {column}", "")
 
-                        # Filter the DataFrame based on selected columns
-                        filtered_df = data_df[selected_columns]
+                        # Apply filters to the DataFrame
+                        filtered_df = data_df
+                        for column, filter_value in filters.items():
+                            if filter_value:
+                                filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False)]
 
                         # Display the filtered DataFrame using st.data_editor
                         st.data_editor(
@@ -321,7 +326,7 @@ def app():
                                 )
                             },
                             hide_index=False
-                        )                 
+                        )
                                          
                     metrics = [
                         {"label": "Total", "value": Total_requests},
