@@ -305,12 +305,12 @@ def app():
                             'LinkEdit': 'Link'
                         })
                         
-                        # Create a multi-select dropdown for selecting columns to filter
-                        selected_columns = st.multiselect("Select columns to filter", ["Ticket", "Approver", "Facility", "Issue", "Status"])
+                        # Define the columns to filter
+                        filter_columns = ["Ticket", "Approver", "Facility"]
 
-                        # Create text input widgets for selected columns
+                        # Create text input widgets for each filter column
                         filters = {}
-                        for column in selected_columns:
+                        for column in filter_columns:
                             filters[column] = st.text_input(f"Filter {column}", "")
 
                         # Apply filters to the DataFrame
@@ -330,6 +330,7 @@ def app():
                             },
                             hide_index=False
                         )
+
 
                                          
                     metrics = [
