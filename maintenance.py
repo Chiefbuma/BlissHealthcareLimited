@@ -16,7 +16,7 @@ from sharepoint import SharePoint
 import main
 from postgrest import APIError
 from IPython.display import HTML
-from medical import region
+
 
 def app():
     if 'is_authenticated' not in st.session_state:
