@@ -272,9 +272,17 @@ def app():
                         with card_container(key="table1"):
                             ui.table(data=Approval_df, maxHeight=300)
                             
-            switch_value = ui.switch(default_checked=True, label="Show Table", key="switch1")   
-                
-            load=switch_value
+           
+            # Initialize the session state
+            if 'toggle_value' not in st.session_state:
+                st.session_state.toggle_value = False
+
+            # Create a checkbox to toggle the value
+            switch_value = ui.switch(default_checked=st.session_state.toggle_value, label="Show Table", key="switch1")   
+
+            # Store the value of the toggle in the session state
+            st.session_state.toggle_value = load
+            
                       
             with card_container(key="gallery1"):
                 
@@ -291,7 +299,7 @@ def app():
                 if "load_state" not in st.session_state:
                     st.session_state.load_state=False
                 
-                if load=="True" or st.session_state.load_state:
+                if load or st.session_state.load_state:
                     st.session_state.load_state=True
                     
                     data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','LinkEdit']]
