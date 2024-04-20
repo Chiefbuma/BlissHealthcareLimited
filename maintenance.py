@@ -258,7 +258,7 @@ def app():
                 current_year = datetime.now().year
                 current_month = datetime.now().month
                 month_names = [
-                    datetime.date(current_year, month, 1).strftime('%B')
+                    datetime(current_year, month, 1).strftime('%B')
                     for month in range(1, current_month + 1)
                 ]
                 month_names.insert(0, "Select Month")
