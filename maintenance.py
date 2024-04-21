@@ -153,7 +153,7 @@ def app():
     if st.session_state.is_authenticated:
         form_container.empty()
         # get clients sharepoint list
-        @st.cache_resource
+        @st.cache_data
         def load_data():
                 clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
                 return pd.DataFrame(clients)
@@ -349,7 +349,7 @@ def app():
                     data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
                                         
                     # Extract just the month name
-                    data_df['MMonthName'] = data_df['MonthName'].str.split(';#').str[1]
+                    data_df['MonthName'] = data_df['MonthName'].str.split(';#').str[1]
                 
                     data_df = data_df.rename(columns={
                         'ID': 'Ticket',
