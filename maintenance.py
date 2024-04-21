@@ -336,7 +336,7 @@ def app():
             # Create a checkbox to toggle the value
             toggle_value = ui.switch(default_checked=st.session_state.toggle_value, label="Show Table", key="switch1")   
 
-            container = st.container(border=False)
+         
             
             # Store the value of the toggle in the session state
             st.session_state.toggle_value = toggle_value
@@ -346,12 +346,12 @@ def app():
                     
             if "contatiner" not in st.session_state:
                     st.session_state.container=False    
+           
           
-            if toggle_value or st.session_state.load_state or container:
+            if toggle_value or st.session_state.load_state:
                 st.session_state.load_state=True
                 df_mainselected= load_data()
-                st.session_state.container=True   
-                
+                  
                 with st.container:
                     with card_container(key="gallery1"):
                         st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
@@ -422,7 +422,8 @@ def app():
                             hide_index=True
                         )   
             else:
-                st.session_state.container=False                      
+                st.session_state.load_state=False 
+                                     
             metrics = [
                 {"label": "Total", "value": Total_requests},
                 {"label": "Closed", "value": closed_request},
