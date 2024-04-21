@@ -24,6 +24,14 @@ def app():
         st.session_state.is_authenticated = False 
         # Initialize session state if it doesn't exist
         
+    if "choice_log" not in st.session_state.choice_log:
+            st.session_state.choice_log=False
+            
+    form_container=st.container(border=False)
+        
+    if "form_container" not in st.session_state:
+        st.session_state.form_container=False  
+        
     @st.cache_resource
     def init_connection():
         url = "https://effdqrpabawzgqvugxup.supabase.co"
@@ -91,16 +99,9 @@ def app():
     col1, col2 = st.columns([2,1])
     with col1:
         menu = ["Login", "Sign up"]
+        
         choice_log = st.sidebar.selectbox("", menu,key="choice_medical")
         
-        if "choice_log" not in st.session_state.choice_log:
-            st.session_state.choice_log=False
-            
-        form_container=st.container(border=False)
-        
-        if "form_container" not in st.session_state:
-            st.session_state.form_container=False   
-
         if choice_log == "Login":
             st.session_state.choice_log=True
             st.session_state.form_container=True
