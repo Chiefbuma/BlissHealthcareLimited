@@ -194,7 +194,7 @@ def app():
         report_sum_df = pd.DataFrame(list(report_sum.items()), columns=["Item", "Cost"])
 
         # Display the DataFrame
-        st.write(report_sum_df)
+        #st.write(report_sum_df)
 
                  
                 
