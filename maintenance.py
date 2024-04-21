@@ -306,7 +306,8 @@ def app():
                                 return pd.DataFrame({'Item': Item, 'Cost': Cost})
                             with card_container(key="chart1"):
                                 st.vega_lite_chart(generate_sales_data(), {
-                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
+                                    'title': 'Cost of Repairs -(Based on Approved Amount)',
+                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 4 },
                                     'encoding': {
                                         'x': {'field': 'Item', 'type': 'ordinal'},
                                         'y': {'field': 'Cost', 'type': 'quantitative', 'sort': '-x', 'axis': {'grid': False}},
