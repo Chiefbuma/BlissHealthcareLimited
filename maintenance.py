@@ -331,8 +331,7 @@ def app():
             if toggle_value:
                 st.session_state.load_state=True
                 # Clear the cache
-                st.cache_data.clear()
-                
+              
                 with card_container(key="gallery1"):
                     
                     st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
