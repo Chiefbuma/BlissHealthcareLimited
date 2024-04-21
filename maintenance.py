@@ -153,7 +153,7 @@ def app():
     if st.session_state.is_authenticated:
         form_container.empty()
         # get clients sharepoint list
-        @st.cache(allow_output_mutation=True)
+        @st.cache_data(allow_output_mutation=True)
         def load_data():
                 clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
                 return pd.DataFrame(clients)
@@ -337,7 +337,7 @@ def app():
                 with card_container(key="gallery1"):
                     
                     st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
-                    @st.cache(allow_output_mutation=True)
+                    @st.cache_data(allow_output_mutation=True)
                     def load_data():
                             New = SharePoint().connect_to_list(ls_name='Maintenance Report')
                             return pd.DataFrame(  New )
