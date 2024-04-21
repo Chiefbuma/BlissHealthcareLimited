@@ -349,16 +349,17 @@ def app():
             
             container = st.container()
             if toggle_value:
-                df_mainselected= load_data()
+              
                 st.session_state.load_state = True
                 st.session_state.toggle_value = True
                 st.session_state.container=True   
                 
                 with container:
                     with card_container(key="gallery1"):
+                        st.cache_data
+                        df_mainselected= load_data()
                         st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
                         data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','MonthName','LinkEdit']]
-                        
                         # Convert 'bill_date' to datetime type
                         data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
                                             
