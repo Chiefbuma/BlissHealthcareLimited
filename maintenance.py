@@ -127,7 +127,6 @@ def app():
                             st.session_state.is_authenticated=True
                             st.session_state.staffnumber = staffnumber
                             st.session_state.password = password
-                            st.cache_data.clear()
                             
    
                         else:
@@ -148,7 +147,7 @@ def app():
                         st.session_state.is_authenticated=True
                         st.session_state.logged_in= True
                         form_container.empty()
-                        st.cache_data.clear()
+                        
                         
                         
                         
@@ -323,7 +322,9 @@ def app():
 
             # Create a checkbox to toggle the value
             toggle_value = ui.switch(default_checked=st.session_state.toggle_value, label="Show Table", key="switch1")   
-
+            
+            if st.button("Reload Data"):
+                 st.cache_data.clear()
             # Store the value of the toggle in the session state
             st.session_state.toggle_value = toggle_value
             
