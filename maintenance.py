@@ -93,7 +93,7 @@ def app():
         menu = ["Login", "Sign up"]
         choice_log = st.sidebar.selectbox("", menu,key="choice_medical")
         
-        if "choice" not in st.session_state.choice_log:
+        if "choice_log" not in st.session_state.choice_log:
             st.session_state.choice_log=False
             
         form_container=st.container(border=False)
@@ -161,7 +161,9 @@ def app():
              st.session_state.choice_log=False
                        
     if st.session_state.is_authenticated:
-
+        st.session_state.form_container=False
+        st.session_state.choice_log=False
+        
         # get clients sharepoint list
         def load_data():
                 clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
