@@ -308,8 +308,8 @@ def app():
                                 st.vega_lite_chart(generate_sales_data(), {
                                     'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
                                     'encoding': {
-                                        'x': {'field': 'Item', 'type': 'ordinal'},
-                                        'y': {'field': 'Cost', 'type': 'quantitative', 'axis': {'grid': False}},
+                                        'x': {'field': 'Month', 'type': 'ordinal'},
+                                        'y': {'field': 'Sales', 'type': 'quantitative', 'axis': {'grid': False}},
                                     },
                                 }, use_container_width=True)
                         with card_container(key="table1"):
