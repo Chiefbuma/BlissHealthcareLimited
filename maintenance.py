@@ -351,7 +351,7 @@ def app():
             
             
             container = st.container()
-            if toggle_value or st.session_state.load_state:
+            if toggle_value:
                 st.session_state.load_state = True
                 st.session_state.toggle_value = True
                 st.session_state.container=True   
@@ -426,7 +426,10 @@ def app():
                             hide_index=True
                         )   
             else:
-                st.session_state.container=False                      
+                container.empty() 
+                st.session_state.load_state = False
+                st.session_state.toggle_value = False
+                st.session_state.container=False                 
             metrics = [
                 {"label": "Total", "value": Total_requests},
                 {"label": "Closed", "value": closed_request},
