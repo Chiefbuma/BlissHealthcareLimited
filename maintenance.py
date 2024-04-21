@@ -358,7 +358,7 @@ def app():
                         'Clinic': 'Facility',
                         'Department':'Department',
                         'Report': 'Issue',
-                        'Amount on the Quotation': 'Quoted',
+                        'Amount on the Quotation': 'Quoted Amount',
                         'Approved amount': 'Final Approved',
                         'MainStatus': 'Status',
                         'MonthName':'Month',
