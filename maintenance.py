@@ -153,16 +153,8 @@ def app():
     if st.session_state.is_authenticated:
         form_container.empty()
         
-        @st.cache_resource
-        def load_data():
-                New = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                return pd.DataFrame(  New )
-            
-        df_mainselected=load_data()
-        
-        st.write(df_mainselected)
         # get clients sharepoint list
-        @st.cache_resource
+        @st.cache_data
         def load_data():
                 clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
                 return pd.DataFrame(clients)
@@ -170,7 +162,7 @@ def app():
         Main_df = load_data()
         
         # Filter the Main_df DataFrame to get the "departmental report" column
-        departmental_report_df =  df_mainselected["Departmental report"]
+        departmental_report_df =  Main_df["Departmental report"]
 
         # Assuming departmental_report_df is your DataFrame
         category_counts =  departmental_report_df.value_counts().reset_index()
@@ -185,7 +177,7 @@ def app():
         #st.write(category_counts) 
         
                 # Filter the Main_df DataFrame where 'Director approval' is equal to 'Approved'
-        approved_main_df = df_mainselected[df_mainselected['Admin Approval'] == 'Approved']
+        approved_main_df = Main_df[Main_df['Admin Approval'] == 'Approved']
 
         # Get unique items in the "Report" column
         unique_reports = approved_main_df["Report"].unique()
