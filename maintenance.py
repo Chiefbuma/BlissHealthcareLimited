@@ -389,8 +389,7 @@ def app():
                     with col5:
                         filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
                     with col6:
-                        filters[filter_columns[5]] = st.text_input(f"Filter {filter_columns[5]}", filters[filter_columns[5]])
-
+                        filters[filter_columns[5]] = ui.select(f"Filter {filter_columns[5]}", options=month_options, index=filters[filter_columns[5]] - 1 if filters[filter_columns[5]] else None)
                     # Apply filters to the DataFrame
                     filtered_df = data_df
                     for column, filter_value in filters.items():
