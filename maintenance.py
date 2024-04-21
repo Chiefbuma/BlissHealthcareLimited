@@ -158,17 +158,12 @@ def app():
                 New = SharePoint().connect_to_list(ls_name='Maintenance Report')
                 return pd.DataFrame(  New )
             
-        df_mainselected=load_data()
+        Main_df=load_data()
         
-        st.write(df_mainselected)
+        st.write(Main_df)
         # get clients sharepoint list
-        @st.cache_resource
-        def load_data():
-                clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                return pd.DataFrame(clients)
-
-        Main_df = load_data()
-        
+ 
+    
         # Filter the Main_df DataFrame to get the "departmental report" column
         departmental_report_df =  Main_df["Departmental report"]
 
