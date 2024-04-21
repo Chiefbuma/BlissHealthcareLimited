@@ -160,7 +160,6 @@ def app():
 
         Main_df = load_data()
         
-                                
         # Filter the Main_df DataFrame to get the "departmental report" column
         departmental_report_df =  Main_df["Departmental report"]
 
@@ -282,8 +281,8 @@ def app():
                         with card_container(key="table1"):
                             def generate_sales_data():
                                 np.random.seed(0)  # For reproducible results
-                                months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-                                sales = np.random.randint(1000, 5000, size=len(months))
+                                months = category_counts["Category"].apply(lambda x: x.split()[0]).tolist()
+                                sales = category_counts["No."].tolist()
                                 return pd.DataFrame({'Month': months, 'Sales': sales})
                             with card_container(key="chart1"):
                                 st.vega_lite_chart(generate_sales_data(), {
