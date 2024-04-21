@@ -166,11 +166,6 @@ def app():
         Main_df = get_main_df()
         
 
-        # Add a button to update the data
-        if st.button('Update Data'):
-            Main_df = load_data()
-            form_container.empty()
-            
         # Filter the Main_df DataFrame to get the "departmental report" column
         departmental_report_df =  Main_df["Departmental report"]
 
@@ -349,17 +344,10 @@ def app():
                 
             if toggle_value or st.session_state.load_state:
                 st.session_state.load_state=True
-                
+                df_mainselected= load_data()
                         
                 with card_container(key="gallery1"):
-                    
                     st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
-                    @st.cache_resource
-                    def load_data():
-                            New = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                            return pd.DataFrame(  New )
-                        
-                    df_mainselected=load_data()
                     
                     data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','MonthName','LinkEdit']]
                     
@@ -427,9 +415,6 @@ def app():
                         },
                         hide_index=True
                     )   
-            
-                
-                
                                     
             metrics = [
                 {"label": "Total", "value": Total_requests},
