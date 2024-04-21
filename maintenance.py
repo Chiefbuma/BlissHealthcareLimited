@@ -160,7 +160,7 @@ def app():
                 return pd.DataFrame(clients)
 
         
-        @st.cache
+        @st.cache_data
         def get_main_df():
               return load_data()
         
