@@ -24,7 +24,7 @@ def app():
         st.session_state.is_authenticated = False 
         # Initialize session state if it doesn't exist
         
-    if "choice_log" not in st.session_state.choice_log:
+    if "choice_log" not in st.session_state:
         st.session_state.choice_log=False
          
     if "form_container" not in st.session_state:
