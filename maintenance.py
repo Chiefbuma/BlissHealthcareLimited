@@ -348,6 +348,9 @@ def app():
                     
                     # Convert 'bill_date' to datetime type
                     data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
+                                        
+                    # Extract just the month name
+                    data_df['MMonthName'] = data_df['MonthName'].str.split(';#').str[1]
                 
                     data_df = data_df.rename(columns={
                         'ID': 'Ticket',
