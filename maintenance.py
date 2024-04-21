@@ -354,7 +354,6 @@ def app():
             if toggle_value or st.session_state.load_state:
                 st.session_state.load_state = True
                 st.session_state.toggle_value = True
-                df_mainselected= load_data()
                 st.session_state.container=True   
                 
                 with container:
