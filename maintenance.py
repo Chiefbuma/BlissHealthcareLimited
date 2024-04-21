@@ -165,6 +165,11 @@ def app():
         
         Main_df = get_main_df()
         
+                # Add a button to update the data
+        if st.button('Update Data'):
+            Main_df = load_data()
+
+        
         # Filter the Main_df DataFrame to get the "departmental report" column
         departmental_report_df =  Main_df["Departmental report"]
 
@@ -323,11 +328,6 @@ def app():
             if 'toggle_value' not in st.session_state:
                 st.session_state.toggle_value = False
             
-            
-            # Add a button to update the data
-            if st.button('Update Data'):
-                Main_df = load_data()
-
             # Create a checkbox to toggle the value
             toggle_value = ui.switch(default_checked=st.session_state.toggle_value, label="Show Table", key="switch1")   
 
