@@ -175,7 +175,23 @@ def app():
         # Display the new DataFrame
         #st.write(category_counts) 
         
-                             
+        # Filter the Main_df DataFrame to get unique items in the "Report" column
+        unique_reports = Main_df["Report"].unique()
+
+        # Create an empty dictionary to store the sum of approved amounts for each unique report
+        report_sum = {}
+
+        # Iterate over each unique report and calculate the sum of approved amounts
+        for report in unique_reports:
+            sum_approved_amount = Main_df[Main_df["Report"] == report]["Approved amount"].sum()
+            report_sum[report] = sum_approved_amount
+
+        # Convert the dictionary to a DataFrame for easier visualization
+        report_sum_df = pd.DataFrame(list(report_sum.items()), columns=["Item", "Cost"])
+
+        # Display the DataFrame
+        st.write(report_sum_df)
+                 
                 
         Director_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
