@@ -335,10 +335,6 @@ def app():
                 with card_container(key="gallery1"):
                     
                     st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
-                    @st.cache_resource
-                    def load_data():
-                            New = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                            return pd.DataFrame(  New )
                         
                     df_mainselected=load_data()
                     
