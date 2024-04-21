@@ -154,20 +154,17 @@ def app():
         form_container.empty()
         
         # get clients sharepoint list
-     
+        @st.cache_data
         def load_data():
                 clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
                 return pd.DataFrame(clients)
+
         
-        @st.cache_data
+        @st.cache
         def get_main_df():
               return load_data()
         
         Main_df = get_main_df()
-        
-        # Add a button to update the data
-        if st.button('Update Data'):
-            Main_df = load_data()
         
         # Filter the Main_df DataFrame to get the "departmental report" column
         departmental_report_df =  Main_df["Departmental report"]
