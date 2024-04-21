@@ -339,13 +339,14 @@ def app():
                 
             if toggle_value:
                 st.session_state.load_state=True
-                
+                Main_df = load_data()
                         
                 with card_container(key="gallery1"):
                     
                     st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
-                        
-            
+                    
+                    
+
                     data_df= Main_df[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','MonthName','LinkEdit']]
                     
                     # Convert 'bill_date' to datetime type
