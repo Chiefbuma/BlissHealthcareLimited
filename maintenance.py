@@ -301,9 +301,9 @@ def app():
                         with card_container(key="table1"):
                             def generate_sales_data():
                                 np.random.seed(0)  # For reproducible results
-                                months = category_counts["Category"].apply(lambda x: x.split()[0]).tolist()
-                                sales = category_counts["No."].tolist()
-                                return pd.DataFrame({'Month': months, 'Sales': sales})
+                                Item = report_sum_df["Item"].apply(lambda x: x.split()[0]).tolist()
+                                Cost = report_sum_df["Cost"].tolist()
+                                return pd.DataFrame({'Month': Item, 'Sales': Cost})
                             with card_container(key="chart1"):
                                 st.vega_lite_chart(generate_sales_data(), {
                                     'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
