@@ -389,8 +389,8 @@ def app():
                     with col5:
                         filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
                     with col6:
-                        default_month_index = month_options.index(filters[filter_columns[5]]) if filters[filter_columns[5]] in month_options else None
-                        filters[filter_columns[5]] = ui.select(f"Filter {filter_columns[5]}", options=month_options, label=filters[filter_columns[5]], index=default_month_index)
+                        default_month = filters[filter_columns[5]] if filters[filter_columns[5]] in month_options else ""
+                        filters[filter_columns[5]] = ui.select(f"Filter {filter_columns[5]}", options=month_options, selected_option=default_month)
                     # Apply filters to the DataFrame
                     filtered_df = data_df
                     for column, filter_value in filters.items():
