@@ -359,7 +359,7 @@ def app():
                         'Department':'Department',
                         'Report': 'Issue',
                         'Amount on the Quotation': 'Quoted',
-                        'Approved amount': 'Approved',
+                        'Approved amount': 'Final Approved',
                         'MainStatus': 'Status',
                         'MonthName':'Month',
                         'Approver': 'Approver',
