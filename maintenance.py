@@ -309,7 +309,7 @@ def app():
                                     'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
                                     'encoding': {
                                         'x': {'field': 'Item', 'type': 'ordinal'},
-                                        'y': {'field': 'Cost', 'type': 'quantitative', 'axis': {'grid': False}},
+                                        'y': {'field': 'Cost', 'type': 'quantitative', 'sort': '-x', 'axis': {'grid': False}},
                                     },
                                 }, use_container_width=True)
                         with card_container(key="table1"):
