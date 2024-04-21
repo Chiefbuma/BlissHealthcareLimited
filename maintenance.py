@@ -162,8 +162,8 @@ def app():
              st.session_state.choice_log=False
                        
     if st.session_state.is_authenticated:
-
-        
+        st.session_state.form_container=False
+        st.session_state.choice_log=False
         # get clients sharepoint list
         def load_data():
                 clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
