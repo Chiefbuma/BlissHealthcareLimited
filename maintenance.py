@@ -323,6 +323,11 @@ def app():
             # Initialize the session state
             if 'toggle_value' not in st.session_state:
                 st.session_state.toggle_value = False
+            
+            
+            # Add a button to update the data
+            if st.button('Update Data'):
+                Main_df = load_data()
 
             # Create a checkbox to toggle the value
             toggle_value = ui.switch(default_checked=st.session_state.toggle_value, label="Show Table", key="switch1")   
@@ -341,9 +346,8 @@ def app():
                     
                     st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
                         
-                    df_mainselected=load_data()
-                    
-                    data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','MonthName','LinkEdit']]
+            
+                    data_df= Main_df[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','MonthName','LinkEdit']]
                     
                     # Convert 'bill_date' to datetime type
                     data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
