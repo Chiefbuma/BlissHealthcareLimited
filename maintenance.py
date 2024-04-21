@@ -25,10 +25,8 @@ def app():
         # Initialize session state if it doesn't exist
         
     if "choice_log" not in st.session_state.choice_log:
-            st.session_state.choice_log=False
-            
-    form_container=st.container(border=False)
-        
+        st.session_state.choice_log=False
+         
     if "form_container" not in st.session_state:
         st.session_state.form_container=False  
         
@@ -101,11 +99,13 @@ def app():
         menu = ["Login", "Sign up"]
         
         choice_log = st.sidebar.selectbox("", menu,key="choice_medical")
+        form_container=st.container(border=False)
         
         if choice_log == "Login":
             st.session_state.choice_log=True
             st.session_state.form_container=True
             
+       
             with form_container:
                 
                 with st.form("Login Form"):
@@ -162,8 +162,7 @@ def app():
              st.session_state.choice_log=False
                        
     if st.session_state.is_authenticated:
-        st.session_state.form_container=False
-        st.session_state.choice_log=False
+
         
         # get clients sharepoint list
         def load_data():
