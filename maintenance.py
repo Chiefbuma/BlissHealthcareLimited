@@ -285,7 +285,6 @@ def app():
                 with card_container(key="table2"):
                     cols = st.columns(2)
                     with cols[0]:
-                        @st.cache_data
                         def get_month_options():
                             current_year = datetime.now().year
                             current_month = datetime.now().month
