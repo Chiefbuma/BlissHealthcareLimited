@@ -158,14 +158,19 @@ def app():
                 New = SharePoint().connect_to_list(ls_name='Maintenance Report')
                 return pd.DataFrame(  New )
             
-        Main_df=load_data()
+        df_mainselected=load_data()
         
-        st.write(Main_df)
+        st.write(df_mainselected)
         # get clients sharepoint list
- 
-    
+        @st.cache_resource
+        def load_data():
+                clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                return pd.DataFrame(clients)
+
+        Main_df = load_data()
+        
         # Filter the Main_df DataFrame to get the "departmental report" column
-        departmental_report_df =  Main_df["Departmental report"]
+        departmental_report_df =  df_mainselected["Departmental report"]
 
         # Assuming departmental_report_df is your DataFrame
         category_counts =  departmental_report_df.value_counts().reset_index()
@@ -180,7 +185,7 @@ def app():
         #st.write(category_counts) 
         
                 # Filter the Main_df DataFrame where 'Director approval' is equal to 'Approved'
-        approved_main_df = Main_df[Main_df['Admin Approval'] == 'Approved']
+        approved_main_df = df_mainselected[df_mainselected['Admin Approval'] == 'Approved']
 
         # Get unique items in the "Report" column
         unique_reports = approved_main_df["Report"].unique()
