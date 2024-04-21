@@ -393,21 +393,15 @@ def app():
                         # Create a dictionary to store filter values
                         filters = {column: '' for column in filter_columns}
                         
+                        # Initialize session state
+                        if 'filters' not in st.session_state:
+                            st.session_state.filters = {column: '' for column in filter_columns}
 
-                        # Create text input widgets for each filter column and arrange them horizontally
-                        with col1:
-                            filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", filters[filter_columns[0]])
-                        with col2:
-                            filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", filters[filter_columns[1]])
-                        with col3:
-                            filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
-                        with col4:
-                            filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
-                        with col5:
-                            filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
-                        with col6:
-                            filters[filter_columns[5]] = st.text_input(f"Filter {filter_columns[5]}", filters[filter_columns[5]])
-                        # Apply filters to the DataFrame
+                        # Update filters in session state when text inputs change
+                        for i, column in enumerate(filter_columns):
+                            st.session_state.filters[column] = st.text_input(f"Filter {column}", st.session_state.filters[column])
+                        
+                        
                         filtered_df = data_df
                         for column, filter_value in filters.items():
                             if filter_value:
