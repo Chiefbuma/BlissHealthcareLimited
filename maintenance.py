@@ -336,7 +336,7 @@ def app():
             # Create a checkbox to toggle the value
             toggle_value = ui.switch(default_checked=st.session_state.toggle_value, label="Show Table", key="switch1")   
 
-         
+            container = st.container(border=False)
             
             # Store the value of the toggle in the session state
             st.session_state.toggle_value = toggle_value
@@ -344,13 +344,13 @@ def app():
             if "load_state" not in st.session_state:
                     st.session_state.load_state=False
                     
-            if "contatiner" not in st.session_state:
+            if "container" not in st.session_state:
                     st.session_state.container=False    
            
-            container = st.container(border=False)
+            df_mainselected= load_data()
+            
             if toggle_value or st.session_state.load_state or container:
                 st.session_state.load_state=True
-                df_mainselected= load_data()
                 st.session_state.container=True   
                 
                 with container:
