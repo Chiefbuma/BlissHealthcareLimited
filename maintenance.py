@@ -23,85 +23,89 @@ def app():
     if 'is_authenticated' not in st.session_state:
         st.session_state.is_authenticated = False 
         # Initialize session state if it doesn't exist
+        
+    @st.cache_resource
+    def init_connection():
+        url = "https://effdqrpabawzgqvugxup.supabase.co"
+        key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
+        return create_client(url, key)
 
-   
+    supabase = init_connection()
+    
+    response = supabase.table('facilities').select("*").execute()
+
+    location_df = pd.DataFrame(response.data)
+    #st.write(location_df)
+
+
+    def get_facilities(staffnumber):
+        # Perform a Supabase query to fetch data from the 'users' table
+        response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
+        login_df = pd.DataFrame(response.data)
+        return login_df
+
+    def add_userdata(staffnumber, password, location, region):
+        # Define the data to insert
+        data = {
+            'staffnumber': staffnumber,
+            'password': password,
+            'location': location,
+            'region': region
+        }
+
+        # Insert the data into the 'userdata' table using Supabase
+        _, count = supabase.table('users').insert(data).execute()
+
+        # Return the count of rows affected by the insert operation
+        return count
+
+    location_names = location_df['Location'].unique().tolist()
+        # Create a dictionary mapping each location to its region
+
+    def login_user(staffnumber,password):
+        
+        try:
+            # Perform a Supabase query to fetch user data based on staff number
+            response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
+            user_data = response.data
+            facilities_df = get_facilities(staffnumber)
+            if not facilities_df.empty:
+                location = facilities_df['location'].iloc[0]
+                region = facilities_df['region'].iloc[0]
+                
+                
+                # Check if the credentials match
+                if password == facilities_df['password'].iloc[0]:
+                    return True, location, region
+                return False, None, None
+            
+        except APIError as e:
+            st.error("Invalid credentials. Please log in again.")
+            st.stop() 
+
+    def view_all_users():
+        response = supabase.from_('users').select('*').execute()
+        data = response.data
+        return data
+      
     col1, col2 = st.columns([2,1])
     with col1:
         menu = ["Login", "Sign up"]
-        choice = st.sidebar.selectbox("", menu,key="choice_medical")
-
-        form_container = st.empty()
-        with form_container :
-            @st.cache_resource
-            def init_connection():
-                url = "https://effdqrpabawzgqvugxup.supabase.co"
-                key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
-                return create_client(url, key)
-
-            supabase = init_connection()
+        choice_log = st.sidebar.selectbox("", menu,key="choice_medical")
+        
+        if "choice" not in st.session_state.choice_log:
+            st.session_state.choice_log=False
             
-            response = supabase.table('facilities').select("*").execute()
-    
-            location_df = pd.DataFrame(response.data)
-            #st.write(location_df)
+        form_container=st.container(border=False)
+        
+        if "form_container" not in st.session_state:
+            st.session_state.form_container=False   
 
-
-            def get_facilities(staffnumber):
-                # Perform a Supabase query to fetch data from the 'users' table
-                response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                login_df = pd.DataFrame(response.data)
-                return login_df
-
-            def add_userdata(staffnumber, password, location, region):
-                # Define the data to insert
-                data = {
-                    'staffnumber': staffnumber,
-                    'password': password,
-                    'location': location,
-                    'region': region
-                }
-
-                # Insert the data into the 'userdata' table using Supabase
-                _, count = supabase.table('users').insert(data).execute()
-
-                # Return the count of rows affected by the insert operation
-                return count
-
-                # Return the count of rows affected by the insert operation
-                return count
-
-            location_names = location_df['Location'].unique().tolist()
-                # Create a dictionary mapping each location to its region
-
-            def login_user(staffnumber,password):
-                
-                try:
-                    # Perform a Supabase query to fetch user data based on staff number
-                    response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                    user_data = response.data
-                    facilities_df = get_facilities(staffnumber)
-                    if not facilities_df.empty:
-                        location = facilities_df['location'].iloc[0]
-                        region = facilities_df['region'].iloc[0]
-                        
-                        
-                        # Check if the credentials match
-                        if password == facilities_df['password'].iloc[0]:
-                            return True, location, region
-                        return False, None, None
-                    
-                except APIError as e:
-                    st.error("Invalid credentials. Please log in again.")
-                    st.stop() 
-
-            def view_all_users():
-                response = supabase.from_('users').select('*').execute()
-                data = response.data
-                return data
- 
-
-            if choice == "Login":
-                # Check if the user is logged in
+        if choice_log == "Login":
+            st.session_state.choice_log=True
+            st.session_state.form_container=True
+            
+            with form_container:
                 
                 with st.form("Login Form"):
                     st.write("Login Form")
@@ -117,7 +121,7 @@ def app():
                         
                     if load or st.session_state.logged_in:
                         st.session_state.logged_in= True
-  
+
                         result, location, region = login_user(staffnumber, password)
                         if result:
                             st.success("Logged In successfully")
@@ -127,12 +131,17 @@ def app():
                             st.session_state.is_authenticated=True
                             st.session_state.staffnumber = staffnumber
                             st.session_state.password = password
-                            
-   
+                            st.session_state.form_container=False
+                            st.session_state.choice_log=False
+
                         else:
                             st.warning("Invalid credentials. Please try again.")
 
-            elif choice == "Sign up":
+        elif choice_log == "Sign up":
+            st.session_state.form_container=True
+            st.session_state.choice_log=True
+            
+            with form_container:
                 with st.form("Sign-up Form"):  
                     st.write("Sign-up Form")
                     staffnumber = st.text_input('Staff Number', key='signup_staff_number')
@@ -146,12 +155,14 @@ def app():
                         st.success("You have created a new account")
                         st.session_state.is_authenticated=True
                         st.session_state.logged_in= True
-                        form_container.empty()
-                        
-                        
-                        
+                        st.session_state.form_container=False
+                        st.session_state.choice_log=False
+        else:
+            st.session_state.logged_in= False
+                       
     if st.session_state.is_authenticated:
-        form_container.empty()
+        st.session_state.form_container=False
+        st.session_state.choice_log=False
         
         # get clients sharepoint list
         def load_data():
@@ -348,6 +359,7 @@ def app():
                     st.session_state.container=False    
             
             container = st.container()
+           
             if toggle_value:
               
                 st.session_state.load_state = True
