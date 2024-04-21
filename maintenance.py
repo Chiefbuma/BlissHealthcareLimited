@@ -329,13 +329,13 @@ def app():
             
             if "load_state" not in st.session_state:
                     st.session_state.load_state=False
+                    
+            st.cache_data.clear()
+            Main_df = load_data()
                 
             if toggle_value:
                 st.session_state.load_state=True
-                st.cache_data.clear()
-                Main_df = load_data()
-                
-                        
+
                 with card_container(key="gallery1"):
                     
                     st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
