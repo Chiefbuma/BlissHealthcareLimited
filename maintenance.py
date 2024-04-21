@@ -152,6 +152,15 @@ def app():
                         
     if st.session_state.is_authenticated:
         form_container.empty()
+        
+        @st.cache_resource
+        def load_data():
+                New = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                return pd.DataFrame(  New )
+            
+        df_mainselected=load_data()
+        
+        st.write(df_mainselected)
         # get clients sharepoint list
         @st.cache_resource
         def load_data():
