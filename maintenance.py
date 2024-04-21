@@ -347,12 +347,13 @@ def app():
             if "contatiner" not in st.session_state:
                     st.session_state.container=False    
            
-          
-            if toggle_value or st.session_state.load_state:
+            container = st.container(border=False)
+            if toggle_value or st.session_state.load_state or container:
                 st.session_state.load_state=True
                 df_mainselected= load_data()
-                  
-                with st.container:
+                st.session_state.container=True   
+                
+                with container:
                     with card_container(key="gallery1"):
                         st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
                         data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','MonthName','LinkEdit']]
@@ -422,8 +423,7 @@ def app():
                             hide_index=True
                         )   
             else:
-                st.session_state.load_state=False 
-                                     
+                st.session_state.container=False                      
             metrics = [
                 {"label": "Total", "value": Total_requests},
                 {"label": "Closed", "value": closed_request},
