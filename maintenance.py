@@ -330,7 +330,7 @@ def app():
             if "load_state" not in st.session_state:
                     st.session_state.load_state=False
                 
-            if toggle_value or st.session_state.load_state:
+            if toggle_value:
                 st.session_state.load_state=True
                 
                         
