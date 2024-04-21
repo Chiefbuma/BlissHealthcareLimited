@@ -347,11 +347,9 @@ def app():
             if "container" not in st.session_state:
                     st.session_state.container=False    
             
-            df_mainselected= load_data()
-            
-            
             container = st.container()
             if toggle_value:
+                df_mainselected= load_data()
                 st.session_state.load_state = True
                 st.session_state.toggle_value = True
                 st.session_state.container=True   
