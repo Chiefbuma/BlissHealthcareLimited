@@ -194,10 +194,8 @@ def app():
         report_sum_df = pd.DataFrame(list(report_sum.items()), columns=["Item", "Cost"])
 
         # Display the DataFrame
-        st.write(report_sum_df)
+        #st.write(report_sum_df)
 
-                 
-                
         Director_Approved=  Main_df [Main_df ["Admin Approval"]=="Approved"]
         Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
         Dir_Approved_request=  Director_Approved["ID"].nunique()
