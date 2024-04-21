@@ -171,8 +171,6 @@ def app():
             Main_df = load_data()
             form_container.empty()
             
-
-            
         # Filter the Main_df DataFrame to get the "departmental report" column
         departmental_report_df =  Main_df["Departmental report"]
 
@@ -309,25 +307,32 @@ def app():
                             return month_names
             
                         month_options = get_month_options()
+                        
                         choice = ui.select(options=month_options)
-                        with card_container(key="table1"):
-                            def generate_sales_data():
-                                np.random.seed(0)  # For reproducible results
-                                Item = report_sum_df["Item"].apply(lambda x: x.split()[0]).tolist()
-                                Cost = report_sum_df["Cost"].tolist()
-                                return pd.DataFrame({'Item': Item, 'Cost': Cost})
-                            with card_container(key="chart1"):
-                                st.vega_lite_chart(generate_sales_data(), {
-                                    'title': 'Cost of Repairs -(Based on Approved Amount)',
-                                    'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 4 },
-                                    'encoding': {
-                                        'x': {'field': 'Item', 'type': 'ordinal'},
-                                        'y': {'field': 'Cost', 'type': 'quantitative', 'sort': '-x', 'axis': {'grid': False}},
-                                    },
-                                }, use_container_width=True)
-                        with card_container(key="table1"):
-                                ui.table(data=Approval_df, maxHeight=300)
+                        
+                        if "Choice" not in st.session_state:
+                            st.session_state.choice=False
                             
+                        if choice:
+                            st.session_state.choice=True
+                            with card_container(key="table1"):
+                                def generate_sales_data():
+                                    np.random.seed(0)  # For reproducible results
+                                    Item = report_sum_df["Item"].apply(lambda x: x.split()[0]).tolist()
+                                    Cost = report_sum_df["Cost"].tolist()
+                                    return pd.DataFrame({'Item': Item, 'Cost': Cost})
+                                with card_container(key="chart1"):
+                                    st.vega_lite_chart(generate_sales_data(), {
+                                        'title': 'Cost of Repairs -(Based on Approved Amount)',
+                                        'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 4 },
+                                        'encoding': {
+                                            'x': {'field': 'Item', 'type': 'ordinal'},
+                                            'y': {'field': 'Cost', 'type': 'quantitative', 'sort': '-x', 'axis': {'grid': False}},
+                                        },
+                                    }, use_container_width=True)
+                            with card_container(key="table1"):
+                                    ui.table(data=Approval_df, maxHeight=300)
+                                
                             
             # Initialize the session state
             if 'toggle_value' not in st.session_state:
