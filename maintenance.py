@@ -332,8 +332,6 @@ def app():
                 
             if toggle_value:
                 st.session_state.load_state=True
-                st.cache_data.clear()
-                Main_df = load_data()
                 
                         
                 with card_container(key="gallery1"):
