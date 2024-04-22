@@ -322,9 +322,9 @@ def app():
                                 New = SharePoint().connect_to_list(ls_name='Maintenance Report')
                                 return pd.DataFrame(  New )
                         
-                        check_df=load_data()
+                        Main_df=load_data()
                         # Group by 'Facility' and 'Issue', and sum 'Amount on the Quotation' and 'Approved amount'
-                        Mcgroup_df = check_df.groupby(['Clinic', 'Report']).agg({
+                        Mcgroup_df = Main_df.groupby(['Clinic', 'Departmental report']).agg({
                             'Amount on the Quotation': 'sum',
                             'Approved amount': 'sum'
 
@@ -333,15 +333,19 @@ def app():
                         # Rename columns
                         Mcgroup_df = Mcgroup_df.rename(columns={
                             'Amount on the Quotation': 'Total Qouted',
-                            'Approved amount': 'Total Approved'
+                            'Approved amount': 'Total Approved',
+                            'Departmental report':'Category',
+                            'Clini':'Facility'
+                            
                             
                         })
-                        with card_container(key="table1"):
+                        container=st.container(border=True,height=700)
+                        
+                        with container:
                             ui.table(data=Mcgroup_df, maxHeight=900)
-                        
-                        ui_result = ui.button("Button", key="btn")
-                        st.write("UI Button Clicked:", ui_result)
-                        
+                            ui_result = ui.button("Button", key="btn")
+                            st.write("UI Button Clicked:", ui_result)
+                            
                         # Initialize the session state
                                     
                         # Sample DataFrame
