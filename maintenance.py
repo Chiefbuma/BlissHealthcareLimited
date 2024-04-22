@@ -317,8 +317,14 @@ def app():
                              ui.table(data=Approval_df, maxHeight=300)
                             
                     with  cols[1]:
+                        @st.cache_resource
+                        def load_data():
+                                New = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                                return pd.DataFrame(  New )
+                        
+                        check_df=load_data()
                         # Group by 'Facility' and 'Issue', and sum 'Amount on the Quotation' and 'Approved amount'
-                        Mcgroup_df = Main_df.groupby(['Clinic', 'Report']).agg({
+                        Mcgroup_df = check_df.groupby(['Clinic', 'Report']).agg({
                             'Amount on the Quotation': 'sum',
                             'Approved amount': 'sum'
 
@@ -332,11 +338,11 @@ def app():
                         })
                         with card_container(key="table1"):
                             ui.table(data=Mcgroup_df, maxHeight=900)
-                            st.write(Mcgroup_df)
-
+                        
                         ui_result = ui.button("Button", key="btn")
                         st.write("UI Button Clicked:", ui_result)
-                                    # Initialize the session state
+                        
+                        # Initialize the session state
                                     
                         # Sample DataFrame
                         data = {
