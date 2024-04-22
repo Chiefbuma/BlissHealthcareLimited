@@ -105,7 +105,7 @@ def app():
             password = st.text_input("Password", type='password',key="pass_medical")
             
             # Fetch location and region based on staffnumber
-            cols = st.columns[4]
+            cols = st.columns(4)
             with cols[0]:
                 LogIn=st.form_submit_button("Login",key="Log_In")
             with cols[3]:
