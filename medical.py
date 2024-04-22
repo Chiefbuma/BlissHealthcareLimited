@@ -464,36 +464,37 @@ def app():
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
                 
                 with st.expander("DOWNLOAD PREVIOUS MONTH"):
-                    
-                    Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["%Arch_REV"] = Allperformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x))
-                    Allperformance_df["Total_Revenue_Budget"] = Allperformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["Projected_Revenue"] = Allperformance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["MTD_Actual_Footfall"] = Allperformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["MTD_Budget_Footfall"] = Allperformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["%Arch_FF"] = Allperformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100))
-                    Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
+                        Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
+                        Allperformance_df["%Arch_REV"] = Allperformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x))
+                        Allperformance_df["Total_Revenue_Budget"] = Allperformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
+                        Allperformance_df["Projected_Revenue"] = Allperformance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
+                        Allperformance_df["MTD_Actual_Footfall"] = Allperformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
+                        Allperformance_df["MTD_Budget_Footfall"] = Allperformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
+                        Allperformance_df["%Arch_FF"] = Allperformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100))
+                        Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
+                        Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
 
-                    
-                    current_month = datetime.now().month
-                    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
-                    
-                    # Create a list of months up to the previous month
-                    display_months = months[:current_month - 1]
+                        
+                        current_month = datetime.now().month
+                        months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
+                        
+                        # Create a list of months up to the previous month
+                        display_months = months[:current_month - 1]
 
-                    # Set the default value to the previous month
-                    default_month_index = current_month - 2  #
-            
-                    # Selectbox for choosing a month
-                    search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index, key="search_text")
+                        # Set the default value to the previous month
+                        default_month_index = current_month - 2  #
                 
-                    # Use the session state value for filtering the dataframe
-                    if st.session_state.search_text:
-                        filtered_df = Monthly_All[Allperformance_df['Month']==search_text]
-                    else:
-                        filtered_df = MTD_All
+                        # Selectbox for choosing a month
+                        search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index, key="search_text")
+                    
+                        # Use the session state value for filtering the dataframe
+                        if st.session_state.search_text:
+                            filtered_df = Monthly_All[Allperformance_df['Month']==search_text]
+                        else:
+                            filtered_df = MTD_All
                             
                     st.write(filtered_df, use_container_width=True)
             
