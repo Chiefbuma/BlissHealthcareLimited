@@ -494,8 +494,9 @@ def app():
                 if st.session_state.search_text:
                     filtered_df = Monthly_All[Allperformance_df['Month']==search_text]
                 else:
-                    filtered_df = MTD_All
-                    st.write(filtered_df, use_container_width=True)
+                    filtered_df = MTD_All\
+                        
+                st.write(filtered_df, use_container_width=True)
                 
         
         # Use the expander widget
