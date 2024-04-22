@@ -107,9 +107,9 @@ def app():
             # Fetch location and region based on staffnumber
             cols = st.columns(4)
             with cols[0]:
-                LogIn=st.form_submit_button("Login",key="Log_In")
+                LogIn=st.form_submit_button("Login")
             with cols[3]:
-                signUp=st.form_submit_button("Login",key="Sign_Up")
+                signUp=st.form_submit_button("Login")
             
             if "logged_in" not in st.session_state:
                 st.session_state.logged_in= False
