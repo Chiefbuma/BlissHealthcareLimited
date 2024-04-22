@@ -29,7 +29,8 @@ def app():
     with col1:
         menu = ["Login", "Sign up"]
         choice = st.sidebar.selectbox("", menu,key="choice_medical")
-
+        
+        
         form_container = st.empty()
         with form_container :
             @st.cache_resource
@@ -315,8 +316,15 @@ def app():
                         with card_container(key="table1"):
                              ui.table(data=Approval_df, maxHeight=300)
                             
-                            
-            # Initialize the session state
+                    with  cols[1]:
+                        Medical_df = pd.DataFrame(Main_df)
+                        with card_container(key="table1"):
+                            ui.table(data=Medical_df, maxHeight=300)
+
+                        ui_result = ui.button("Button", key="btn")
+                        st.write("UI Button Clicked:", ui_result)
+                                    # Initialize the session state
+                                    
             if 'toggle_value' not in st.session_state:
                 st.session_state.toggle_value = False
 
