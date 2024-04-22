@@ -310,23 +310,26 @@ def app():
                 
                             month_options = get_month_options()
                             choice = ui.select(options=month_options)
-                            with card_container(key="table1"):
-                                def generate_sales_data():
-                                    np.random.seed(0)  # For reproducible results
-                                    Item = report_sum_df["Item"].apply(lambda x: x.split()[0]).tolist()
-                                    Cost = report_sum_df["Cost"].tolist()
-                                    return pd.DataFrame({'Item': Item, 'Cost': Cost})
-                                with card_container(key="chart1"):
-                                    st.vega_lite_chart(generate_sales_data(), {
-                                        'title': 'Cost of Repairs -(Based on Approved Amount)',
-                                        'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 4 },
-                                        'encoding': {
-                                            'x': {'field': 'Item', 'type': 'ordinal'},
-                                            'y': {'field': 'Cost', 'type': 'quantitative', 'sort': '-x', 'axis': {'grid': False}},
-                                        },
-                                    }, use_container_width=True)
-                            with card_container(key="table1"):
-                                ui.table(data=Approval_df, maxHeight=300)
+                            
+                            if choice:
+                        
+                                with card_container(key="table1"):
+                                    def generate_sales_data():
+                                        np.random.seed(0)  # For reproducible results
+                                        Item = report_sum_df["Item"].apply(lambda x: x.split()[0]).tolist()
+                                        Cost = report_sum_df["Cost"].tolist()
+                                        return pd.DataFrame({'Item': Item, 'Cost': Cost})
+                                    with card_container(key="chart1"):
+                                        st.vega_lite_chart(generate_sales_data(), {
+                                            'title': 'Cost of Repairs -(Based on Approved Amount)',
+                                            'mark': {'type': 'bar', 'tooltip': True, 'fill': 'black', 'cornerRadiusEnd': 4 },
+                                            'encoding': {
+                                                'x': {'field': 'Item', 'type': 'ordinal'},
+                                                'y': {'field': 'Cost', 'type': 'quantitative', 'sort': '-x', 'axis': {'grid': False}},
+                                            },
+                                        }, use_container_width=True)
+                                with card_container(key="table1"):
+                                    ui.table(data=Approval_df, maxHeight=300)
                                 
                         with  cols[1]:
                             @st.cache_data(ttl=600, max_entries=100, show_spinner=False, persist=False, experimental_allow_widgets=False)
