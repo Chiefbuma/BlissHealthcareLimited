@@ -120,6 +120,7 @@ def app():
                                 st.success("Logged In successfully")
                                 st.write(f"Location: {location}, Region: {region}")
                                 st.session_state.logged_in= True
+                                st.session_state.is_authenticated=True
                                 st.session_state.staffnumber = staffnumber
                                 st.session_state.password = password
                                 st.session_state.Location = location
