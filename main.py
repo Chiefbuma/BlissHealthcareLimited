@@ -38,17 +38,13 @@ def app():
     response = supabase.table('facilities').select("*").execute()
 
     location_df = pd.DataFrame(response.data)
-    #st.write(location_df)
-
 
     def get_facilities(staffnumber):
-        # Perform a Supabase query to fetch data from the 'users' table
         response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
         login_df = pd.DataFrame(response.data)
         return login_df
 
     def add_userdata(staffnumber, password, location, region):
-        # Define the data to insert
         data = {
             'staffnumber': staffnumber,
             'password': password,
@@ -56,22 +52,14 @@ def app():
             'region': region
         }
 
-        # Insert the data into the 'userdata' table using Supabase
         _, count = supabase.table('users').insert(data).execute()
-
-        # Return the count of rows affected by the insert operation
-        return count
-
-        # Return the count of rows affected by the insert operation
         return count
 
     location_names = location_df['Location'].unique().tolist()
-        # Create a dictionary mapping each location to its region
 
     def login_user(staffnumber,password):
         
         try:
-            # Perform a Supabase query to fetch user data based on staff number
             response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
             user_data = response.data
             facilities_df = get_facilities(staffnumber)
@@ -82,7 +70,6 @@ def app():
                 st.session_state.Region =region
 
                 
-                # Check if the credentials match
                 if password == facilities_df['password'].iloc[0]:
                     return True, st.session_state.Location, st.session_state.Region
                 return False, None, None
@@ -101,15 +88,15 @@ def app():
     with form_container:
         with st.form("Login Form"):
             st.write("Login Form")
-            staffnumber = st.text_input("Staffnumber",key="staff_medical")
-            password = st.text_input("Password", type='password',key="pass_medical")
+            staffnumber = st.text_input("Staffnumber")
+            password = st.text_input("Password", type='password')
             
             # Fetch location and region based on staffnumber
             cols = st.columns(4)
             with cols[0]:
-                LogIn=st.form_submit_button("Login",key='Log_In')
+                LogIn = st.form_submit_button("Login")
             with cols[3]:
-                signUp=st.form_submit_button("Login",key='signup_up')
+                signUp = st.form_submit_button("Sign Up")
             
             if "logged_in" not in st.session_state:
                 st.session_state.logged_in= False
@@ -134,11 +121,11 @@ def app():
             elif signUp:
                 st.session_state.signUp= True
                 with st.form("Sign-up Form"): 
-                    staffnumber = st.text_input('Staff Number', key='signup_staff_number')
+                    staffnumber = st.text_input('Staff Number')
                     location = st.selectbox("Select Location", location_names)
                     selected_location_row = location_df[location_df['Location'] == location]
                     region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
-                    password = st.text_input('Password', key='signup_password')
+                    password = st.text_input('Password')
                     signup_btn = st.form_submit_button('Sign Up')
                     if signup_btn:
                         add_userdata(staffnumber, password, location, region)
@@ -148,4 +135,3 @@ def app():
                         form_container.empty()
                     else:
                         st.warning("Invalid credentials. Please try again.")
-
