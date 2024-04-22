@@ -165,7 +165,7 @@ def app():
                             st.session_state.logged_in= True
                             form_container.empty()
                         
-    if st.session_state.is_authenticated:
+    elif st.session_state.is_authenticated:
         st.session_state.container = False
         form_container.empty()
         
