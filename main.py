@@ -134,7 +134,7 @@ def app():
                     location = st.selectbox("Select Location", location_names)
                     selected_location_row = location_df[location_df['Location'] == location]
                     region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
-                    password = st.text_input('Password')
+                    password = st.text_input('Password',type='password')
                     signup_btn = st.form_submit_button('Sign Up')
                     
                     if "Sign_up" not in st.session_state:
