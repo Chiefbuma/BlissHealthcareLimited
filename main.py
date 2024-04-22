@@ -119,18 +119,18 @@ def app():
             
         elif signUp:
             st.session_state.signUp= True
-            with st.form("Sign-up Form"): 
-                staffnumber = st.text_input('Staff Number')
-                location = st.selectbox("Select Location", location_names)
-                selected_location_row = location_df[location_df['Location'] == location]
-                region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
-                password = st.text_input('Password')
-                signup_btn = st.form_submit_button('Sign Up')
-                if signup_btn:
-                    add_userdata(staffnumber, password, location, region)
-                    st.success("You have created a new account")
-                    st.session_state.is_authenticated=True
-                    st.session_state.logged_in= True
-                    form_container.empty()
-                else:
-                    st.warning("Invalid credentials. Please try again.")
+            st.write("Sign-up Form")
+            staffnumber = st.text_input('Staff Number')
+            location = st.selectbox("Select Location", location_names)
+            selected_location_row = location_df[location_df['Location'] == location]
+            region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
+            password = st.text_input('Password')
+            signup_btn = st.form_submit_button('Sign Up')
+            if signup_btn:
+                add_userdata(staffnumber, password, location, region)
+                st.success("You have created a new account")
+                st.session_state.is_authenticated=True
+                st.session_state.logged_in= True
+                form_container.empty()
+            else:
+                st.warning("Invalid credentials. Please try again.")
