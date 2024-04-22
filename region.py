@@ -564,7 +564,7 @@ def app():
                         default_month_index = current_month - 1  #   
                         
                         search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
-                        if Month == "":
+                        if search_text == "":
                              Newfiltered_df = Monthly_All[Allperformance_df['Month']==search_text]
                         else:
                             Newfiltered_df =performance_df
