@@ -122,8 +122,8 @@ def app():
                                 st.session_state.logged_in= True
                                 st.session_state.staffnumber = staffnumber
                                 st.session_state.password = password
-                                st.session_state.Location = location.location
-                                st.session_state.Region =region.region
+                                st.session_state.Location = location
+                                st.session_state.Region =region
 
                                 form_container.empty()
 
