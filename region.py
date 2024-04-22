@@ -484,17 +484,17 @@ def app():
                             line_color='darkslategray',  # Border color
                             line=dict(width=1)),
                             columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
-                cells=dict(values=[performance_df["Scheme"],
-                                   performance_df["MTD_Budget_Revenue"],
-                                   performance_df["MTD_Actual_Revenue"],
-                                   performance_df["%Arch_REV"],
-                                    performance_df["Total_Revenue_Budget"],
-                                    performance_df["Projected_Revenue"],
-                                    performance_df["MTD_Budget_Footfall"],
-                                   performance_df["MTD_Actual_Footfall"],
-                                    performance_df["%Arch_FF"],
-                                    performance_df["Total_Footfall_Budget"],
-                                    performance_df["Projected_Footfalls"]]
+                cells=dict(values=[performance_total["Scheme"],
+                                   performance_total["MTD_Budget_Revenue"],
+                                   performance_total["MTD_Actual_Revenue"],
+                                   performance_total["%Arch_REV"],
+                                    performance_total["Total_Revenue_Budget"],
+                                    performance_total["Projected_Revenue"],
+                                    performance_total["MTD_Budget_Footfall"],
+                                   performance_total["MTD_Actual_Footfall"],
+                                   performance_total["%Arch_FF"],
+                                    performance_total["Total_Footfall_Budget"],
+                                    performance_total["Projected_Footfalls"]]
                         ,
                         
                 
@@ -503,7 +503,7 @@ def app():
 ,
                         font_color=[
                                 ['white'],  # Blue for "Report" column
-                                ['black'] * len(performance_df)  # White for "Count" column
+                                ['black'] * len(performance_total)  # White for "Count" column
                             ],
                         align='left',
                         font=dict(color='black', size=14),
@@ -565,9 +565,9 @@ def app():
                         
                         search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
                         if search_text == "":
-                            filtered_df = Allperformance_df[Allperformance_df['Month']==search_text]
+                            filtered_df = performance_total[performance_total['Month']==search_text]
                         else:
-                            filtered_df  =Allperformance_df
+                            filtered_df  =performance_total
 
                     st.write(filtered_df, use_container_width=True)   
            
