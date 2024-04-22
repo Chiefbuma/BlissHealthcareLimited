@@ -331,7 +331,7 @@ def app():
                             
                         })
                         with card_container(key="table1"):
-                            ui.table(data=Mcgroup_df, maxHeight=300)
+                            ui.table(data=Mcgroup_df, maxHeight=900)
 
                         ui_result = ui.button("Button", key="btn")
                         st.write("UI Button Clicked:", ui_result)
