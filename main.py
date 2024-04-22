@@ -106,20 +106,11 @@ def app():
                     st.write("Login Form")
                     staffnumber = st.text_input("Staffnumber")
                     password = st.text_input("Password", type='password')
-                    
-                    # Fetch location and region based on staffnumber
-                    cols = st.columns(4)
-                    with cols[0]:
-                        LogIn = st.form_submit_button("Login")
-                    with cols[3]:
-                        signUp = st.form_submit_button("Sign Up")
+                    LogIn = st.form_submit_button("Login")
                     
                     if "logged_in" not in st.session_state:
                         st.session_state.logged_in= False
-                        
-                    if "Sign_up" not in st.session_state:
-                        st.session_state.Sign_up= False  
-                    
+                     
                     if LogIn:
                         st.session_state.logged_in= True
                         result, location, region = login_user(staffnumber, password)
@@ -134,21 +125,26 @@ def app():
                         else:
                             st.warning("Invalid credentials. Please try again.")
                         
-        elif signUp:
+        elif choice == "Sign up":
             st.session_state.signUp= True
             form_container = st.empty()
-            with st.form("Sign-up Form"): 
-                staffnumber = st.text_input('Staff Number')
-                location = st.selectbox("Select Location", location_names)
-                selected_location_row = location_df[location_df['Location'] == location]
-                region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
-                password = st.text_input('Password')
-                signup_btn = st.form_submit_button('Sign Up')
-                if signup_btn:
-                    add_userdata(staffnumber, password, location, region)
-                    st.success("You have created a new account")
-                    st.session_state.is_authenticated=True
-                    st.session_state.logged_in= True
-                    form_container.empty()
-                else:
-                    st.warning("Invalid credentials. Please try again.")
+            with form_container:
+                with st.form("Sign-up Form"): 
+                    staffnumber = st.text_input('Staff Number')
+                    location = st.selectbox("Select Location", location_names)
+                    selected_location_row = location_df[location_df['Location'] == location]
+                    region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
+                    password = st.text_input('Password')
+                    signup_btn = st.form_submit_button('Sign Up')
+                    
+                    if "Sign_up" not in st.session_state:
+                        st.session_state.Sign_up= False 
+                    
+                    if signup_btn:
+                        st.session_state.Sign_up= True
+                        add_userdata(staffnumber, password, location, region)
+                        st.success("You have created a new account")
+                        st.session_state.is_authenticated=True
+                        form_container.empty()
+                    else:
+                        st.warning("Invalid credentials. Please try again.")
