@@ -567,7 +567,7 @@ def app():
                         if search_text == "":
                             filtered_df = performance_total[performance_total['Month']==search_text]
                         else:
-                            filtered_df  =performance_total
+                            filtered_df = Monthly_All[Monthly_All['Month']==search_text]
 
                     st.write(filtered_df, use_container_width=True)   
            
