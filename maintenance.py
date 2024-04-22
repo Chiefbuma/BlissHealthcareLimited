@@ -112,7 +112,8 @@ def app():
                 st.session_state.choice = True
                 
                 # Check if the user is logged in
-                with container:
+                form_container = st.empty()
+                with form_container:
                     with st.form("Login Form"):
                         st.write("Login Form")
                         staffnumber = st.text_input("Staffnumber",key="staff_medical")
@@ -137,7 +138,7 @@ def app():
                                 st.session_state.is_authenticated=True
                                 st.session_state.staffnumber = staffnumber
                                 st.session_state.password = password
-                                container.empty()
+                                form_container.empty()
                                 
     
                             else:
@@ -160,11 +161,11 @@ def app():
                             st.success("You have created a new account")
                             st.session_state.is_authenticated=True
                             st.session_state.logged_in= True
-                            container.empty()
+                            form_container.empty()
                         
         if st.session_state.is_authenticated:
             st.session_state.container = False
-            container.empty()
+            form_container.empty()
             
             # get clients sharepoint list
             @st.cache_data(ttl=600, max_entries=100, show_spinner=False, persist=False, experimental_allow_widgets=False)
