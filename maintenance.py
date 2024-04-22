@@ -324,7 +324,7 @@ def app():
                         
                         Main_df=load_data()
                         # Group by 'Facility' and 'Issue', and sum 'Amount on the Quotation' and 'Approved amount'
-                        Mcgroup_df = Main_df.groupby(['Clinic', 'Departmental report']).agg({
+                        Mcgroup_df = Main_df.groupby(['Clinic']).agg({
                             'Amount on the Quotation': 'sum',
                             'Approved amount': 'sum'
 
@@ -334,50 +334,19 @@ def app():
                         Mcgroup_df = Mcgroup_df.rename(columns={
                             'Amount on the Quotation': 'Total Qouted',
                             'Approved amount': 'Total Approved',
-                            'Departmental report':'Category',
-                            'Clini':'Facility'
+                            'Clinic':'Facility'
                             
                             
                         })
-                        container=st.container(border=True,height=700)
+                        container=st.container(border=True,height=800)
                         
                         with container:
-                            ui.table(data=Mcgroup_df, maxHeight=900)
+                            ui.table(data=Mcgroup_df, maxHeight=800)
                             ui_result = ui.button("Button", key="btn")
-                            st.write("UI Button Clicked:", ui_result)
+                
                             
-                        # Initialize the session state
-                                    
-                        # Sample DataFrame
-                        data = {
-                            'Name': ['Image 1', 'Image 2', 'Image 3', 'Image 4', 'Image 5', 'Image 6', 'Image 7', 'Image 8', 'Image 9', 'Image 10'],
-                            'Image': ['https://via.placeholder.com/150'] * 10,
-                            'Description': ['Description 1', 'Description 2', 'Description 3', 'Description 4', 'Description 5', 'Description 6', 'Description 7', 'Description 8', 'Description 9', 'Description 10']
-                        }
-                        df = pd.DataFrame(data)
-
-                        # Display the scrollable table
-                        with st.container():
-                            st.write("Scrollable Table")
-                            st.write("This table is scrollable")
-                            st.write("")
-
-                            # Apply CSS styling to make the table scrollable
-                            st.write(
-                                """
-                                <style>
-                                .scrollable-table {
-                                    max-height: 400px;
-                                    overflow-y: auto;
-                                }
-                                </style>
-                                """
-                            )
-
-                            # Display the DataFrame as a scrollable table
-                            with st.container(className="scrollable-table"):
-                                st.table(df)
-                                    
+                    
+                                                            
             if 'toggle_value' not in st.session_state:
                 st.session_state.toggle_value = False
 
