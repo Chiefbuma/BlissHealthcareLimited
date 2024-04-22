@@ -361,7 +361,7 @@ def app():
             
             # Rearrange the columns
             Monthly_All = Allperformance_df[
-                [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+                [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget']
             ]
             
            # Calculate the total values for each column
@@ -494,10 +494,10 @@ def app():
                 if st.session_state.search_text:
                     filtered_df = Monthly_All[Allperformance_df['Month']==search_text]
                 else:
-                    filtered_df = MTD_All\
+                    filtered_df = MTD_All
                         
                 st.write(filtered_df, use_container_width=True)
-                
+            
         
         # Use the expander widget
         #with st.expander("MONTHWISE REVENUE SUMMARY TABLE"):
