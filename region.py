@@ -565,11 +565,11 @@ def app():
                         
                         search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
                         if search_text == "":
-                            Newfiltered_df = Monthly_All[ Monthly_All['Month']==search_text]
+                            filtered_df = Monthly_All[Allperformance_df['Month']==search_text]
                         else:
-                            Newfiltered_df =Monthly_All[ Monthly_All['Month']==search_text]
+                            filtered_df  =MTD_All
 
-                    st.write(Newfiltered_df, use_container_width=True)   
+                    st.write(filtered_df, use_container_width=True)   
            
                 
                 with st.expander("DOWNLOAD MEDICAL CENTRES-click the download icon on the upper right corner of the table"):
