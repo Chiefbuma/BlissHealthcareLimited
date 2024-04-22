@@ -325,6 +325,19 @@ def app():
                         st.write("UI Button Clicked:", ui_result)
                                     # Initialize the session state
                                     
+                        # Sample DataFrame
+                        data = {
+                            'Name': ['Image 1', 'Image 2', 'Image 3'],
+                            'Image': ['https://via.placeholder.com/150', 'https://via.placeholder.com/150', 'https://via.placeholder.com/150'],
+                            'Description': ['Description 1', 'Description 2', 'Description 3']
+                        }
+                        df = pd.DataFrame(data)
+
+                        # Display the gallery-like table
+                        for index, row in df.iterrows():
+                            st.image(row['Image'], caption=row['Name'], width=150)
+                            st.write(row['Description'])
+                                    
             if 'toggle_value' not in st.session_state:
                 st.session_state.toggle_value = False
 
