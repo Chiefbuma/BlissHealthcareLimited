@@ -21,6 +21,11 @@ def app():
     
     if 'is_authenticated' not in st.session_state:
         st.session_state.is_authenticated = False 
+        
+    if 'Location' not in st.session_state:
+        st.session_state.Location = ''
+    if 'Region' not in st.session_state:
+        st.session_state.Region = ''
                 # Initialize session state if it doesn't exist
      
     def init_connection():
@@ -73,11 +78,13 @@ def app():
             if not facilities_df.empty:
                 location = facilities_df['location'].iloc[0]
                 region = facilities_df['region'].iloc[0]
-                
+                st.session_state.Location = location
+                st.session_state.Region =region
+
                 
                 # Check if the credentials match
                 if password == facilities_df['password'].iloc[0]:
-                    return True, location, region
+                    return True, st.session_state.Location, st.session_state.Region
                 return False, None, None
             
         except APIError as e:
@@ -88,68 +95,45 @@ def app():
         response = supabase.from_('users').select('*').execute()
         data = response.data
         return data
-    col1, col2 = st.columns([2,1])
     
-   
-    with col1:
-        menu = ["Login", "Sign up"]
-        
-        choice = st.sidebar.selectbox("", menu,key="choice_medical")
-        
-        if 'choice' not in st.session_state:
-            st.session_state.choice = False 
-            # Initialize session state if it doesn't exist
+    
+    form_container = st.empty()
+    with form_container:
+        with st.form("Login Form"):
+            st.write("Login Form")
+            staffnumber = st.text_input("Staffnumber",key="staff_medical")
+            password = st.text_input("Password", type='password',key="pass_medical")
             
-        if 'container' not in st.session_state:
-            st.session_state.container = False 
-            # Initialize session state if it doesn't exist
+            # Fetch location and region based on staffnumber
+            cols = st.columns[4]
+            with cols[0]:
+                LogIn=st.form_submit_button("Login",key="Log_In")
+            with cols[3]:
+                signUp=st.form_submit_button("Login",key="Sign_Up")
             
-        container=st.container()
-        
-        
-        
-        if choice == "Login":
-            st.session_state.choice = True
-            
-            # Check if the user is logged in
-            form_container = st.empty()
-            with form_container:
-                with st.form("Login Form"):
-                    st.write("Login Form")
-                    staffnumber = st.text_input("Staffnumber",key="staff_medical")
-                    password = st.text_input("Password", type='password',key="pass_medical")
-                    # Fetch location and region based on staffnumber
-                    load=st.form_submit_button("Login")
-                    
-                    
-                    if "logged_in" not in st.session_state:
-                        st.session_state.logged_in= False
-                        
-                        
-                    if load or st.session_state.logged_in:
-                        st.session_state.logged_in= True
+            if "logged_in" not in st.session_state:
+                st.session_state.logged_in= False
+                
+            if "Sign_up" not in st.session_state:
+                st.session_state.Sign_up= False  
+             
+            if LogIn:
+                st.session_state.logged_in= True
+                result, location, region = login_user(staffnumber, password)
+                if result:
+                    st.success("Logged In successfully")
+                    st.write(f"Location: {location}, Region: {region}")
+                    st.session_state.logged_in= True
+                    st.session_state.staffnumber = staffnumber
+                    st.session_state.password = password
+                    form_container.empty()
 
-                        result, location, region = login_user(staffnumber, password)
-                        if result:
-                            st.success("Logged In successfully")
-                            st.write(f"Location: {location}, Region: {region}")
-
-                            st.session_state.logged_in= True
-                            st.session_state.is_authenticated=True
-                            st.session_state.staffnumber = staffnumber
-                            st.session_state.password = password
-                            form_container.empty()
-                            
-
-                        else:
-                            st.warning("Invalid credentials. Please try again.")
-
-        elif choice == "Sign up":
-            st.session_state.choice = True
-            with st.form("Sign-up Form"): 
-                with container: 
-                    st.session_state.container = True
-                    st.write("Sign-up Form")
+                else:
+                    st.warning("Invalid credentials. Please try again.")
+                
+            elif signUp:
+                st.session_state.signUp= True
+                with st.form("Sign-up Form"): 
                     staffnumber = st.text_input('Staff Number', key='signup_staff_number')
                     location = st.selectbox("Select Location", location_names)
                     selected_location_row = location_df[location_df['Location'] == location]
@@ -162,5 +146,6 @@ def app():
                         st.session_state.is_authenticated=True
                         st.session_state.logged_in= True
                         form_container.empty()
+                    else:
+                        st.warning("Invalid credentials. Please try again.")
 
-   
