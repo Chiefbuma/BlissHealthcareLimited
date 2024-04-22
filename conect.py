@@ -32,7 +32,7 @@ class MultiApp:
         with st.sidebar: 
             app = option_menu.option_menu(key="main_key",
             menu_title='DASHBOARDS',
-            options=['Home','Medical centre Dashboard', 'Region Dashboard','Summary Dashboard','Maintenance Dashboard' ],
+            options=['Account','Medical centre Dashboard', 'Region Dashboard','Summary Dashboard','Maintenance Dashboard' ],
             icons=['house-fill', 'receipt', 'receipt', 'receipt', 'receipt', 'person-circle'],
             menu_icon='house-fill',
             default_index=0,
@@ -51,7 +51,10 @@ class MultiApp:
         if app == "Summary Dashboard":
             support.app()  
         if app == "Maintenance Dashboard":
-            maintenance.app()    
+            maintenance.app()
+        if app == "Account":
+            main.app()    
+    
 
     run()            
         
