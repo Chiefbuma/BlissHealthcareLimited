@@ -447,7 +447,7 @@ def app():
             
             # Rearrange the columns
             Monthly_All = Allperformance_df[
-                [ 'Month','Region','location_name','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+                [ 'Month','Region','location_name','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget']
             ]
             
             
@@ -484,17 +484,17 @@ def app():
                             line_color='darkslategray',  # Border color
                             line=dict(width=1)),
                             columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
-                cells=dict(values=[performance_total["Scheme"],
-                                   performance_total["MTD_Budget_Revenue"],
-                                   performance_total["MTD_Actual_Revenue"],
-                                   performance_total["%Arch_REV"],
-                                    performance_total["Total_Revenue_Budget"],
-                                    performance_total["Projected_Revenue"],
-                                     performance_total["MTD_Budget_Footfall"],
-                                    performance_total["MTD_Actual_Footfall"],
-                                    performance_total["%Arch_FF"],
-                                    performance_total["Total_Footfall_Budget"],
-                                    performance_total["Projected_Footfalls"]]
+                cells=dict(values=[performance_df["Scheme"],
+                                   performance_df["MTD_Budget_Revenue"],
+                                   performance_df["MTD_Actual_Revenue"],
+                                   performance_df["%Arch_REV"],
+                                    performance_df["Total_Revenue_Budget"],
+                                    performance_df["Projected_Revenue"],
+                                    performance_df["MTD_Budget_Footfall"],
+                                   performance_df["MTD_Actual_Footfall"],
+                                    performance_df["%Arch_FF"],
+                                    performance_df["Total_Footfall_Budget"],
+                                    performance_df["Projected_Footfalls"]]
                         ,
                         
                 
@@ -503,7 +503,7 @@ def app():
 ,
                         font_color=[
                                 ['white'],  # Blue for "Report" column
-                                ['black'] * len(performance_total)  # White for "Count" column
+                                ['black'] * len(performance_df)  # White for "Count" column
                             ],
                         align='left',
                         font=dict(color='black', size=14),
@@ -563,11 +563,11 @@ def app():
                         # Set the default value to the previous month
                         default_month_index = current_month - 1  #   
                         
-                        Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
+                        search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
                         if Month == "":
-                            Newfiltered_df = performance_total
+                             Newfiltered_df = Monthly_All[Allperformance_df['Month']==search_text]
                         else:
-                            Newfiltered_df =performance_total
+                            Newfiltered_df =performance_df
 
                     st.write(Newfiltered_df, use_container_width=True)   
            
