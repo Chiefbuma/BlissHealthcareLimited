@@ -327,16 +327,33 @@ def app():
                                     
                         # Sample DataFrame
                         data = {
-                            'Name': ['Image 1', 'Image 2', 'Image 3'],
-                            'Image': ['https://via.placeholder.com/150', 'https://via.placeholder.com/150', 'https://via.placeholder.com/150'],
-                            'Description': ['Description 1', 'Description 2', 'Description 3']
+                            'Name': ['Image 1', 'Image 2', 'Image 3', 'Image 4', 'Image 5', 'Image 6', 'Image 7', 'Image 8', 'Image 9', 'Image 10'],
+                            'Image': ['https://via.placeholder.com/150'] * 10,
+                            'Description': ['Description 1', 'Description 2', 'Description 3', 'Description 4', 'Description 5', 'Description 6', 'Description 7', 'Description 8', 'Description 9', 'Description 10']
                         }
                         df = pd.DataFrame(data)
 
-                        # Display the gallery-like table
-                        for index, row in df.iterrows():
-                            st.image(row['Image'], caption=row['Name'], width=150)
-                            st.write(row['Description'])
+                        # Display the scrollable table
+                        with st.container():
+                            st.write("Scrollable Table")
+                            st.write("This table is scrollable")
+                            st.write("")
+
+                            # Apply CSS styling to make the table scrollable
+                            st.write(
+                                """
+                                <style>
+                                .scrollable-table {
+                                    max-height: 400px;
+                                    overflow-y: auto;
+                                }
+                                </style>
+                                """
+                            )
+
+                            # Display the DataFrame as a scrollable table
+                            with st.container(className="scrollable-table"):
+                                st.table(df)
                                     
             if 'toggle_value' not in st.session_state:
                 st.session_state.toggle_value = False
