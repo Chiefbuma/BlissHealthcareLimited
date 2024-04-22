@@ -462,6 +462,7 @@ def app():
                 with cols[3]:
                     ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
+                
                 with st.expander("DOWNLOAD PREVIOUS MONTH"):
                     
                     Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
@@ -485,18 +486,16 @@ def app():
                     # Set the default value to the previous month
                     default_month_index = current_month - 2  #
             
-                  
-
-                # Selectbox for choosing a month
-                search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index, key="search_text")
-            
-                # Use the session state value for filtering the dataframe
-                if st.session_state.search_text:
-                    filtered_df = Monthly_All[Allperformance_df['Month']==search_text]
-                else:
-                    filtered_df = MTD_All
-                        
-                st.write(filtered_df, use_container_width=True)
+                    # Selectbox for choosing a month
+                    search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index, key="search_text")
+                
+                    # Use the session state value for filtering the dataframe
+                    if st.session_state.search_text:
+                        filtered_df = Monthly_All[Allperformance_df['Month']==search_text]
+                    else:
+                        filtered_df = MTD_All
+                            
+                    st.write(filtered_df, use_container_width=True)
             
         
         # Use the expander widget
