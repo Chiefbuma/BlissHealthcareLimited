@@ -356,8 +356,6 @@ def app():
                                 ui.table(data=Mcgroup_df, maxHeight=800)
                                 ui_result = ui.button("Button", key="btn")
                     
-                                
-                        
                                                                 
                 if 'toggle_value' not in st.session_state:
                     st.session_state.toggle_value = False
@@ -491,7 +489,7 @@ def app():
                     <style>
                     .st-cd {
                         border: 1px solid #e6e9ef;
-                        border-radius: 5px;
+                        border-radius: 100px;
                         padding: 10px;
                         margin-bottom: 10px;
                     }
