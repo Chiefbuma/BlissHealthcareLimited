@@ -320,15 +320,15 @@ def app():
                         # Group by 'Facility' and 'Issue', and sum 'Amount on the Quotation' and 'Approved amount'
                         Mcgroup_df = Main_df.groupby(['Clinic', 'Report']).agg({
                             'Amount on the Quotation': 'sum',
-                            'Approved amount': 'sum',
-                            'Report': 'nunique'
+                            'Approved amount': 'sum'
+
                         }).reset_index()
 
                         # Rename columns
                         Mcgroup_df = Mcgroup_df.rename(columns={
                             'Amount on the Quotation': 'Total Qouted',
-                            'Approved amount': 'Total Approved',
-                             'Report': 'Items Qty'
+                            'Approved amount': 'Total Approved'
+                            
                         })
                         with card_container(key="table1"):
                             ui.table(data=Mcgroup_df, maxHeight=300)
