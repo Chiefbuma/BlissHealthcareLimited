@@ -96,7 +96,7 @@ def app():
             with cols[0]:
                 LogIn = st.form_submit_button("Login")
             with cols[3]:
-                signUp = st.form_submit_button("Sign Up")
+                signUp = st.form_submit_button("Dont have account?, create one")
             
             if "logged_in" not in st.session_state:
                 st.session_state.logged_in= False
