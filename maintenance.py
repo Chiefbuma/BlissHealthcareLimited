@@ -33,7 +33,7 @@ def app():
         
         form_container = st.empty()
         with form_container :
-            @st.cache_resource(ttl=600, max_entries=100, show_spinner=False, persist=False, experimental_allow_widgets=False)
+            @st.cache_data(ttl=600, max_entries=100, show_spinner=False, persist=False, experimental_allow_widgets=False)
             def init_connection():
                 url = "https://effdqrpabawzgqvugxup.supabase.co"
                 key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
