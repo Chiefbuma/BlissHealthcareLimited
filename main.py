@@ -158,6 +158,7 @@ def app():
                             
  
     if st.session_state.is_authenticated:
-        st.write(st.session_state.location)
-        st.write(st.session_state.region)
+        st.write(st.session_state.Location)
+        st.write(st.session_state.Region)
+
            
