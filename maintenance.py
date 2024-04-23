@@ -258,7 +258,7 @@ def app():
                     data_df['MonthName'] = data_df['MonthName'].str.split(';#').str[1]
                 
                     data_df = data_df.rename(columns={
-                        'ID': 'Ticket',
+                        'ID': 'Tkt',
                         'Date of report':'Date',
                         'Clinic': 'Facility',
                         'Department':'Department',
