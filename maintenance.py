@@ -13,161 +13,20 @@ import streamlit_shadcn_ui as ui
 from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
 from sharepoint import SharePoint
-import main
 from postgrest import APIError
 from IPython.display import HTML
 from streamlit_dynamic_filters import DynamicFilters
 
+
 def app():
-    
     if 'is_authenticated' not in st.session_state:
         st.session_state.is_authenticated = False 
-                # Initialize session state if it doesn't exist
-     
-        def init_connection():
-            url = "https://effdqrpabawzgqvugxup.supabase.co"
-            key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
-            return create_client(url, key)
-
-        supabase = init_connection()
-        
-        response = supabase.table('facilities').select("*").execute()
-
-        location_df = pd.DataFrame(response.data)
-        #st.write(location_df)
-
-
-        def get_facilities(staffnumber):
-            # Perform a Supabase query to fetch data from the 'users' table
-            response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-            login_df = pd.DataFrame(response.data)
-            return login_df
-
-        def add_userdata(staffnumber, password, location, region):
-            # Define the data to insert
-            data = {
-                'staffnumber': staffnumber,
-                'password': password,
-                'location': location,
-                'region': region
-            }
-
-            # Insert the data into the 'userdata' table using Supabase
-            _, count = supabase.table('users').insert(data).execute()
-
-            # Return the count of rows affected by the insert operation
-            return count
-
-            # Return the count of rows affected by the insert operation
-            return count
-
-        location_names = location_df['Location'].unique().tolist()
-            # Create a dictionary mapping each location to its region
-
-        def login_user(staffnumber,password):
-            
-            try:
-                # Perform a Supabase query to fetch user data based on staff number
-                response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                user_data = response.data
-                facilities_df = get_facilities(staffnumber)
-                if not facilities_df.empty:
-                    location = facilities_df['location'].iloc[0]
-                    region = facilities_df['region'].iloc[0]
-                    
-                    
-                    # Check if the credentials match
-                    if password == facilities_df['password'].iloc[0]:
-                        return True, location, region
-                    return False, None, None
-                
-            except APIError as e:
-                st.error("Invalid credentials. Please log in again.")
-                st.stop() 
-
-        def view_all_users():
-            response = supabase.from_('users').select('*').execute()
-            data = response.data
-            return data
-        col1, col2 = st.columns([2,1])
-        
-        with col1:
-            menu = ["Login", "Sign up"]
-            
-            choice = st.sidebar.selectbox("", menu,key="choice_medical")
-            
-            
-                
-            if 'choice' not in st.session_state:
-                st.session_state.choice = False 
-                # Initialize session state if it doesn't exist
-                
-            if 'container' not in st.session_state:
-                st.session_state.container = False 
-                # Initialize session state if it doesn't exist
-                
-            container=st.container()
-            
-            
-            
-            if choice == "Login":
-                st.session_state.choice = True
-                
-                # Check if the user is logged in
-                form_container = st.empty()
-                with form_container:
-                    with st.form("Login Form"):
-                        st.write("Login Form")
-                        staffnumber = st.text_input("Staffnumber",key="staff_medical")
-                        password = st.text_input("Password", type='password',key="pass_medical")
-                        # Fetch location and region based on staffnumber
-                        load=st.form_submit_button("Login")
-                        
-                        
-                        if "logged_in" not in st.session_state:
-                            st.session_state.logged_in= False
-                            
-                            
-                        if load or st.session_state.logged_in:
-                            st.session_state.logged_in= True
-    
-                            result, location, region = login_user(staffnumber, password)
-                            if result:
-                                st.success("Logged In successfully")
-                                st.write(f"Location: {location}, Region: {region}")
-
-                                st.session_state.logged_in= True
-                                st.session_state.is_authenticated=True
-                                st.session_state.staffnumber = staffnumber
-                                st.session_state.password = password
-                                form_container.empty()
-                                
-    
-                            else:
-                                st.warning("Invalid credentials. Please try again.")
-
-            elif choice == "Sign up":
-                st.session_state.choice = True
-                with st.form("Sign-up Form"): 
-                    with container: 
-                        st.session_state.container = True
-                        st.write("Sign-up Form")
-                        staffnumber = st.text_input('Staff Number', key='signup_staff_number')
-                        location = st.selectbox("Select Location", location_names)
-                        selected_location_row = location_df[location_df['Location'] == location]
-                        region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
-                        password = st.text_input('Password', key='signup_password')
-                        signup_btn = st.form_submit_button('Sign Up')
-                        if signup_btn:
-                            add_userdata(staffnumber, password, location, region)
-                            st.success("You have created a new account")
-                            st.session_state.is_authenticated=True
-                            st.session_state.logged_in= True
-                            form_container.empty()
-                        
-    elif st.session_state.is_authenticated:
-        st.session_state.container = False
-        form_container.empty()
+        st.write("You are not Logged in,click account to  Log in/Sign up to proceed")
+        # Initialize session state if it doesn't exist
+                 
+    if st.session_state.is_authenticated:
+        st.write(st.session_state.Location)
+        st.write(st.session_state.Region)
         
         # get clients sharepoint list
         @st.cache_data(ttl=600, max_entries=100, show_spinner=False, persist=False, experimental_allow_widgets=False)
@@ -361,103 +220,102 @@ def app():
                             ui.table(data=Mcgroup_df, maxHeight=800)
                             ui_result = ui.button("Button", key="btn")
                 
-                                                            
+            if st.button("Reload Data"):
+                st.cache_data.clear() 
+                                                    
             if 'toggle_value' not in st.session_state:
                 st.session_state.toggle_value = False
 
             # Create a checkbox to toggle the value
             toggle_value = ui.switch(default_checked=st.session_state.toggle_value, label="Show Table", key="switch1")   
+
+            # Store the value of the toggle in the session state
+            st.session_state.toggle_value = toggle_value
             
-            if st.button("Reload Data"):
-                st.cache_data.clear()
-                
-                # Store the value of the toggle in the session state
-                st.session_state.toggle_value = toggle_value
-                
-                if "load_state" not in st.session_state:
-                        st.session_state.load_state=False
+            if "load_state" not in st.session_state:
+                    st.session_state.load_state=False
                     
-                if toggle_value:
-                    st.session_state.load_state=True
-                    # Clear the cache
-                
-                    with card_container(key="gallery1"):
-                        
-                        st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
-                        @st.cache_resource
-                        def load_data():
-                                New = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                                return pd.DataFrame(  New )
-                            
-                        df_mainselected=load_data()
-                        
-                        data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','MonthName','LinkEdit']]
-                        
-                        # Convert 'bill_date' to datetime type
-                        data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
-                                            
-                        # Extract just the month name
-                        data_df['MonthName'] = data_df['MonthName'].str.split(';#').str[1]
-                    
-                        data_df = data_df.rename(columns={
-                            'ID': 'Ticket',
-                            'Date of report':'Date',
-                            'Clinic': 'Facility',
-                            'Department':'Department',
-                            'Report': 'Issue',
-                            'Amount on the Quotation': 'Quoted Amount',
-                            'Approved amount': 'Final Approved',
-                            'MainStatus': 'Status',
-                            'MonthName':'Month',
-                            'Approver': 'Approver',
-                            'LinkEdit': 'Link'
-                        })
-                        # Fill NaN/NA values with an empty string
-                        
-                        data_df.fillna('', inplace=True)
-                        
-                        # Define the columns to filter
-                        filter_columns = ["Ticket", "Approver", "Facility","Issue","Status","Month"]
-
-                        # Create five columnss for arranging widgets horizontally
-                        col1, col2, col3, col4, col5, col6 = st.columns(6)
-                        
-                        
-                        # Create a dictionary to store filter values
-                        filters = {column: '' for column in filter_columns}
-                        
-
-                        # Create text input widgets for each filter column and arrange them horizontally
-                        with col1:
-                            filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", filters[filter_columns[0]])
-                        with col2:
-                            filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", filters[filter_columns[1]])
-                        with col3:
-                            filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
-                        with col4:
-                            filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
-                        with col5:
-                            filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
-                        with col6:
-                            filters[filter_columns[5]] = st.text_input(f"Filter {filter_columns[5]}", filters[filter_columns[5]])
-                        # Apply filters to the DataFrame
-                        filtered_df = data_df
-                        for column, filter_value in filters.items():
-                            if filter_value:
-                                filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False)]
-
-                        # Display the filtered DataFrame using st.data_editor
-                        st.data_editor(
-                            filtered_df,
-                            column_config={
-                                "Link": st.column_config.LinkColumn(
-                                    "Link",
-                                    display_text="View"
-                                )
-                            },
-                            hide_index=True
-                        )   
+            if toggle_value:
+                st.session_state.load_state=True
+                st.session_state.toggle_value = True
             
+                with card_container(key="gallery1"):
+                    
+                    st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
+                    @st.cache_resource
+                    def load_data():
+                            New = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                            return pd.DataFrame(  New )
+                        
+                    df_mainselected=load_data()
+                    
+                    data_df= df_mainselected[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','MonthName','LinkEdit']]
+                    
+                    # Convert 'bill_date' to datetime type
+                    data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
+                                        
+                    # Extract just the month name
+                    data_df['MonthName'] = data_df['MonthName'].str.split(';#').str[1]
+                
+                    data_df = data_df.rename(columns={
+                        'ID': 'Tkt',
+                        'Date of report':'Date',
+                        'Clinic': 'Facility',
+                        'Department':'Dep',
+                        'Report': 'Issue',
+                        'Amount on the Quotation': 'Quoted',
+                        'Approved amount': 'Approved',
+                        'MainStatus': 'Status',
+                        'MonthName':'Month',
+                        'Approver': 'Approver',
+                        'LinkEdit': 'Link'
+                    })
+                    # Fill NaN/NA values with an empty string
+                    
+                    data_df.fillna('', inplace=True)
+                    
+                    # Define the columns to filter
+                    filter_columns = ["Ticket", "Approver", "Facility","Issue","Status","Month"]
+
+                    # Create five columnss for arranging widgets horizontally
+                    col1, col2, col3, col4, col5, col6 = st.columns(6)
+                    
+                    
+                    # Create a dictionary to store filter values
+                    filters = {column: '' for column in filter_columns}
+                    
+
+                    # Create text input widgets for each filter column and arrange them horizontally
+                    with col1:
+                        filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", filters[filter_columns[0]])
+                    with col2:
+                        filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", filters[filter_columns[1]])
+                    with col3:
+                        filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
+                    with col4:
+                        filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
+                    with col5:
+                        filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
+                    with col6:
+                        filters[filter_columns[5]] = st.text_input(f"Filter {filter_columns[5]}", filters[filter_columns[5]])
+                    # Apply filters to the DataFrame
+                    filtered_df = data_df
+                    for column, filter_value in filters.items():
+                        if filter_value:
+                            filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False)]
+
+                    # Display the filtered DataFrame using st.data_editor
+                    st.data_editor(
+                        filtered_df,
+                        column_config={
+                            "Link": st.column_config.LinkColumn(
+                                "Link",
+                                display_text="View"
+                            )
+                        },
+                        hide_index=True
+                    )   
+        
                     
                     
                                         
@@ -503,3 +361,5 @@ def app():
                     """,
                     unsafe_allow_html=True
                 )
+    else:
+        st.write("You  are  not  logged  in. Click   **[Account]**  on the  side  menu to Login  or  Signup  to proceed")
