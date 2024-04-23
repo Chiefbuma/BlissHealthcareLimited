@@ -258,13 +258,13 @@ def app():
                     data_df['MonthName'] = data_df['MonthName'].str.split(';#').str[1]
                 
                     data_df = data_df.rename(columns={
-                        'ID': 'Tkt',
+                        'ID': 'Ticket',
                         'Date of report':'Date',
                         'Clinic': 'Facility',
-                        'Department':'Dep',
+                        'Department':'Department',
                         'Report': 'Issue',
-                        'Amount on the Quotation': 'Quoted',
-                        'Approved amount': 'Approved',
+                        'Amount on the Quotation': 'Quoted Amount',
+                        'Approved amount': 'Final Approved',
                         'MainStatus': 'Status',
                         'MonthName':'Month',
                         'Approver': 'Approver',
