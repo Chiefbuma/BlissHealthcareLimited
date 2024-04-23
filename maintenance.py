@@ -264,7 +264,7 @@ def app():
                         'Department':'Department',
                         'Report': 'Issue',
                         'Amount on the Quotation': 'Quoted Amount',
-                        'Approved amount': 'Final Approved',
+                        'Approved amount': 'Approved Amount',
                         'MainStatus': 'Status',
                         'MonthName':'Month',
                         'Approver': 'Approver',
@@ -305,19 +305,17 @@ def app():
                             filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False)]
 
                     # Display the filtered DataFrame using st.data_editor
-                    st.data_editor(
-                        filtered_df,
-                        column_config={
-                            "Link": st.column_config.LinkColumn(
-                                "Link",
-                                display_text="View"
-                            )
-                        },
-                        hide_index=True
-                    )   
-        
-                    
-                    
+                    with card_container(key="gallery4"):
+                        st.data_editor(
+                            filtered_df,
+                            column_config={
+                                "Link": st.column_config.LinkColumn(
+                                    "Link",
+                                    display_text="View"
+                                )
+                            },
+                            hide_index=True
+                        , use_container_width=True)
                                         
                 metrics = [
                     {"label": "Total", "value": Total_requests},
