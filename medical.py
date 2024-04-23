@@ -21,138 +21,17 @@ from postgrest import APIError
 
 
 def app():
-        
     if 'is_authenticated' not in st.session_state:
         st.session_state.is_authenticated = False 
+        st.write("You are not Logged in,click account to  Log in/Sign up to proceed")
         # Initialize session state if it doesn't exist
-
-   
-    col1, col2 = st.columns([2,1])
-    with col1:
-        menu = ["Login", "Sign up"]
-        choice = st.sidebar.selectbox("", menu,key="choice_medical")
-
-        form_container = st.empty()
-        with form_container :
-            @st.cache_resource
-            def init_connection():
-                url = "https://effdqrpabawzgqvugxup.supabase.co"
-                key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
-                return create_client(url, key)
-
-            supabase = init_connection()
-            
-            response = supabase.table('facilities').select("*").execute()
-    
-            location_df = pd.DataFrame(response.data)
-            #st.write(location_df)
-
-
-            def get_facilities(staffnumber):
-                # Perform a Supabase query to fetch data from the 'users' table
-                response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                login_df = pd.DataFrame(response.data)
-                return login_df
-
-            def add_userdata(staffnumber, password, location, region):
-                # Define the data to insert
-                data = {
-                    'staffnumber': staffnumber,
-                    'password': password,
-                    'location': location,
-                    'region': region
-                }
-
-                # Insert the data into the 'userdata' table using Supabase
-                _, count = supabase.table('users').insert(data).execute()
-
-                # Return the count of rows affected by the insert operation
-                return count
-
-                # Return the count of rows affected by the insert operation
-                return count
-
-            location_names = location_df['Location'].unique().tolist()
-                # Create a dictionary mapping each location to its region
-
-            def login_user(staffnumber,password):
-                
-                try:
-                    # Perform a Supabase query to fetch user data based on staff number
-                    response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                    user_data = response.data
-                    facilities_df = get_facilities(staffnumber)
-                    if not facilities_df.empty:
-                        location = facilities_df['location'].iloc[0]
-                        region = facilities_df['region'].iloc[0]
-                        
-                        
-                        # Check if the credentials match
-                        if password == facilities_df['password'].iloc[0]:
-                            return True, location, region
-                        return False, None, None
-                    
-                except APIError as e:
-                    st.error("Invalid credentials. Please log in again.")
-                    st.stop() 
-
-            def view_all_users():
-                response = supabase.from_('users').select('*').execute()
-                data = response.data
-                return data
- 
-
-            if choice == "Login":
-                # Check if the user is logged in
-                
-                with st.form("Login Form"):
-                    st.write("Login Form")
-                    staffnumber = st.text_input("Staffnumber",key="staff_medical")
-                    password = st.text_input("Password", type='password',key="pass_medical")
-                    # Fetch location and region based on staffnumber
-                    load=st.form_submit_button("Login")
-                    
-                    
-                    if "logged_in" not in st.session_state:
-                        st.session_state.logged_in= False
-                        
-                        
-                    if load or st.session_state.logged_in:
-                        st.session_state.logged_in= True
-  
-                        result, location, region = login_user(staffnumber, password)
-                        if result:
-                            st.success("Logged In successfully")
-                            st.write(f"Location: {location}, Region: {region}")
-
-                            st.session_state.logged_in= True
-                            st.session_state.is_authenticated=True
-                            st.session_state.staffnumber = staffnumber
-                            st.session_state.password = password
-                            
-   
-                        else:
-                            st.warning("Invalid credentials. Please try again.")
-
-            elif choice == "Sign up":
-                with st.form("Sign-up Form"):  
-                    st.write("Sign-up Form")
-                    staffnumber = st.text_input('Staff Number', key='signup_staff_number')
-                    location = st.selectbox("Select Location", location_names)
-                    selected_location_row = location_df[location_df['Location'] == location]
-                    region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
-                    password = st.text_input('Password', key='signup_password')
-                    signup_btn = st.form_submit_button('Sign Up')
-                    if signup_btn:
-                        add_userdata(staffnumber, password, location, region)
-                        st.success("You have created a new account")
-                        st.session_state.is_authenticated=True
-                        st.session_state.logged_in= True
-                        form_container.empty()
-                        
-                        
-                        
+                 
     if st.session_state.is_authenticated:
+        st.write(st.session_state.Location)
+        st.write(st.session_state.Region)
+        
+        location=st.session_state.Location
+   
         @st.cache_resource
         def init_connection():
             url = "https://effdqrpabawzgqvugxup.supabase.co"
@@ -167,7 +46,7 @@ def app():
             
             st.session_state.logged_in= True
             # Dropdown for selecting the year
-          
+        
             
             current_month = datetime.now().month
             current_month_name = calendar.month_name[current_month]
@@ -186,7 +65,7 @@ def app():
             LastUpdate_df = pd.DataFrame(Lastdateresponse.data)
             LastUpdate_df = LastUpdate_df[['Last_Updated']]  # Assuming 'Last_Updated' is the column you want
             Lastdate = LastUpdate_df.iloc[0]['Last_Updated']
-          
+        
             # Define the function to calculate the fraction of days passed in a month
             def fraction_of_days_in_month(date):
                 # Calculate the total number of days in the month
@@ -196,7 +75,7 @@ def app():
                 fraction_passed = (date.day) / total_days_in_month.day
                 
                 return fraction_passed
-           
+        
             # Create a new figure
             fig3 = go.Figure()
             
@@ -221,7 +100,7 @@ def app():
             #Total_budget_FF = performance_df['Budget_Footfall'].sum()
             #formatted_FF_budget = "{:,.0f}".format(Total_budget_FF)
                         
-   
+
             # For example, let's say you want to add a trace for the "Projection" metric
             fig3.update_layout(
                 template="plotly_white",
@@ -270,7 +149,7 @@ def app():
             Arch_Rev = (MTD_Actual_Footfall/MTD_footfall_budget) * 100
             formatted_arch_ff = "{:.2f}%".format(Arch_Rev)
             
-           
+        
             
             #ALL MONTHS 
             
@@ -310,16 +189,16 @@ def app():
                 )
             
             # Create a new figure
-             #fig6.add_trace(
-             #go.Indicator(
-                 #title={'text': "MTD FOOTFALL",'font': {'size': 15,'color': 'green'}},
-                 #value= int(Total_budget)
+            #fig6.add_trace(
+            #go.Indicator(
+                #title={'text': "MTD FOOTFALL",'font': {'size': 15,'color': 'green'}},
+                #value= int(Total_budget)
             # For example, let's say you want to add a trace for the "Projection" metric
             #fig6.update_layout(
                 #template="plotly_white",
                 #height=80,
                 #font_family="TimesNew Roman",
-               # width=100,
+            # width=100,
                 #paper_bgcolor='rgba(209, 255, 119, 0.1)',  # Set background color to transparent
                 #plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
                 #uniformtext=dict(minsize=40, mode='hide'),
@@ -351,7 +230,7 @@ def app():
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             
             
-              # Rearrange the columns
+            # Rearrange the columns
             MTD_All = performance_df[
                 [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
@@ -364,7 +243,7 @@ def app():
                 [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget']
             ]
             
-           # Calculate the total values for each column
+        # Calculate the total values for each column
             total_values = {
                 'Scheme': 'TOTAL',
                 'MTD_Budget_Revenue': formatted_Rev_budget ,
@@ -397,12 +276,12 @@ def app():
                             line=dict(width=1)),
                             columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
                 cells=dict(values=[performance_total["Scheme"],
-                                   performance_total["MTD_Budget_Revenue"],
-                                   performance_total["MTD_Actual_Revenue"],
-                                   performance_total["%Arch_REV"],
+                                performance_total["MTD_Budget_Revenue"],
+                                performance_total["MTD_Actual_Revenue"],
+                                performance_total["%Arch_REV"],
                                     performance_total["Total_Revenue_Budget"],
                                     performance_total["Projected_Revenue"],
-                                     performance_total["MTD_Budget_Footfall"],
+                                    performance_total["MTD_Budget_Footfall"],
                                     performance_total["MTD_Actual_Footfall"],
                                     performance_total["%Arch_FF"],
                                     performance_total["Total_Footfall_Budget"],
@@ -422,7 +301,7 @@ def app():
                         line_color='darkslategray',
                         height=25,# Border color
                         line=dict(width=0.3))),
-                       
+                    
             ])
             fig_request_by_type_Rev.update_layout(
                     margin=dict(l=0, r=0, t=0, b=0),
@@ -504,6 +383,8 @@ def app():
             # Set the height of the expander
             #st.write(RR_pivot_Actual, use_container_width=True)
             #st.write(FF_pivot_Actual, use_container_width=True)
-        form_container.empty()
+    else:
+        st.write("You  are  not  logged  in. Click   **[Account]**  on the  side  menu to Login  or  Signup  to proceed")
+
 
 
