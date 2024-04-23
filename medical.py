@@ -56,6 +56,8 @@ def app():
             response = supabase.from_('MTD_Revenue').select('*').eq('location_name', location).eq('Month', current_month_name ).execute()
             performance_df = pd.DataFrame(response.data)
             
+            st.write(performance_df)
+            
             # Query the MTD_Revenue table with the filter for location_name and Month
             Allresponse = supabase.from_('MTD_Revenue').select('*').eq('location_name', location).execute()
             Allperformance_df = pd.DataFrame(Allresponse.data)
