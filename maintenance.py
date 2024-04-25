@@ -392,7 +392,7 @@ def app():
                             'ID': 'Tkt',
                             'Date of report':'Date',
                             'Clinic': 'Facility',
-                            'Department':'Department',
+                            'Department':'Dep',
                             'Report': 'Issue',
                             'Amount on the Quotation': 'Amount',
                             'Approved amount': 'Approved',
