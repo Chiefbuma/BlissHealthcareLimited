@@ -406,7 +406,7 @@ def app():
                         data_df.fillna('', inplace=True)
                         
                         # Define the columns to filter
-                        filter_columns = ["Ticket", "Approver", "Facility","Issue","Status","Month"]
+                        filter_columns = ["Tkt", "Approver", "Facility","Issue","Status","Month"]
 
                         # Create five columnss for arranging widgets horizontally
                         col1, col2, col3, col4, col5, col6 = st.columns(6)
