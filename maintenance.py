@@ -47,7 +47,7 @@ def app():
             Department_df= Main_df[['Departmental report','Approved amount','Admin Approval','Month']]
 
             # Filter Department_df where 'Admin Approval' is 'Approved'
-            approved_department_df = Department_df[Department_df["Biomedical Head Approval"] == "Approved"]
+            approved_department_df = Department_df[Department_df['Admin Approval'] == 'Approved']
 
             # Group by 'Departmental report' and 'Month', and sum 'Approved amount'
             department_sum_df = approved_department_df.groupby(['Departmental report', 'Month'])['Approved amount'].sum().reset_index()
@@ -101,13 +101,13 @@ def app():
                     # Map the month name back to its numeric value
                     month_number = datetime.strptime(choice, "%B").month
 
-                    approved_main_df = Main_df[(Main_df["Biomedical Head Approval"] == "Approved") & (Main_df['Month'] == month_number)]
+                    approved_main_df = Main_df[(Main_df['Admin Approval'] == 'Approved') & (Main_df['Month'] == month_number)]
                     Selected_df=Main_df[Main_df['Month'] == month_number]
                     Main_df=Main_df[Main_df['Month'] == month_number]
                     
                     department_All=department_sum_df[department_sum_df['Month'] == month_number]
                     
-                    Centre_df=Main_df[(Main_df["Biomedical Head Approval"] == "Approved") & (Main_df['Month'] == month_number)]
+                    Centre_df=Main_df[(Main_df['Admin Approval'] == 'Approved') & (Main_df['Month'] == month_number)]
                     
                 if choice and choice == "Select Month":
                     
@@ -116,7 +116,7 @@ def app():
                     Selected_df = All_df[All_df['Month'] < 13]
                     approved_main_df = Main_df[Main_df['Title'] != '']
                     Main_df=All_df
-                    Centre_df=All_df[(All_df["Biomedical Head Approval"] == "Approved") & (All_df['Month']< 13)]
+                    Centre_df=Main_df[(All_df['Admin Approval'] == 'Approved') & (All_df['Month']< 13)]
                     
                     department_All=department_sum_df
                     
@@ -183,8 +183,6 @@ def app():
                             Finance_pending =  Selected_df[( Selected_df["Biomedical Head Approval"].isnull()) & (Selected_df["Projects Approval"] == "Approved")]
                             Fin_pending_request = Finance_pending["ID"].nunique()
                            
-                            Finance_Rejected = Selected_df[ Selected_df["Admin Approval"] == "Rejected"]
-                            Finance_rejected_request = Finance_Rejected["ID"].nunique()
                            
                             Director_Approved = Selected_df[ Selected_df["Admin Approval"] == "Approved"]
                             Dir_Approved_value = '{:,.0f}'.format(Director_Approved["Approved amount"].sum())
@@ -227,7 +225,6 @@ def app():
                             Pro_rejected_request = Pro_rejected["ID"].nunique()
                                                     
                             data = [
-                                {"Approver": "Finance", "Approved.":Finance_Approved_request, "Value":Finance_Approved_value, "Pending": Fin_pending_request,"Rejected": Finance_rejected_request },
                                 {"Approver": "Director", "Approved.":Dir_Approved_request, "Value":Dir_Approved_value, "Pending": Dir_pending_request,"Rejected": Dir_rejected_request },
                                 {"Approver": "Projects", "Approved.":Pro_Approved_request, "Value":Pro_Approved_value , "Pending":Pro_pending_request,"Rejected": Pro_rejected_request },
                                 {"Approver": "Cordinator", "Approved.":Fac_Approved_request, "Value":Fac_Approved_value, "Pending":Fac_pending_request,"Rejected": Fac_rejected_request },
