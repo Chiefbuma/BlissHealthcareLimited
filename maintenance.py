@@ -359,8 +359,14 @@ def app():
                 with cols[9]:
                    ui_result = ui.button("Load", key="btn")  
                    if ui_result:   
-                       st.cache_data.clear()         
-                                                        
+                       st.cache_data.clear()    
+                            
+                with cols[8]:
+                   ui_pop = ui.button("Pop", key="pop")  
+                   
+                   if ui_pop:   
+                       st.popup('This is a popup!')     
+                                                         
                 if 'toggle_value' not in st.session_state:
                     st.session_state.toggle_value = False
 
