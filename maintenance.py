@@ -365,7 +365,7 @@ def app():
                    ui_pop = ui.button("Pop", key="pop")  
                    
                    if ui_pop:   
-                       st.popup('This is a popup!')     
+                       st.popover('This is a popup!')     
                                                          
                 if 'toggle_value' not in st.session_state:
                     st.session_state.toggle_value = False
