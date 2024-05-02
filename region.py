@@ -18,6 +18,7 @@ from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
 import main
 from postgrest import APIError
+from dateutil.relativedelta import relativedelta
 
 
 def app():
@@ -52,7 +53,8 @@ def app():
             # Dropdown for selecting the year
           
             
-            current_month = "April"
+            current_month = (datetime.now() - relativedelta(months=1)).month
+            
             current_month_name = calendar.month_name[current_month]
             
 
