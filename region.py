@@ -52,7 +52,7 @@ def app():
             # Dropdown for selecting the year
           
             
-            current_month = datetime.now().month
+            current_month = "April"
             current_month_name = calendar.month_name[current_month]
             
 

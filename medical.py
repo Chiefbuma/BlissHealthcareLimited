@@ -23,7 +23,7 @@ from postgrest import APIError
 def app():
     if 'is_authenticated' not in st.session_state:
         st.session_state.is_authenticated = False 
-        st.write(f"""<span style="color: green;">
+        st.write(f"""<span style="color:red;">
                     You are not Logged in,click account to  Log in/Sign up to proceed.
                 </span>""", unsafe_allow_html=True)
         
@@ -48,7 +48,7 @@ def app():
             # Dropdown for selecting the year
           
             
-            current_month = datetime.now().month
+            current_month = "April"
             current_month_name = calendar.month_name[current_month]
             
 
