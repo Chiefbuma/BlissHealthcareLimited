@@ -369,8 +369,6 @@ def app():
                    
                    if ui_pop:   
                        st.popover('This is a popup!')  
-                       red   
-                       blue
                                                          
                 if 'toggle_value' not in st.session_state:
                     st.session_state.toggle_value = False
