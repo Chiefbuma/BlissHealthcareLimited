@@ -369,10 +369,8 @@ def app():
                    
                    if ui_pop:   
                        st.popover('This is a popup!')  
-                       if red:
-                            st.write(":red[This is a red item.]")
-                       if blue:
-                            st.write(":blue[This is a blue item.]")   
+                       red   
+                       blue
                                                          
                 if 'toggle_value' not in st.session_state:
                     st.session_state.toggle_value = False
