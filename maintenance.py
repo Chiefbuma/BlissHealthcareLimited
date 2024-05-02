@@ -362,10 +362,17 @@ def app():
                        st.cache_data.clear()    
                             
                 with cols[8]:
-                   ui_pop = ui.button("Pop", key="pop")  
+                   ui_pop = ui.button("Pop", key="pop") 
+                   popover = st.popover("Filter items") 
+                   red = popover.checkbox("Show red items.", True)
+                   blue = popover.checkbox("Show blue items.", True)
                    
                    if ui_pop:   
-                       st.popover('This is a popup!')     
+                       st.popover('This is a popup!')  
+                       if red:
+                            st.write(":red[This is a red item.]")
+                       if blue:
+                            st.write(":blue[This is a blue item.]")   
                                                          
                 if 'toggle_value' not in st.session_state:
                     st.session_state.toggle_value = False
