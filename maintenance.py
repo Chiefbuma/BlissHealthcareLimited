@@ -358,15 +358,9 @@ def app():
                 cols=st.columns(10)
                 with cols[9]:
                    ui_result = ui.button("Load", key="btn")  
-                   
                    if ui_result:   
                        st.cache_data.clear()         
-                with cols[8]:
-                   ui_pop = ui.button("Pop", key="pop")  
-                   
-                   if ui_pop:   
-                       st.popup('This is a popup!')      
-                                      
+                                                        
                 if 'toggle_value' not in st.session_state:
                     st.session_state.toggle_value = False
 
@@ -385,6 +379,7 @@ def app():
                     st.session_state.toggle_value = True
                 
                     with card_container(key="gallery1"):
+
                         
                         st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
                         @st.cache_data(ttl=600, max_entries=100, show_spinner=False, persist=False, experimental_allow_widgets=False)
