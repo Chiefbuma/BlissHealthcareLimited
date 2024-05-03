@@ -8,9 +8,6 @@ import plotly.graph_objects as go
 from office365.sharepoint.client_context import ClientContext
 from office365.runtime.auth.authentication_context import AuthenticationContext
 from office365.sharepoint.client_context import UserCredential
-from office365.runtime.auth.authentication_context import AuthenticationContext
-from office365.sharepoint.client_context import ClientContext
-from office365.sharepoint.lists.list import List
 import streamlit_option_menu as option_menu
 import streamlit_shadcn_ui as ui
 from local_components import card_container
@@ -47,23 +44,6 @@ def app():
                     
             Main_df = load_data()
             
-            
-                        # Allow the user to edit the data
-            st.write("Edit SharePoint List Data:")
-            new_data = {}
-            for column in  Main_df.columns:
-                new_value = st.text_input(f"Enter new value for '{column}':",  Main_df[column][0])
-                new_data[column] = new_value
-
-            # Update the SharePoint list with the new data
-            item_id =  Main_df.iloc[0]['Id']
-            item_to_update = list.get_item_by_id(item_id)
-            for key, value in new_data.items():
-                item_to_update.set_property(key, value)
-            item_to_update.update()
-            ClientContext.execute_query()
-
-            st.success("SharePoint list updated successfully.")
             
             
             Department_df= Main_df[['Departmental report','Approved amount','Admin Approval','Month']]
