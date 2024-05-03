@@ -11,7 +11,6 @@ from office365.sharepoint.client_context import UserCredential
 from office365.runtime.auth.authentication_context import AuthenticationContext
 from office365.sharepoint.client_context import ClientContext
 from office365.sharepoint.lists.list import List
-from office365.sharepoint.lists.listitem import ListItem
 import streamlit_option_menu as option_menu
 import streamlit_shadcn_ui as ui
 from local_components import card_container
