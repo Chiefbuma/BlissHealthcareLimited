@@ -53,8 +53,7 @@ def app():
             # Dropdown for selecting the year
           
             
-            current_month = (datetime.now() - relativedelta(months=1)).month
-            
+            current_month = datetime.now().month
             current_month_name = calendar.month_name[current_month]
             
 
