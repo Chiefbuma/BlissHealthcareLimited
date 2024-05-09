@@ -502,7 +502,7 @@ def app():
                     with col2:
                         Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="MTDmonth") 
                     if Month == "" or location =="":
-                        filtered_df = MTD_All
+                        filtered_df = MTDPerformance_df 
                     else:
                         filtered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
                         
