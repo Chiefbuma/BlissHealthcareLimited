@@ -268,7 +268,7 @@ def app():
             
             
             MTDPerformance_df['MTD_Budget_Revenue'] = (MTDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
- 
+
             MTDPerformance_df['MTD_Budget_Footfall'] = (MTDPerformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
 
             # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
@@ -329,7 +329,7 @@ def app():
             
             
             # Rearrange the columns
-            Monthly_All =NewDPerformance_df[
+            Monthly_All = Allperformance_df[
                 [ 'Month','Region','location_name','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget']
             ]
             
@@ -460,9 +460,9 @@ def app():
                         
                         search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
                         if search_text == "":
-                            filtered_df = NewDPerformance_df[NewDPerformance_df ['Month']==search_text]
+                            filtered_df =  Allperformance_df[ Allperformance_df ['Month']==search_text]
                         else:
-                            filtered_df =NewDPerformance_df[ NewDPerformance_df ['Month']==search_text]
+                            filtered_df = NewDPerformance_df[ Allperformance_df ['Month']==search_text]
 
                     st.write(filtered_df, use_container_width=True)   
            
