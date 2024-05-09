@@ -18,141 +18,22 @@ from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
 import main
 from postgrest import APIError
+from dateutil.relativedelta import relativedelta
 
 
 def app():
-        
     if 'is_authenticated' not in st.session_state:
         st.session_state.is_authenticated = False 
+        st.write(f"""<span style="color:red;">
+                    You are not Logged in,click account to  Log in/Sign up to proceed.
+                </span>""", unsafe_allow_html=True)
+        
         # Initialize session state if it doesn't exist
-
-   
-    col1, col2 = st.columns([2,1])
-    with col1:
-        menu = ["Login", "Sign up"]
-        choice = st.sidebar.selectbox("", menu,key="choice_medical")
-
-        form_container = st.empty()
-        with form_container :
-            @st.cache_resource
-            def init_connection():
-                url = "https://effdqrpabawzgqvugxup.supabase.co"
-                key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
-                return create_client(url, key)
-
-            supabase = init_connection()
-            
-            response = supabase.table('facilities').select("*").execute()
-    
-            location_df = pd.DataFrame(response.data)
-            #st.write(location_df)
-
-
-            def get_facilities(staffnumber):
-                # Perform a Supabase query to fetch data from the 'users' table
-                response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                login_df = pd.DataFrame(response.data)
-                return login_df
-
-            def add_userdata(staffnumber, password, location, region):
-                # Define the data to insert
-                data = {
-                    'staffnumber': staffnumber,
-                    'password': password,
-                    'location': location,
-                    'region': region
-                }
-
-                # Insert the data into the 'userdata' table using Supabase
-                _, count = supabase.table('users').insert(data).execute()
-
-                # Return the count of rows affected by the insert operation
-                return count
-
-                # Return the count of rows affected by the insert operation
-                return count
-
-            location_names = location_df['Location'].unique().tolist()
-                # Create a dictionary mapping each location to its region
-
-            def login_user(staffnumber,password):
-                
-                try:
-                    # Perform a Supabase query to fetch user data based on staff number
-                    response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                    user_data = response.data
-                    facilities_df = get_facilities(staffnumber)
-                    if not facilities_df.empty:
-                        location = facilities_df['location'].iloc[0]
-                        region = facilities_df['region'].iloc[0]
-                        
-                        
-                        # Check if the credentials match
-                        if password == facilities_df['password'].iloc[0]:
-                            return True, location, region
-                        return False, None, None
-                    
-                except APIError as e:
-                    st.error("Invalid credentials. Please log in again.")
-                    st.stop() 
-
-            def view_all_users():
-                response = supabase.from_('users').select('*').execute()
-                data = response.data
-                return data
- 
-
-            if choice == "Login":
-                # Check if the user is logged in
-                
-                with st.form("Login Form"):
-                    st.write("Login Form")
-                    staffnumber = st.text_input("Staffnumber",key="staff_medical")
-                    password = st.text_input("Password", type='password',key="pass_medical")
-                    # Fetch location and region based on staffnumber
-                    load=st.form_submit_button("Login")
-                    
-                    
-                    if "logged_in" not in st.session_state:
-                        st.session_state.logged_in= False
-                        
-                        
-                    if load or st.session_state.logged_in:
-                        st.session_state.logged_in= True
-  
-                        result, location, region = login_user(staffnumber, password)
-                        if result:
-                            st.success("Logged In successfully")
-                            st.write(f"Location: {location}, Region: {region}")
-
-                            st.session_state.logged_in= True
-                            st.session_state.is_authenticated=True
-                            st.session_state.staffnumber = staffnumber
-                            st.session_state.password = password
-                            
-   
-                        else:
-                            st.warning("Invalid credentials. Please try again.")
-
-            elif choice == "Sign up":
-                with st.form("Sign-up Form"):  
-                    st.write("Sign-up Form")
-                    staffnumber = st.text_input('Staff Number', key='signup_staff_number')
-                    location = st.selectbox("Select Location", location_names)
-                    selected_location_row = location_df[location_df['Location'] == location]
-                    region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
-                    password = st.text_input('Password', key='signup_password')
-                    signup_btn = st.form_submit_button('Sign Up')
-                    if signup_btn:
-                        add_userdata(staffnumber, password, location, region)
-                        st.success("You have created a new account")
-                        st.session_state.is_authenticated=True
-                        st.session_state.logged_in= True
-                        form_container.empty()
-                        
-                        
-                        
+                 
     if st.session_state.is_authenticated:
+        region=st.session_state.Location
+        location=st.session_state.Region
+
         @st.cache_resource
         def init_connection():
             url = "https://effdqrpabawzgqvugxup.supabase.co"
@@ -161,9 +42,12 @@ def app():
 
         supabase = init_connection()
         
+        response = supabase.table('facilities').select("*").execute()
+
+        location_df = pd.DataFrame(response.data)
+        
         # Check if the connection is successful
         if init_connection():
-        
             
             st.session_state.logged_in= True
             # Dropdown for selecting the year
@@ -268,7 +152,6 @@ def app():
             
                         # Create a new figure
             fig2 = go.Figure()
-            
             
             MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()*fraction_passed
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
@@ -447,7 +330,7 @@ def app():
             
             # Rearrange the columns
             Monthly_All = Allperformance_df[
-                [ 'Month','Region','location_name','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
+                [ 'Month','Region','location_name','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget']
             ]
             
             
@@ -490,9 +373,9 @@ def app():
                                    performance_total["%Arch_REV"],
                                     performance_total["Total_Revenue_Budget"],
                                     performance_total["Projected_Revenue"],
-                                     performance_total["MTD_Budget_Footfall"],
-                                    performance_total["MTD_Actual_Footfall"],
-                                    performance_total["%Arch_FF"],
+                                    performance_total["MTD_Budget_Footfall"],
+                                   performance_total["MTD_Actual_Footfall"],
+                                   performance_total["%Arch_FF"],
                                     performance_total["Total_Footfall_Budget"],
                                     performance_total["Projected_Footfalls"]]
                         ,
@@ -553,26 +436,6 @@ def app():
                 
                 with st.expander("DOWNLOAD PREVIOUS MONTH"):
                     col1, col2, col3 = st.columns(3)
-                    with col1:
-                        
-                        current_month = datetime.now().month
-                        months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
-                            # Create a list of months up to the previous month
-                        display_months = months[:current_month - 1]
-
-                        # Set the default value to the previous month
-                        default_month_index = current_month - 1  #   
-                        
-                        Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
-                        if Month == "":
-                            Newfiltered_df = performance_total
-                        else:
-                            Newfiltered_df =performance_total
-
-                    st.write(Newfiltered_df, use_container_width=True)   
-           
-                
-                with st.expander("DOWNLOAD MEDICAL CENTRES-click the download icon on the upper right corner of the table"):
                     
                     Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
@@ -585,6 +448,28 @@ def app():
                     Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
 
+                    with col1:
+                        
+                        current_month = datetime.now().month
+                        months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][:current_month]
+                            # Create a list of months up to the previous month
+                        display_months = months[:current_month - 1]
+
+                        # Set the default value to the previous month
+                        default_month_index = current_month - 1  #   
+                        
+                        search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
+                        if search_text == "":
+                            filtered_df =   MTD_All [MTD_All ['Month']==search_text]
+                        else:
+                            filtered_df = MTD_All [ MTD_All ['Month']==search_text]
+
+                    st.write(filtered_df, use_container_width=True)   
+           
+                
+                with st.expander("DOWNLOAD MEDICAL CENTRES-click the download icon on the upper right corner of the table"):
+                    
+                    
                     col1, col2, col3 = st.columns(3)
             
                     st.markdown("""<style>
@@ -623,16 +508,15 @@ def app():
                         
   
                     st.write(filtered_df, use_container_width=True)
-                    
-                
-                        
-                
         
         # Use the expander widget
         #with st.expander("MONTHWISE REVENUE SUMMARY TABLE"):
             # Set the height of the expander
             #st.write(RR_pivot_Actual, use_container_width=True)
             #st.write(FF_pivot_Actual, use_container_width=True)
-        form_container.empty()
+    else:
+       st.write("You  are  not  logged  in. Click   **[Account]**  on the  side  menu to Login  or  Signup  to proceed")
+
+    
 
 
