@@ -153,7 +153,7 @@ def app():
                         # Create a new figure
             fig2 = go.Figure()
             
-            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()
+            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()*fraction_passed
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
             
             # # Define the Reveneu metrics
@@ -169,7 +169,7 @@ def app():
             projected_revenue =performance_df['Total_Revenue_Budget'].sum()*(performance_df['MTD_Actual_Revenue'].sum()/(performance_df['MTD_Budget_Revenue'].sum()*fraction_passed))
             formatted_projected_reveue = "{:,.0f}".format(projected_revenue )
                         
-            MTD_footfall_budget = performance_df['MTD_Budget_Footfall'].sum()
+            MTD_footfall_budget = performance_df['MTD_Budget_Footfall'].sum()*fraction_passed
             formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
             # # Define the Reveneu metrics
             MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall'].sum()
@@ -242,9 +242,9 @@ def app():
             # The above code is formatting the columns in a DataFrame called `performance_df`. It is
             # applying specific formatting to the numerical values in the columns to make them more
             # readable and presentable.
-            performance_df['MTD_Budget_Revenue'] = (performance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
+            performance_df['MTD_Budget_Revenue'] = (performance_df['MTD_Budget_Revenue']).round(0)
 
-            performance_df['MTD_Budget_Footfall']=(performance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
+            performance_df['MTD_Budget_Footfall']=(performance_df['MTD_Budget_Footfall']).round(0)
             # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
             performance_df['%Arch_FF'] = (performance_df['MTD_Actual_Footfall'] / performance_df['MTD_Budget_Footfall'])
             # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
