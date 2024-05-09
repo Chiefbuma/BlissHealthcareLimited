@@ -460,7 +460,7 @@ def app():
                         
                         search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
                         if search_text == "":
-                            filtered_df =   [MTDPerformance_df ['Month']==search_text]
+                            filtered_df =  MTDPerformance_df [ MTDPerformance_df ['Month']==search_text]
                         else:
                             filtered_df = MTDPerformance_df [ MTDPerformance_df ['Month']==search_text]
 
