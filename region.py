@@ -268,9 +268,9 @@ def app():
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
             
             
-            MTDPerformance_df['MTD_Budget_Revenue'] = (MTDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
+            MTDPerformance_df['MTD_Budget_Revenue'] = (MTDPerformance_df['MTD_Budget_Revenue'] ).round(0)
 
-            MTDPerformance_df['MTD_Budget_Footfall'] = (MTDPerformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
+            MTDPerformance_df['MTD_Budget_Footfall'] = (MTDPerformance_df['MTD_Budget_Footfall']).round(0)
 
             # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
             MTDPerformance_df['%Arch_FF'] = (MTDPerformance_df['MTD_Actual_Footfall'] / MTDPerformance_df['MTD_Budget_Footfall'])
