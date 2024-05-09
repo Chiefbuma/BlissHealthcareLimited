@@ -460,9 +460,9 @@ def app():
                         
                         search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
                         if search_text == "":
-                            filtered_df =  MTDPerformance_df [ MTDPerformance_df ['Month']==search_text]
+                            filtered_df =  Allperformance_df[ Allperformance_df ['Month']==search_text]
                         else:
-                            filtered_df = MTDPerformance_df [ MTDPerformance_df ['Month']==search_text]
+                            filtered_df = Allperformance_df[ Allperformance_df ['Month']==search_text]
 
                     st.write(filtered_df, use_container_width=True)   
            
@@ -502,7 +502,7 @@ def app():
                     with col2:
                         Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="MTDmonth") 
                     if Month == "" or location =="":
-                        filtered_df = MTDPerformance_df 
+                        filtered_df = Allperformance_df
                     else:
                         filtered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
                         
