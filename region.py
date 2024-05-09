@@ -133,11 +133,11 @@ def app():
 
             # Calculate fraction of days passed for the selected month
             fraction_passed = fraction_of_days_in_month(Lastdate_date)
-                
+                      
             
             #Total_budget_FF = performance_df['Budget_Footfall'].sum()
             #formatted_FF_budget = "{:,.0f}".format(Total_budget_FF)
-                    
+                           
             # For example, let's say you want to add a trace for the "Projection" metric
             fig3.update_layout(
                 template="plotly_white",
@@ -152,6 +152,7 @@ def app():
             
                         # Create a new figure
             fig2 = go.Figure()
+            
             
             MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()*fraction_passed
             formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
@@ -321,7 +322,7 @@ def app():
 
             
               # Rearrange the columns
-            MTDPerformance_df =  MTDPerformance_df[
+            MTD_All =  MTDPerformance_df[
                 [ 'Month','Region','Scheme','MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
@@ -460,9 +461,9 @@ def app():
                         
                         search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
                         if search_text == "":
-                            filtered_df =  Allperformance_df[ Allperformance_df ['Month']==search_text]
+                            filtered_df =   MTD_All [MTD_All ['Month']==search_text]
                         else:
-                            filtered_df = NewDPerformance_df[ Allperformance_df ['Month']==search_text]
+                            filtered_df = MTD_All [ MTD_All ['Month']==search_text]
 
                     st.write(filtered_df, use_container_width=True)   
            
@@ -502,7 +503,7 @@ def app():
                     with col2:
                         Month = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="MTDmonth") 
                     if Month == "" or location =="":
-                        filtered_df = Allperformance_df
+                        filtered_df = MTD_All
                     else:
                         filtered_df = Monthly_All.query("`Month` == @Month and `location_name` == @location")
                         
