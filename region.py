@@ -133,7 +133,7 @@ def app():
 
             # Calculate fraction of days passed for the selected month
             fraction_passed = fraction_of_days_in_month(Lastdate_date)
-                      
+                
             
             #Total_budget_FF = performance_df['Budget_Footfall'].sum()
             #formatted_FF_budget = "{:,.0f}".format(Total_budget_FF)
@@ -295,9 +295,9 @@ def app():
             
             
             
-            NewDPerformance_df['MTD_Budget_Revenue'] = (NewDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
+            NewDPerformance_df['MTD_Budget_Revenue'] = (NewDPerformance_df['MTD_Budget_Revenue']).round(0)
 
-            NewDPerformance_df['MTD_Budget_Footfall'] = (NewDPerformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
+            NewDPerformance_df['MTD_Budget_Footfall'] = (NewDPerformance_df['MTD_Budget_Footfall']).round(0)
 
             # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
             NewDPerformance_df['%Arch_FF'] = (NewDPerformance_df['MTD_Actual_Footfall'] / NewDPerformance_df['MTD_Budget_Footfall'])
