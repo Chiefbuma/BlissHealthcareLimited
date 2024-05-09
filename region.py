@@ -329,7 +329,7 @@ def app():
             
             
             # Rearrange the columns
-            Monthly_All = Allperformance_df[
+            Monthly_All = MTDPerformance_df[
                 [ 'Month','Region','location_name','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget']
             ]
             
