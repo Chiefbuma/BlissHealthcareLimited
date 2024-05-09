@@ -294,9 +294,9 @@ def app():
             
             
             
-            NewDPerformance_df['MTD_Budget_Revenue'] = (NewDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
+            NewDPerformance_df['MTD_Budget_Revenue'] = (NewDPerformance_df['MTD_Budget_Revenue']).round(0)
 
-            NewDPerformance_df['MTD_Budget_Footfall'] = (NewDPerformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
+            NewDPerformance_df['MTD_Budget_Footfall'] = (NewDPerformance_df['MTD_Budget_Footfall']).round(0)
 
             # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
             NewDPerformance_df['%Arch_FF'] = (NewDPerformance_df['MTD_Actual_Footfall'] / NewDPerformance_df['MTD_Budget_Footfall'])
@@ -329,7 +329,7 @@ def app():
             
             
             # Rearrange the columns
-            Monthly_All = Allperformance_df[
+            Monthly_All =NewDPerformance_df[
                 [ 'Month','Region','location_name','Scheme', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget']
             ]
             
