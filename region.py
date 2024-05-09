@@ -267,31 +267,6 @@ def app():
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
             
             
-            
-            
-            # Replace performance_df with Allperformance_df
-            Allperformance_df['MTD_Budget_Revenue'] = (Allperformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
-
-            Allperformance_df['MTD_Budget_Footfall'] = (Allperformance_df['MTD_Budget_Footfall'] * fraction_passed).round(0)
-
-            # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
-            Allperformance_df['%Arch_FF'] = (Allperformance_df['MTD_Actual_Footfall'] / Allperformance_df['MTD_Budget_Footfall'])
-
-            # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
-            Allperformance_df['%Arch_REV'] = (Allperformance_df['MTD_Actual_Revenue'] / Allperformance_df['MTD_Budget_Revenue'])
-
-            Allperformance_df['Projected_Footfalls'] = (Allperformance_df['Total_Footfall_Budget']) * (Allperformance_df['MTD_Actual_Footfall'] / Allperformance_df['MTD_Budget_Footfall'])
-
-            Allperformance_df['Projected_Revenue'] = (Allperformance_df['Total_Revenue_Budget']) * (Allperformance_df['MTD_Actual_Revenue'] / Allperformance_df['MTD_Budget_Revenue'])
-
-                        
-            
-            
-            
-            
-            
-            
-            
             MTDPerformance_df['MTD_Budget_Revenue'] = (MTDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
 
             MTDPerformance_df['MTD_Budget_Footfall'] = (MTDPerformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
@@ -346,7 +321,7 @@ def app():
 
             
               # Rearrange the columns
-            MTD_All =  MTDPerformance_df[
+            MTDPerformance_df =  MTDPerformance_df[
                 [ 'Month','Region','Scheme','MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
             ]
             
@@ -485,9 +460,9 @@ def app():
                         
                         search_text = st.selectbox("Select Month", [""] + display_months, index=default_month_index,key="Allmonth") 
                         if search_text == "":
-                            filtered_df =   MTD_All [MTD_All ['Month']==search_text]
+                            filtered_df =   [MTDPerformance_df ['Month']==search_text]
                         else:
-                            filtered_df = MTD_All [ MTD_All ['Month']==search_text]
+                            filtered_df = MTDPerformance_df [ MTDPerformance_df ['Month']==search_text]
 
                     st.write(filtered_df, use_container_width=True)   
            
