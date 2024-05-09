@@ -267,6 +267,31 @@ def app():
             performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].apply(lambda x: '{:,.0f}'.format(x))
             
             
+            
+            
+            # Replace performance_df with Allperformance_df
+            Allperformance_df['MTD_Budget_Revenue'] = (Allperformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
+
+            Allperformance_df['MTD_Budget_Footfall'] = (Allperformance_df['MTD_Budget_Footfall'] * fraction_passed).round(0)
+
+            # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
+            Allperformance_df['%Arch_FF'] = (Allperformance_df['MTD_Actual_Footfall'] / Allperformance_df['MTD_Budget_Footfall'])
+
+            # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
+            Allperformance_df['%Arch_REV'] = (Allperformance_df['MTD_Actual_Revenue'] / Allperformance_df['MTD_Budget_Revenue'])
+
+            Allperformance_df['Projected_Footfalls'] = (Allperformance_df['Total_Footfall_Budget']) * (Allperformance_df['MTD_Actual_Footfall'] / Allperformance_df['MTD_Budget_Footfall'])
+
+            Allperformance_df['Projected_Revenue'] = (Allperformance_df['Total_Revenue_Budget']) * (Allperformance_df['MTD_Actual_Revenue'] / Allperformance_df['MTD_Budget_Revenue'])
+
+                        
+            
+            
+            
+            
+            
+            
+            
             MTDPerformance_df['MTD_Budget_Revenue'] = (MTDPerformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
 
             MTDPerformance_df['MTD_Budget_Footfall'] = (MTDPerformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
@@ -437,13 +462,13 @@ def app():
                 with st.expander("DOWNLOAD PREVIOUS MONTH"):
                     col1, col2, col3 = st.columns(3)
                     
-                    Allperformance_df["MTD_Budget_Revenue"] = (Allperformance_df["MTD_Budget_Revenue"] * fraction_passed).apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["%Arch_REV"] = Allperformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x))
                     Allperformance_df["Total_Revenue_Budget"] = Allperformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["Projected_Revenue"] = Allperformance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["MTD_Actual_Footfall"] = Allperformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["MTD_Budget_Footfall"] = (Allperformance_df["MTD_Budget_Footfall"]* fraction_passed).apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["MTD_Budget_Footfall"] = Allperformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["%Arch_FF"] = Allperformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100))
                     Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
                     Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
