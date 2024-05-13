@@ -1,7 +1,4 @@
 import streamlit as st
-from shareplum import Site, Office365
-from shareplum.site import Version
-import streamlit as st
 from st_supabase_connection import SupabaseConnection
 from supabase import create_client, Client
 import pandas as pd
@@ -16,6 +13,7 @@ import streamlit_shadcn_ui as ui
 from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
 from sharepoint import SharePoint
+
 import main
 from postgrest import APIError
 from IPython.display import HTML
