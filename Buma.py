@@ -20,35 +20,37 @@ import main
 from postgrest import APIError
 from IPython.display import HTML
 
-USERNAME = "biosafety@blisshealthcare.co.ke"
-PASSWORD = "Buma#2025"
-SHAREPOINT_URL = "https://blissgvske.sharepoint.com"
-SHAREPOINT_SITE = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReports/"
 
-# Authenticate with SharePoint
-authcookie = Office365(SHAREPOINT_URL, username=USERNAME, password=PASSWORD).GetCookies()
-site = Site(SHAREPOINT_SITE, version=Version.v365, authcookie=authcookie)
+def app():
+    USERNAME = "biosafety@blisshealthcare.co.ke"
+    PASSWORD = "Buma#2025"
+    SHAREPOINT_URL = "https://blissgvske.sharepoint.com"
+    SHAREPOINT_SITE = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReports/"
 
-# Define your data
-my_data = [{'Title': 'First Row!'}, {'Title': 'Another One!'}]
+    # Authenticate with SharePoint
+    authcookie = Office365(SHAREPOINT_URL, username=USERNAME, password=PASSWORD).GetCookies()
+    site = Site(SHAREPOINT_SITE, version=Version.v365, authcookie=authcookie)
 
-# Create a new list object
-new_list = site.List('Maintenance Report')
+    # Define your data
+    my_data = [{'Title': 'First Row!'}, {'Title': 'Another One!'}]
 
-# Streamlit UI
-st.title("Add Rows to SharePoint List")
+    # Create a new list object
+    new_list = site.List('Maintenance Report')
 
-# Collect data from user input
-data = [{
-    'Title': st.text_input("Enter Title"),
-    'Admin Approval': st.text_input("Enter Value for Admin Approval")
-}]
+    # Streamlit UI
+    st.title("Add Rows to SharePoint List")
 
-# Button to trigger the add action
-if st.button("Add Row"):
-    if all(data):
-        # Add list items to the SharePoint list
-        new_list.UpdateListItems(data=data, kind='New')
-        st.success("Row added successfully!")
-    else:
-        st.error("Please fill in all fields")
+    # Collect data from user input
+    data = [{
+        'Title': st.text_input("Enter Title"),
+        'Admin Approval': st.text_input("Enter Value for Admin Approval")
+    }]
+
+    # Button to trigger the add action
+    if st.button("Add Row"):
+        if all(data):
+            # Add list items to the SharePoint list
+            new_list.UpdateListItems(data=data, kind='New')
+            st.success("Row added successfully!")
+        else:
+            st.error("Please fill in all fields")

@@ -16,8 +16,7 @@ import supabase
 import streamlit_shadcn_ui as ui
 from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
-import main, region,medical,support,maintenance
-
+import main, region,medical,support,maintenance,  Buma
 # Set the page configuration
 st.set_page_config(page_title="Bliss Healthcare limited", layout="wide")
 
@@ -51,7 +50,7 @@ class MultiApp:
         if app == "Summary Dashboard":
             support.app()  
         if app == "Maintenance Dashboard":
-            maintenance.app()
+            Buma.app()
         if app == "Account":
             main.app()    
     
