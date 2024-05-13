@@ -18,7 +18,6 @@ from IPython.display import HTML
 from streamlit_dynamic_filters import DynamicFilters
 
 def app():
-    if 'is_authenticated' not in st.session_state:
         st.session_state.is_authenticated = False
         form_container = st.empty()
         
