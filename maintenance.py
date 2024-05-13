@@ -17,7 +17,7 @@ from postgrest import APIError
 from IPython.display import HTML
 from streamlit_dynamic_filters import DynamicFilters
 
-
+st.write("hello")
 def app():
     
     try:
