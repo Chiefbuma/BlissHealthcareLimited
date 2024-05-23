@@ -306,7 +306,7 @@ def app():
             ])
             fig_request_by_type_Rev.update_layout(
                     margin=dict(l=0, r=0, t=0, b=0),
-                    height=200,
+                    height=300,
                     width=1000,# Set all margins to 0
                     paper_bgcolor='rgba(0, 0, 0, 0)', 
                     # Set paper background color to transparent
