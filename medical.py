@@ -219,18 +219,18 @@ def app():
             performance_df['Projected_Footfalls']=(performance_df['Total_Footfall_Budget'] ) * (performance_df['MTD_Actual_Footfall'] / performance_df['MTD_Budget_Footfall'])           
             performance_df['Projected_Revenue']=(performance_df['Total_Revenue_Budget'] ) * (performance_df['MTD_Actual_Revenue'] / performance_df['MTD_Budget_Revenue'])           
             
-            performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].fillna(0).astype(int).apply(lambda x: '{:,.0f}'.format(x))
-            performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].fillna(0).astype(int).apply(lambda x: '{:,}'.format(x))
-            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].fillna(0).apply(lambda x: '{:.1f}%'.format(x*100 ))
-            performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].fillna(0).apply(lambda x: '{:,}'.format(x))
-            performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
-            performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].fillna(0).apply(lambda x: '{:,}'.format(x))
-            performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
-            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].fillna(0).apply(lambda x: '{:.1f}%'.format(x*100))
-            performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].fillna(0).apply(lambda x: '{:,}'.format(x))
-            performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
+            performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].replace([np.inf, -np.inf], 0).fillna(0).astype(int).apply(lambda x: '{:,.0f}'.format(x))
+            performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].replace([np.inf, -np.inf], 0).fillna(0).astype(int).apply(lambda x: '{:,}'.format(x))
+            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:.1f}%'.format(x*100 ))
+            performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
+            performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,.0f}'.format(x))
+            performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
+            performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,.0f}'.format(x))
+            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:.1f}%'.format(x*100))
+            performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
+            performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             
-            
+           
               # Rearrange the columns
             MTD_All = performance_df[
                 [ 'Month','Scheme','location_name', 'MTD_Budget_Revenue', 'MTD_Actual_Revenue', '%Arch_REV','Total_Revenue_Budget', 'Projected_Revenue','MTD_Actual_Footfall', 'MTD_Budget_Footfall', '%Arch_FF', 'Total_Footfall_Budget','Projected_Footfalls']
@@ -345,16 +345,16 @@ def app():
                 
                 with st.expander("DOWNLOAD PREVIOUS MONTH"):
                     
-                    Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["%Arch_REV"] = Allperformance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x))
-                    Allperformance_df["Total_Revenue_Budget"] = Allperformance_df["Total_Revenue_Budget"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["Projected_Revenue"] = Allperformance_df["Projected_Revenue"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["MTD_Actual_Footfall"] = Allperformance_df["MTD_Actual_Footfall"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["MTD_Budget_Footfall"] = Allperformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["%Arch_FF"] = Allperformance_df["%Arch_FF"].apply(lambda x: '{:.1f}%'.format(x/100))
+                    Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["MTD_Actual_Revenue"] = Allperformance_df["MTD_Actual_Revenue"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["%Arch_REV"] = Allperformance_df["%Arch_REV"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:.1f}%'.format(x))
+                    Allperformance_df["Total_Revenue_Budget"] = Allperformance_df["Total_Revenue_Budget"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["Projected_Revenue"] = Allperformance_df["Projected_Revenue"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["MTD_Actual_Footfall"] = Allperformance_df["MTD_Actual_Footfall"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["MTD_Budget_Footfall"] = Allperformance_df["MTD_Budget_Footfall"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["%Arch_FF"] = Allperformance_df["%Arch_FF"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:.1f}%'.format(x/100))
                     Allperformance_df["Total_Footfall_Budget"] = Allperformance_df["Total_Footfall_Budget"].apply(lambda x: '{:,}'.format(x))
-                    Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].apply(lambda x: '{:,}'.format(x))
+                    Allperformance_df["Projected_Footfalls"] = Allperformance_df["Projected_Footfalls"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
 
                     
                     current_month = datetime.now().month
