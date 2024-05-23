@@ -258,7 +258,7 @@ def app():
             
             performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
-            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].apply(lambda x: '{:.1f}%'.format(x*100 ))
+            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:.1f}%'.format(x*100 ))
             performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
@@ -314,7 +314,7 @@ def app():
             NewDPerformance_df["Total_Revenue_Budget"] = NewDPerformance_df["Total_Revenue_Budget"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             NewDPerformance_df["Projected_Revenue"] = NewDPerformance_df["Projected_Revenue"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             NewDPerformance_df["MTD_Actual_Footfall"] = NewDPerformance_df["MTD_Actual_Footfall"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
-            NewDPerformance_df["MTD_Budget_Footfall"] = NewDPerformance_df["MTD_Budget_Footfall"].apply(lambda x: '{:,.0f}'.format(x))
+            NewDPerformance_df["MTD_Budget_Footfall"] = NewDPerformance_df["MTD_Budget_Footfall"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,.0f}'.format(x))
             NewDPerformance_df["%Arch_FF"] = NewDPerformance_df["%Arch_FF"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:.1f}%'.format(x*100))
             NewDPerformance_df["Total_Footfall_Budget"] = NewDPerformance_df["Total_Footfall_Budget"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))
             NewDPerformance_df["Projected_Footfalls"] = NewDPerformance_df["Projected_Footfalls"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,.0f}'.format(x))
