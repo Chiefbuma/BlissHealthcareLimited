@@ -53,8 +53,9 @@ def app():
             #previous_month_date = datetime.now() - relativedelta(months=1)
 
             
-            current_month = datetime.now().month 
-            #current_month = datetime.now() - relativedelta(months=1)
+            #current_month = datetime.now().month 
+            
+            current_month = datetime.now() - relativedelta(months=1)
             current_month_name = calendar.month_name[current_month]
             
 
