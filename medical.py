@@ -181,7 +181,6 @@ def app():
                 )
             
             
-            
             # For example, let's say you want to add a trace for the "Projection" metric
             fig3.update_layout(
                 template="plotly_white",
