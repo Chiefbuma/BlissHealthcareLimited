@@ -53,8 +53,8 @@ def app():
             #previous_month_date = datetime.now() - relativedelta(months=1)
 
             
-            #current_month = datetime.now().month 
-            current_month = datetime.now() - relativedelta(months=1)
+            current_month = datetime.now().month 
+            #current_month = datetime.now() - relativedelta(months=1)
             current_month_name = calendar.month_name[current_month]
             
 
@@ -179,6 +179,7 @@ def app():
                 uniformtext=dict(minsize=40, mode='hide'),
                 margin=dict(l=20, r=20, t=50, b=5)
                 )
+            
             
             
             # For example, let's say you want to add a trace for the "Projection" metric
