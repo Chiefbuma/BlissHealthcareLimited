@@ -56,7 +56,7 @@ def app():
             #current_month = datetime.now().month 
             
             current_month = datetime.now() - relativedelta(months=1)
-            current_month_name = calendar.month_name[current_month]
+            current_month_name = (datetime.now() - relativedelta(months=1)).strftime("%B")
             
 
             # Query the MTD_Revenue table with the filter for location_name and Month
