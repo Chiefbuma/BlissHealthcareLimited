@@ -52,10 +52,11 @@ def app():
             st.session_state.logged_in= True
             # Dropdown for selecting the year
           
-            current_month = datetime.now() - relativedelta(months=1)
+            current_month = datetime.now().month 
+            current_month_name = datetime.now().strftime("%B")
             
-            
-            current_month_name = (datetime.now() - relativedelta(months=1)).strftime("%B")
+            #current_month = datetime.now() - relativedelta(months=1)
+            #current_month_name = (datetime.now() - relativedelta(months=1)).strftime("%B")
             
 
             # Query the MTD_Revenue table with the filter for location_name and Month
