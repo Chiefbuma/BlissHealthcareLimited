@@ -36,7 +36,7 @@ def app():
             st.markdown("Enter the details of the new Order.")
 
             # Establishing a Google Sheets connection
-            conn = st.experimental_connection("gsheets", type=GSheetsConnection)
+            conn = st.connection("gsheets", type=GSheetsConnection)
 
             # Fetch existing vendors data
             spreadsheet_id = '18kAq2sl6A9_PQcOhze4gUGoKa1ehhXxI'  # Replace with your actual spreadsheet ID
