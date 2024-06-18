@@ -40,7 +40,7 @@ def app():
 
             # Fetch existing vendors data
             spreadsheet_id = '18kAq2sl6A9_PQcOhze4gUGoKa1ehhXxI'  # Replace with your actual spreadsheet ID
-            existing_data = conn.read(spreadsheet=spreadsheet_id, worksheet="Esslor", usecols=list(range(29)), ttl=5)
+            existing_data = conn.read(spreadsheet=spreadsheet_id, worksheet="Esslor", usecols=list(range(6)), ttl=60)
             existing_data = existing_data.dropna(how="all")
             
             st.dataframe(existing_data)
