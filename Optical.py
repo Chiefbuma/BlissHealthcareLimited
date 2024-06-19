@@ -18,7 +18,17 @@ from IPython.display import HTML
 import main
 from streamlit_dynamic_filters import DynamicFilters
 from streamlit_gsheets import GSheetsConnection
+from google.oauth2.service_account import Credential
+from urllib.error import HTTPError
+from google.oauth2.service_account import Credentials
 
+
+
+# Path to your service account credentials file
+SERVICE_ACCOUNT_FILE = 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Streamlit/blisshealtchare-fa7b1fd01b22.json'
+
+# Scopes for Google Sheets API
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 def app():
     try:
@@ -36,21 +46,34 @@ def app():
             st.markdown("Enter the details of the new Order.")
 
             # Establishing a Google Sheets connection
-            conn = st.connection("gsheets", type=GSheetsConnection)
+            credentials = Credentials.from_service_account_file(
+                SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+            conn = GSheetsConnection(credentials=credentials)
 
             # Fetch existing vendors data
             spreadsheet_id = '18kAq2sl6A9_PQcOhze4gUGoKa1ehhXxI'  # Replace with your actual spreadsheet ID
-            existing_data = conn.read(spreadsheet=spreadsheet_id, worksheet="Esslor", usecols=list(range(6)), ttl=60)
-            existing_data = existing_data.dropna(how="all")
-            
-            st.dataframe(existing_data)
+            worksheet_name = "Esslor"  # Replace with your actual worksheet name
+
+            try:
+                existing_data = conn.read(spreadsheet=spreadsheet_id, worksheet=worksheet_name, usecols=list(range(29)), ttl=5)
+                existing_data = existing_data.dropna(how="all")
+                st.dataframe(existing_data)
+            except ValueError as ve:
+                st.error(f"Value error: {ve}")
+            except HTTPError as he:
+                st.error(f"HTTP error occurred: {he.reason}")
+            except Exception as e:
+                st.error(f"An error occurred while reading the spreadsheet: {str(e)}")
 
         else:
             st.write("You are not logged in. Click **[Account]** on the side menu to Login or Signup to proceed")
     
     except APIError as e:
         st.error("Cannot connect, Kindly refresh")
-        st.stop() 
+        st.stop()
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
+        st.stop()
 
 if __name__ == "__main__":
     app()
