@@ -51,7 +51,7 @@ def app():
 
             # Fetch existing vendors data
             spreadsheet_id = '18kAq2sl6A9_PQcOhze4gUGoKa1ehhXxI'  # Replace with your actual spreadsheet ID
-            worksheet_name = "Esslor"  # Replace with your actual worksheet name
+            worksheet_name = 'Esslor'  # Replace with your actual worksheet name
 
             try:
                 existing_data = conn.read(spreadsheet=spreadsheet_id, worksheet=worksheet_name, usecols=list(range(29)), ttl=5)
