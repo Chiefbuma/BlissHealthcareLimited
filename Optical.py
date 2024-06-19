@@ -47,7 +47,7 @@ def app():
             # Establishing a Google Sheets connection
             credentials = Credentials.from_service_account_file(
                 SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-            conn = GSheetsConnection(credentials=credentials)
+            conn = GSheetsConnection(credentials=credentials,connection_name="gsheets_conn",)
 
             # Fetch existing vendors data
             spreadsheet_id = '18kAq2sl6A9_PQcOhze4gUGoKa1ehhXxI'  # Replace with your actual spreadsheet ID
