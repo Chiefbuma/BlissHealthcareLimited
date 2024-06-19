@@ -50,7 +50,7 @@ def app():
             conn = GSheetsConnection(credentials=credentials,connection_name="gsheets_conn",)
 
             # Fetch existing vendors data
-            spreadsheet_id = '18kAq2sl6A9_PQcOhze4gUGoKa1ehhXxI'  # Replace with your actual spreadsheet ID
+            spreadsheet_id = '1Gq9-Uhq-JeBNWBunkmen2-YclAxNL8gp'  # Replace with your actual spreadsheet ID
             worksheet_name = 'Esslor'  # Replace with your actual worksheet name
 
             try:
