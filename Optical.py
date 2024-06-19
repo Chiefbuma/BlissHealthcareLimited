@@ -18,7 +18,6 @@ from IPython.display import HTML
 import main
 from streamlit_dynamic_filters import DynamicFilters
 from streamlit_gsheets import GSheetsConnection
-from google.oauth2.service_account import Credential
 from urllib.error import HTTPError
 from google.oauth2.service_account import Credentials
 
