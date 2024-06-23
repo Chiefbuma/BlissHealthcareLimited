@@ -334,22 +334,6 @@ def app():
             
             with card_container(key="MTDREVENUE"):
                 
-                metabase_url = "http://localhost:3000/public/dashboard/bc7f34f4-804b-4502-81bb-496b42eb0200"
-            
-                # HTML iframe code
-                iframe_html = f"""
-                <iframe
-                    src="{metabase_url}"
-                    frameborder="0"
-                    width="800"
-                    height="600"
-                    allowtransparency
-                ></iframe>
-                """
-                
-                # Embed the Metabase dashboard using HTML iframe
-                st.markdown(iframe_html, unsafe_allow_html=True)
-                
                 card_style3 = "border: 2px solid #000000; border-radius: 5px; padding: 10px; background-color:#ffffff; color:#000000; text-align: center; font-size: 15px;font-weight: bold; width: 100%; height: 30;"
                 ui.card(
                     content=location,
