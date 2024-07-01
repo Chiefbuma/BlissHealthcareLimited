@@ -49,15 +49,15 @@ def app():
             # Dropdown for selecting the year
         
         
-            # Get the previous month as a date
+            #Get the previous month as a date
             #previous_month_date = datetime.now() - relativedelta(months=1)
 
             
-             current_month = datetime.now().month 
-             current_month_name = datetime.now().strftime("%B")
+            #current_month = datetime.now().month 
+            #current_month_name = datetime.now().strftime("%B")
             
-            #current_month = datetime.now() - relativedelta(months=1)
-            #current_month_name = (datetime.now() - relativedelta(months=1)).strftime("%B")
+            current_month = datetime.now() - relativedelta(months=1)
+            current_month_name = (datetime.now() - relativedelta(months=1)).strftime("%B")
             
 
             # Query the MTD_Revenue table with the filter for location_name and Month
