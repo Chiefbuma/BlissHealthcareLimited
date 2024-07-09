@@ -402,7 +402,7 @@ def app():
                             
                         df_main=load_data()
                         
-                        data_df= df_main[['ID','Date of report','Clinic','Department','Amount on the Quotation','MainStatus','Approver','MonthName','LinkEdit']]
+                        data_df= df_main[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','MonthName','LinkEdit']]
                         
                         # Convert 'bill_date' to datetime type
                         data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
@@ -426,12 +426,12 @@ def app():
                         data_df.fillna('', inplace=True)
                         
                         # Define the columns to filter
-                        filter_columns = ["Tkt", "Approver", "Facility","Status","Month"]
+                        filter_columns = ["Tkt", "Approver", "Facility","Issue","Status","Month"]
 
                         # Create five columnss for arranging widgets horizontally
-                        col1, col2, col3,col5, col6 = st.columns(6)
+                        col1, col2, col3, col4, col5, col6 = st.columns(6)
                         
-
+                        
                         # Create a dictionary to store filter values
                         filters = {column: '' for column in filter_columns}
                         
@@ -443,6 +443,8 @@ def app():
                             filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", filters[filter_columns[1]])
                         with col3:
                             filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
+                        with col4:
+                            filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
                         with col5:
                             filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
                         with col6:
