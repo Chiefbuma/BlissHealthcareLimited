@@ -402,7 +402,7 @@ def app():
                             
                         df_main=load_data()
                         
-                        data_df= df_main[['ID','Date of report','Clinic','Department','Report','Amount on the Quotation','Approved amount','MainStatus','Approver','MonthName','LinkEdit']]
+                        data_df= df_main[['ID','Date of report','Clinic','Department','Amount on the Quotation','MainStatus','Approver','MonthName','LinkEdit']]
                         
                         # Convert 'bill_date' to datetime type
                         data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
