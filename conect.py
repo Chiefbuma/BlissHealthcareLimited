@@ -16,7 +16,7 @@ import supabase
 import streamlit_shadcn_ui as ui
 from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
-import main, region,medical,support,maintenance,Repair,Optical
+import main, region,medical,support,maintenance,Radiology,Repair
 # Set the page configuration
 st.set_page_config(page_title="Bliss Healthcare limited", layout="wide")
 
@@ -30,8 +30,8 @@ class MultiApp:
         # app = st.sidebar(
         with st.sidebar: 
             app = option_menu.option_menu(key="main_key",
-            menu_title='DASHBOARDS',
-            options=['Account','Medical centre Dashboard', 'Region Dashboard','Summary Dashboard','Maintenance Dashboard','Optical orders' ],
+            menu_title='DEPARTMENTS',
+            options=['Account','Medical centre', 'Region','Dawa Nyumbani','Maintenance','Radiology'],
             icons=['house-fill', 'receipt', 'receipt', 'receipt', 'receipt', 'person-circle'],
             menu_icon='house-fill',
             default_index=0,
@@ -43,18 +43,20 @@ class MultiApp:
         )       
             
 
-        if app == "Medical centre Dashboard":
+        if app == "Medical centre":
             medical.app()
-        if app == "Region Dashboard":
+        if app == "Region":
             region.app()  
-        if app == "Summary Dashboard":
+        if app == "Dawa Nyumbani":
             support.app()  
-        if app == "Maintenance Dashboard":
+        if app == "Maintenance":
            Repair.app()
+        if app == "Radiology":
+           Radiology.app()
         if app == "Account":
             main.app()    
-        if app == "Optical orders":
-            Optical.app()    
+   
+          
     
 
     run()            
