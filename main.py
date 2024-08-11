@@ -28,7 +28,18 @@ def app():
             st.session_state.Location = ''
         if 'Region' not in st.session_state:
             st.session_state.Region = ''
-                    # Initialize session state if it doesn't exist
+            
+        if 'Department' not in st.session_state:
+            st.session_state.Department = ''
+        
+        if 'staffnumber' not in st.session_state:
+            st.session_state.staffnumber= ''
+            
+        if 'staffname' not in st.session_state:
+            st.session_state.staffname= ''
+            
+            
+        # Initialize session state if it doesn't exist
         
         def init_connection():
             try:
@@ -47,19 +58,25 @@ def app():
         location_df = pd.DataFrame(response.data)
 
         def get_facilities(staffnumber):
-            response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
+            response = supabase.from_('usersD').select('*').eq('staffnumber', staffnumber).execute()
+            login_df = pd.DataFrame(response.data)
+            return login_df
+        
+            response = supabase.from_('usersD').select('*').eq('staffnumber', staffnumber).execute()
             login_df = pd.DataFrame(response.data)
             return login_df
 
-        def add_userdata(staffnumber, password, location, region):
+        def add_userdata(staffnumber, password, location, region,department,staffname):
             data = {
                 'staffnumber': staffnumber,
+                'staffname': staffname,
                 'password': password,
                 'location': location,
-                'region': region
+                'region': region,
+                'department': department
             }
 
-            _, count = supabase.table('users').insert(data).execute()
+            _, count = supabase.table('usersD').insert(data).execute()
             return count
 
         location_names = location_df['Location'].unique().tolist()
@@ -67,18 +84,22 @@ def app():
         def login_user(staffnumber,password):
             
             try:
-                response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
+                response = supabase.from_('usersD').select('*').eq('staffnumber', staffnumber).execute()
                 user_data = response.data
                 facilities_df = get_facilities(staffnumber)
                 if not facilities_df.empty:
                     location = facilities_df['location'].iloc[0]
                     region = facilities_df['region'].iloc[0]
+                    staffname = facilities_df['staffname'].iloc[0]
+                    department= facilities_df['department'].iloc[0]
                     st.session_state.Location = location
                     st.session_state.Region =region
+                    st.session_state.Department = department
+                    st.session_state.staffnumber = staffnumber
+                    st.session_state.staffname= staffname
 
-                    
                     if password == facilities_df['password'].iloc[0]:
-                        return True, region, location
+                        return True, region, location,department,staffname
                     return False, None, None
                 
             except APIError as e:
@@ -86,7 +107,7 @@ def app():
                 st.stop() 
 
         def view_all_users():
-            response = supabase.from_('users').select('*').execute()
+            response = supabase.from_('usersD').select('*').execute()
             data = response.data
             return data
         
@@ -122,16 +143,18 @@ def app():
                             
                             if LogIn:
                                 st.session_state.logged_in= True
-                                result, location, region = login_user(staffnumber, password)
+                                result, location, region,department,staffname= login_user(staffnumber, password)
                                 if result:
                                     st.success("Logged In successfully")
                                     st.write(f"Location: {location}, Region: {region}")
                                     st.session_state.logged_in= True
                                     st.session_state.is_authenticated=True
-                                    st.session_state.staffnumber = staffnumber
+                                    st.session_state.staffnumber = staffnumber  
                                     st.session_state.password = password
                                     st.session_state.Location = location
                                     st.session_state.Region =region
+                                    st.session_state.Department=department
+                                    st.session_state.staffname= staffname
 
                                     form_container.empty()
 
@@ -144,10 +167,29 @@ def app():
                     with form_container:
                         with st.form("Sign-up Form"): 
                             staffnumber = st.text_input('Staff Number')
+                            staffname=st.text_input('Staff Name')
+                            if staffname:
+                                  staffname = staffname.title()
                             location = st.selectbox("Select Location", location_names)
                             selected_location_row = location_df[location_df['Location'] == location]
                             region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
                             password = st.text_input('Password',type='password')
+                            department=st.selectbox('Department',[ 
+                                                                    
+                                                                    'Guest',
+                                                                    'Laboratory',
+                                                                    'Nursing',
+                                                                    'Operations',
+                                                                    'Optical',
+                                                                    'Patient Experience',
+                                                                    'Pharmacy',
+                                                                    'Quality',
+                                                                    'Radiology',
+                                                                    'Administration',
+                                                                    'Telemedicine',
+                                                                    'Warehouse'])
+
+                            
                             signup_btn = st.form_submit_button('Sign Up')
                             
                             if "Sign_up" not in st.session_state:
@@ -155,11 +197,15 @@ def app():
                             
                             if signup_btn:
                                 st.session_state.Sign_up= True
-                                add_userdata(staffnumber, password, location, region)
+                                add_userdata(staffnumber, password, location, region,department,staffname)
                                 st.success("You have created a new account")
                                 st.session_state.is_authenticated=True
                                 st.session_state.Location = location
                                 st.session_state.Region =region
+                                st.session_state.staffname =staffname
+                                st.session_state.Department = department
+                                st.session_state.staffnumber = staffnumber  
+
                                 form_container.empty()
                             else:
                                 st.warning("Invalid credentials. Please try again.")
@@ -169,7 +215,10 @@ def app():
             st.write(f"""<span style="color: green;">
                             Successfully logged in !!<br>
                             Location: <strong>{st.session_state.Region}</strong><br>
-                            Region: <strong>{st.session_state.Location}</strong>.<br>\
+                            Staffnumber: <strong>{st.session_state.staffnumber}</strong><br>
+                            Staffname: <strong>{st.session_state.staffname}</strong><br>
+                            Department: <strong>{st.session_state.Department}</strong><br>
+                           \
                             <br>
                             Naviagte to your  dashboard from the menu on the sidebar.
                         </span>""", unsafe_allow_html=True)
