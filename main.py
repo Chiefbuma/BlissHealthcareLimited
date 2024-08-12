@@ -20,7 +20,7 @@ from streamlit_dynamic_filters import DynamicFilters
 def app():
     
     try:
-        st.write("KINDLYuppdate  YOUR CREDENTIALS   AFRESH   TO USE THE APP")
+        st.write("KINDLY UPDATE  YOUR CREDENTIALS   AFRESH   TO USE THE APP")
     
         if 'is_authenticated' not in st.session_state:
             st.session_state.is_authenticated = False 
