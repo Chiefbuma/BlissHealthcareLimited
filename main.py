@@ -165,6 +165,7 @@ def app():
                     st.session_state.signUp= True
                     form_container = st.empty()
                     with form_container:
+                        st.write("KINDLY ADD YOUR CREDENTIALS AFRESH TO USE THE APP")
                         with st.form("Sign-up Form"): 
                             staffnumber = st.text_input('Staff Number')
                             staffname=st.text_input('Staff Name')
