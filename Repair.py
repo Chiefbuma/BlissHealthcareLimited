@@ -23,8 +23,6 @@ from streamlit_dynamic_filters import DynamicFilters
 def app():
     
     try:
-        
-        
 
         if 'is_authenticated' not in st.session_state:
             st.session_state.is_authenticated = False 
@@ -37,78 +35,18 @@ def app():
         if st.session_state.is_authenticated:
             
             # get clients sharepoint list
-            st.cache_data(ttl=80, max_entries=2000, show_spinner=False, persist=False, experimental_allow_widgets=False)
-            def load_new():
-                columns = [
-                    "Date of report",
-                    "Name of Staff",
-                    "Department",
-                    "Month",
-                    "Date Number ",
-                    "Clinic",
-                    "Departmental report",
-                    "Details",
-                    "Report",
-                    "MainLink flow",
-                    "ATTACHED",
-                    "MainLINK",
-                    "MainItem",
-                    "Labor",
-                    "Amount on the Quotation",
-                    "RIT Approval",
-                    "RIT Comment",
-                    "RIT labour",
-                    "Facility Approval",
-                    "Facility comments",
-                    "Facility Labor",
-                    "Time Line",
-                    "Projects Approval",
-                    "Project Comments",
-                    "Project Labor",
-                    "Admin Approval",
-                    "Admin Comments",
-                    "Admin labor",
-                    "Approved amount",
-                    "Finance Amount",
-                    "STATUS",
-                    "Approver",
-                    "TYPE",
-                    "Days",
-                    "Disbursement",
-                    "MainStatus",
-                    "Modified",
-                    "Modified By",
-                    "Created By",
-                    "ID",
-                    "Email",
-                    "MAINTYPE",
-                    "Attachments",
-                    "LinkEdit",
-                    "UpdateLink",
-                    "PHOTOS",
-                    "QUOTES",
-                    "Title",
-                    "MonthName",
-                    "Centre Manager Approval",
-                    "Biomedical Head Approval"
-
-                ]
-                
+            @st.cache_data(ttl=600, max_entries=100, show_spinner=False, persist=False, experimental_allow_widgets=False)
+            def load_data():
                 try:
-                    clients = SharePoint().connect_to_list(ls_name='Maintenance Report', columns=columns)
-                    df = pd.DataFrame(clients)
-                    
-                    # Ensure all specified columns are in the DataFrame, even if empty
-                    for col in columns:
-                        if col not in df.columns:
-                            df[col] = None
-
-                    return df
+                    clients = SharePoint().connect_to_list(ls_name='Maintenance Report')
+                    return pd.DataFrame(clients)
                 except APIError as e:
                     st.error("Connection not available, check connection")
-                    st.stop()
+                    st.stop() 
                     
-            Main_df = load_new()
+            Main_df = load_data()
+            
+            
             
             Department_df= Main_df[['Departmental report','Approved amount','Admin Approval','Month']]
 
@@ -157,8 +95,7 @@ def app():
                         content="Bliss Healthcare Maintenance Dashboard",
                         key="MCcard3"
                     ).render()
-            with cols[0]:
-                month_options = get_month_options()
+            with cols[1]:
                 choice = ui.select(options=month_options)
                 
                 if choice and choice != "Select Month":
@@ -187,6 +124,7 @@ def app():
                     
                     department_All=department_sum_df
                     
+            
                     
             with card_container(key="Main1"):
                 
