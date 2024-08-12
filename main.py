@@ -176,10 +176,9 @@ def app():
                             password = st.text_input('Password',type='password')
                             department=st.selectbox('Department',[ 
                                                                     
-                                                                    'Guest',
+                                                                    'Centre Manager',
                                                                     'Laboratory',
                                                                     'Nursing',
-                                                                    'Operations',
                                                                     'Optical',
                                                                     'Patient Experience',
                                                                     'Pharmacy',
@@ -187,7 +186,8 @@ def app():
                                                                     'Radiology',
                                                                     'Administration',
                                                                     'Telemedicine',
-                                                                    'Warehouse'])
+                                                                    'Warehouse',
+                                                                     'Guest'])
 
                             
                             signup_btn = st.form_submit_button('Sign Up')
