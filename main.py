@@ -20,6 +20,7 @@ from streamlit_dynamic_filters import DynamicFilters
 def app():
     
     try:
+        st.write("KINDLY ADD YOUR CREDENTIALS AFRESH TO USE THE APP")
     
         if 'is_authenticated' not in st.session_state:
             st.session_state.is_authenticated = False 
@@ -165,7 +166,6 @@ def app():
                     st.session_state.signUp= True
                     form_container = st.empty()
                     with form_container:
-                        st.write("KINDLY ADD YOUR CREDENTIALS AFRESH TO USE THE APP")
                         with st.form("Sign-up Form"): 
                             staffnumber = st.text_input('Staff Number')
                             staffname=st.text_input('Staff Name')
