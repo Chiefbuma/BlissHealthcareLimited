@@ -162,7 +162,7 @@ def app():
                 
                 if choice and choice != "Select Month":
                     
-                    Main_df = load_data()
+                    Main_df = load_new()
                     
                     # Map the month name back to its numeric value
                     month_number = datetime.strptime(choice, "%B").month
@@ -177,7 +177,7 @@ def app():
                     
                 if choice and choice == "Select Month":
                     
-                    All_df = load_data()
+                    All_df = load_new()
                     
                     Selected_df = All_df[All_df['Month'] < 13]
                     approved_main_df = Main_df[Main_df['Title'] != '']
@@ -458,11 +458,11 @@ def app():
                         
                         st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
                         @st.cache_data(ttl=600, max_entries=100, show_spinner=False, persist=False, experimental_allow_widgets=False)
-                        def load_data():
+                        def load_new():
                                 New = SharePoint().connect_to_list(ls_name='Maintenance Report')
                                 return pd.DataFrame(  New )
                             
-                        df_main=load_data()
+                        df_main=load_new()
                         
                         data_df= df_main[['ID','Date of report','Clinic','Department','Amount on the Quotation','MainStatus','Approver','MonthName','LinkEdit']]
                         
