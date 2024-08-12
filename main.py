@@ -116,7 +116,7 @@ def app():
             col1, col2 = st.columns([2,1])
                 
             with col1:
-                menu = ["Login", "Sign up"]
+                menu = ["Sign up","Login"]
                 
                 choice = st.sidebar.selectbox("", menu,key="choice_medical")
                 
