@@ -107,8 +107,6 @@ def app():
                     st.stop()
                     
             Main_df = load_new()
-    
-            st.write(Main_df)
             
             Department_df= Main_df[['Departmental report','Approved amount','Admin Approval','Month']]
 
