@@ -351,6 +351,26 @@ def app():
                     ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
                 
+                
+             
+
+                # Power BI embed URL
+                embed_url = "https://app.powerbi.com/reportEmbed?reportId=902d5299-7684-421e-a96d-03158eba6a33&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63"
+
+                # Set the width and height for the iframe
+                iframe_width = 1400
+                iframe_height = 1200
+
+                # HTML code to embed the Power BI report
+                iframe_code = f'''
+                <iframe width="{iframe_width}" height="{iframe_height}" src="{embed_url}" frameborder="0" allowFullScreen="true"></iframe>
+                '''
+                
+                # Display the iframe in Streamlit
+                st.markdown(iframe_code, unsafe_allow_html=True)
+
+
+                
                 with st.expander("DOWNLOAD PREVIOUS MONTH"):
                     
                     Allperformance_df["MTD_Budget_Revenue"] = Allperformance_df["MTD_Budget_Revenue"].replace([np.inf, -np.inf], 0).fillna(0).apply(lambda x: '{:,}'.format(x))

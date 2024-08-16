@@ -3,540 +3,637 @@ from st_supabase_connection import SupabaseConnection
 from supabase import create_client, Client
 import pandas as pd
 from datetime import datetime, timedelta
-from IPython.display import display
-import calendar
 import numpy as np
-import plotly.express as px
-from IPython.display import HTML
+import plotly.graph_objects as go
 from office365.sharepoint.client_context import ClientContext
 from office365.runtime.auth.authentication_context import AuthenticationContext
+from office365.sharepoint.client_context import UserCredential
 import streamlit_option_menu as option_menu
-import plotly.graph_objects as go
-import supabase
 import streamlit_shadcn_ui as ui
 from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
-import main
+from sharepoint import SharePoint
 from postgrest import APIError
+from st_aggrid import AgGrid, GridOptionsBuilder,JsCode
+from IPython.display import HTML
+from streamlit_dynamic_filters import DynamicFilters
 
 
 def app():
+    
+    try:
+
+        if 'is_authenticated' not in st.session_state:
+            st.session_state.is_authenticated = False 
+            st.write(f"""<span style="color: red;">
+                        You are not Logged in,click account to  Log in/Sign up to proceed.
+                    </span>""", unsafe_allow_html=True)
         
-    if 'is_authenticated' not in st.session_state:
-        st.session_state.is_authenticated = False 
-        # Initialize session state if it doesn't exist
-        
-    if " choice" not in st.session_state:
-        st.session_state.choice=False
-        
-    if "form_container" not in st.session_state:
-        st.session_state.form_container=False  
-   
-    col1, col2 = st.columns([2,1])
-    with col1:
-        menu = ["Login", "Sign up"]
-        
-        choice = st.sidebar.selectbox("", menu,key="choice_medical")
-
-        
-        
-        @st.cache_resource
-        def init_connection():
-            url = "https://effdqrpabawzgqvugxup.supabase.co"
-            key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
-            return create_client(url, key)
-
-        supabase = init_connection()
-        
-        response = supabase.table('facilities').select("*").execute()
-
-        location_df = pd.DataFrame(response.data)
-        #st.write(location_df)
-
-
-        def get_facilities(staffnumber):
-            # Perform a Supabase query to fetch data from the 'users' table
-            response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-            login_df = pd.DataFrame(response.data)
-            return login_df
-
-        def add_userdata(staffnumber, password, location, region):
-            # Define the data to insert
-            data = {
-                'staffnumber': staffnumber,
-                'password': password,
-                'location': location,
-                'region': region
-            }
-
-            # Insert the data into the 'userdata' table using Supabase
-            _, count = supabase.table('users').insert(data).execute()
-
-            # Return the count of rows affected by the insert operation
-            return count
-
-            # Return the count of rows affected by the insert operation
-            return count
-
-        location_names = location_df['Location'].unique().tolist()
-            # Create a dictionary mapping each location to its region
-
-        def login_user(staffnumber,password):
             
-            try:
-                # Perform a Supabase query to fetch user data based on staff number
-                response = supabase.from_('users').select('*').eq('staffnumber', staffnumber).execute()
-                user_data = response.data
-                facilities_df = get_facilities(staffnumber)
-                if not facilities_df.empty:
-                    location = facilities_df['location'].iloc[0]
-                    region = facilities_df['region'].iloc[0]
                     
-                    
-                    # Check if the credentials match
-                    if password == facilities_df['password'].iloc[0]:
-                        return True, location, region
-                    return False, None, None
-                
-            except APIError as e:
-                st.error("Invalid credentials. Please log in again.")
-                st.stop() 
-
-        def view_all_users():
-            response = supabase.from_('users').select('*').execute()
-            data = response.data
-            return data
- 
-        form_container=st.container(border=False)
-        
-        
-        if choice == "Login":
-            st.session_state.choice=True
-            st.session_state.form_container=True
-            # Check if the user is logged in
-            
-            with form_container:  
-                with st.form("Login Form"):
-                    st.write("Login Form")
-                    staffnumber = st.text_input("Staffnumber",key="staff_medical")
-                    password = st.text_input("Password", type='password',key="pass_medical")
-                    # Fetch location and region based on staffnumber
-                    load=st.form_submit_button("Login")
-                    
-                    
-                    if "logged_in" not in st.session_state:
-                        st.session_state.logged_in= False
-                        
-                        
-                    if load or st.session_state.logged_in:
-                        st.session_state.logged_in= True
-  
-                        result, location, region = login_user(staffnumber, password)
-                        if result:
-                            st.success("Logged In successfully")
-                            st.write(f"Location: {location}, Region: {region}")
-
-                            st.session_state.logged_in= True
-                            st.session_state.is_authenticated=True
-                            st.session_state.staffnumber = staffnumber
-                            st.session_state.password = password
-                            
-   
-                        else:
-                            st.warning("Invalid credentials. Please try again.")
-
-        elif choice == "Sign up":
-            st.session_state.choice=True
-            st.session_state.form_container=True
-            
-            
-            with form_container: 
-                with st.form("Sign-up Form"):  
-                    st.write("Sign-up Form")
-                    staffnumber = st.text_input('Staff Number', key='signup_staff_number')
-                    location = st.selectbox("Select Location", location_names)
-                    selected_location_row = location_df[location_df['Location'] == location]
-                    region = selected_location_row['Region'].iloc[0] if not selected_location_row.empty else None
-                    password = st.text_input('Password', key='signup_password')
-                    signup_btn = st.form_submit_button('Sign Up')
-                    if signup_btn:
-                        add_userdata(staffnumber, password, location, region)
-                        st.success("You have created a new account")
-                        st.session_state.is_authenticated=True
-                        st.session_state.logged_in= True
-                        form_container.empty()
-                       
-                        
-    if st.session_state.is_authenticated:
-        st.session_state.choice=False
-        st.session_state.form_container=False
-        
-        @st.cache_resource
-        def init_connection():
-            url = "https://effdqrpabawzgqvugxup.supabase.co"
-            key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
-            return create_client(url, key)
-
-        supabase = init_connection()
-        
-        # Check if the connection is successful
-        if init_connection():
-        
-            
-            st.session_state.logged_in= True
-            # Dropdown for selecting the year
-          
-            
-            current_month = datetime.now().month
-            current_month_name = calendar.month_name[current_month]
-            
-
-            response = supabase.from_('MTD_Overall').select('*').eq('Month', current_month_name ).execute()
-            performance_df = pd.DataFrame(response.data)
-
-            
-            Regionresponse = supabase.from_('MTD_RegionALL').select('*').eq('Month', current_month_name ).execute()
-            Regionperformance_df = pd.DataFrame(Regionresponse.data)
-            
-            
-            Lastdateresponse = supabase.from_('Last_Update').select('*').execute()
-            LastUpdate_df = pd.DataFrame(Lastdateresponse.data)
-            LastUpdate_df = LastUpdate_df[['Last_Updated']]  # Assuming 'Last_Updated' is the column you want
-            Lastdate = LastUpdate_df.iloc[0]['Last_Updated']
-          
-            # Define the function to calculate the fraction of days passed in a month
-            def fraction_of_days_in_month(date):
-                # Calculate the total number of days in the month
-                total_days_in_month = (date.replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)
-                
-                # Calculate the fraction of days passed
-                fraction_passed = (date.day) / total_days_in_month.day
-                
-                return fraction_passed
+        if st.session_state.is_authenticated:
            
-            # Create a new figure
-            fig3 = go.Figure()
-            
-            # # Define the metrics
-                        # Calculate the previous day
-            Lastdate = LastUpdate_df.iloc[0]['Last_Updated']
-            Lastdate_date = datetime.strptime(Lastdate, "%Y-%m-%d").date()
-            
-            
-            # Convert Lastdate to a datetime.date object
-            dateword = datetime.strptime(Lastdate, "%Y-%m-%d").date()
-
-            # Format the date as "Friday 24th 2024"
-            formatted_date = dateword.strftime("%A %dth %Y")
-
-            # Calculate fraction of days passed for the selected month
-            fraction_passed = fraction_of_days_in_month(Lastdate_date)
-            
-            
-            
-            
-            #Total_budget_FF = performance_df['Budget_Footfall'].sum()
-            #formatted_FF_budget = "{:,.0f}".format(Total_budget_FF)
-                        
-   
-            # For example, let's say you want to add a trace for the "Projection" metric
-            fig3.update_layout(
-                template="plotly_white",
-                height=80,
-                font_family="TimesNew Roman",
-                width=100,
-                paper_bgcolor='rgba(209, 255, 119, 0.1)',  # Set background color to transparent
-                plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
-                uniformtext=dict(minsize=40, mode='hide'),
-                margin=dict(l=20, r=20, t=50, b=5)
-                )
-            
-                        # Create a new figure
-            fig2 = go.Figure()
-            
-            
-            MTD_Revenue_budget = performance_df['MTD_Budget_Revenue'].sum()*fraction_passed
-            formatted_Rev_budget = "{:,.0f}".format(MTD_Revenue_budget)
-            
-            # # Define the Reveneu metrics
-            MTD_Actual_Revenue = performance_df['MTD_Actual_Revenue'].sum()
-            formatted_Actual_revenue = "{:,.0f}".format(MTD_Actual_Revenue)
-            
-            Total_Budget_Reveneu = performance_df['Total_Revenue_Budget'].sum()
-            formatted_Total_revenue = "{:,.0f}".format(Total_Budget_Reveneu)
-            
-            Arch_Rev = (MTD_Actual_Revenue /MTD_Revenue_budget) * 100
-            formatted_arch_rev = "{:.2f}%".format(Arch_Rev)
-            
-            projected_revenue =performance_df['Total_Revenue_Budget'].sum()*(performance_df['MTD_Actual_Revenue'].sum()/(performance_df['MTD_Budget_Revenue'].sum()*fraction_passed))
-            formatted_projected_reveue = "{:,.0f}".format(projected_revenue )
-            
-            
-            MTD_footfall_budget = performance_df['MTD_Budget_Footfall'].sum()*fraction_passed
-            formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
-            # # Define the Reveneu metrics
-            MTD_Actual_Footfall = performance_df['MTD_Actual_Footfall'].sum()
-            formatted_Actual_footfall = "{:,.0f}".format(MTD_Actual_Footfall)
-            
-            Total_Budget_Footfall = performance_df['Total_Footfall_Budget'].sum()
-            formatted_Total_footfall = "{:,.0f}".format(Total_Budget_Footfall)
-            
-            projected_Footfall = performance_df['Total_Footfall_Budget'].sum()*(performance_df['MTD_Actual_Footfall'].sum()/(performance_df['MTD_Budget_Footfall'].sum()*fraction_passed))
-            formatted_projected_footfall = "{:,.0f}".format(projected_Footfall )
-            
-            Arch_Rev = (MTD_Actual_Footfall/MTD_footfall_budget) * 100
-            formatted_arch_ff = "{:.2f}%".format(Arch_Rev)
-            
-            
-            
-                      # # Define the Reveneu metrics
-            AllMTD_Actual_Revenue = Regionperformance_df['MTD_Actual_Revenue'].sum()
-            formatted_Actual_revenue = "{:,.0f}".format(AllMTD_Actual_Revenue)
-            
-            AllTotal_Budget_Reveneu = Regionperformance_df['Total_Revenue_Budget'].sum()
-            formatted_Total_revenue = "{:,.0f}".format(AllTotal_Budget_Reveneu)
-            
-            AllArch_Rev = (MTD_Actual_Revenue /MTD_Revenue_budget) * 100
-            formatted_arch_rev = "{:.2f}%".format(AllArch_Rev)
-            # It looks like the code is a comment in Python. Comments in Python start with a hash
-            # symbol (#) and are used to provide explanations or notes within the code. In this case,
-            # the comment appears to say "projecte".
-            
-            projected_revenue =Regionperformance_df['Total_Revenue_Budget'].sum()*(Regionperformance_df['MTD_Actual_Revenue'].sum()/(Regionperformance_df['MTD_Budget_Revenue'].sum()*fraction_passed))
-            formatted_projected_reveue = "{:,.0f}".format(projected_revenue )
-            
-            
-            MTD_footfall_budget = Regionperformance_df['MTD_Budget_Footfall'].sum()*fraction_passed
-            formatted_ff_budget = "{:,.0f}".format(   MTD_footfall_budget)
-            # # Define the Reveneu metrics
-            MTD_Actual_Footfall = Regionperformance_df['MTD_Actual_Footfall'].sum()
-            formatted_Actual_footfall = "{:,.0f}".format(MTD_Actual_Footfall)
-            
-            Total_Budget_Footfall = Regionperformance_df['Total_Footfall_Budget'].sum()
-            formatted_Total_footfall = "{:,.0f}".format(Total_Budget_Footfall)
-            
-            projected_Footfall = Regionperformance_df['Total_Footfall_Budget'].sum()*(Regionperformance_df['MTD_Actual_Footfall'].sum()/(performance_df['MTD_Budget_Footfall'].sum()*fraction_passed))
-            formatted_projected_footfall = "{:,.0f}".format(projected_Footfall )
-            
-            Arch_Rev = (MTD_Actual_Footfall/MTD_footfall_budget) * 100
-            formatted_arch_ff = "{:.2f}%".format(Arch_Rev)
-           
-            
-            #ALL MONTHS 
-            
-            # Create a dropdown selectbox for searching
-            
-            # # Define Footfalls  metrics
-            #Total_footfalls = performance_df['Footfall'].sum()
-            #formatted_total_footfalls = "{:,.0f}".format(Total_footfalls)
-            #Arch_FF = performance_df['%Arch_FF'].mean() * 100
-            #formatted_arch_ff = "{:.0f}%".format( Arch_FF)
-            
-            
-            # For example, let's say you want to add a trace for the "Projection" metric
-            fig2.update_layout(
-                template="plotly_white",
-                height=80,
-                font_family="TimesNew Roman",
-                width=100,
-                paper_bgcolor='rgba(209, 255, 119, 0.1)',  # Set background color to transparent
-                plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
-                uniformtext=dict(minsize=40, mode='hide'),
-                margin=dict(l=20, r=20, t=50, b=5)
-                )
-            
-            
-            
-            # For example, let's say you want to add a trace for the "Projection" metric
-            fig3.update_layout(
-                template="plotly_white",
-                height=80,
-                font_family="TimesNew Roman",
-                width=100,
-                paper_bgcolor='rgba(209, 255, 119, 0.1)',  # Set background color to transparent
-                plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
-                uniformtext=dict(minsize=40, mode='hide'),
-                margin=dict(l=20, r=20, t=50, b=5)
-                )
-            
-            # Create a new figure
-             #fig6.add_trace(
-             #go.Indicator(
-                 #title={'text': "MTD FOOTFALL",'font': {'size': 15,'color': 'green'}},
-                 #value= int(Total_budget)
-            # For example, let's say you want to add a trace for the "Projection" metric
-            #fig6.update_layout(
-                #template="plotly_white",
-                #height=80,
-                #font_family="TimesNew Roman",
-               # width=100,
-                #paper_bgcolor='rgba(209, 255, 119, 0.1)',  # Set background color to transparent
-                #plot_bgcolor='rgba(0, 137, 184, 1)',   # Set plot area background color to transparent
-                #uniformtext=dict(minsize=40, mode='hide'),
-                #margin=dict(l=20, r=20, t=50, b=5)
+            #AllTrans_df = load_data(email_user, password_user, sharepoint_url, list_name)
+            @st.cache_data(ttl=80, max_entries=2000, show_spinner=False, persist=False, experimental_allow_widgets=False)
+            def load_new():
+                columns = [
+                     "Title",
+                        "UHID",
+                        "Patientname",
+                        "mobile",
+                        "Location",
+                        "Booking status",
+                        "Booking Date",
+                        "Booked on",
+                        "Booked By",
+                        "DoctorName",
+                        "Consultation Status",
+                        "Consultation Date",
+                        "Dispatched status",
+                        "Dispatched Date",
+                        "Dispatched By",
+                        "Received Date",
+                        "Received By",
+                        "Received Status",
+                        "Dispensed By",
+                        "Collection status",
+                        "Collection Date",
+                         "Transfer To",
+                         "Transfer Status",
+                         "Transfer From",
+                        "Month",
+                        "Cycle",
+                        "MVC"
+                ]
                 
-            # The above code is formatting the columns in a DataFrame called `performance_df`. It is
-            # applying specific formatting to the numerical values in the columns to make them more
-            # readable and presentable.
-            performance_df['MTD_Budget_Revenue'] = (performance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
+                try:
+                    clients = SharePoint().connect_to_list(ls_name='Home Delivery', columns=columns)
+                    df = pd.DataFrame(clients)
+                    
+                    # Ensure all specified columns are in the DataFrame, even if empty
+                    for col in columns:
+                        if col not in df.columns:
+                            df[col] = None
 
-            performance_df['MTD_Budget_Footfall']=(performance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
-            # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
-            performance_df['%Arch_FF'] = (performance_df['MTD_Actual_Footfall'] / performance_df['MTD_Budget_Footfall'])
-            # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
-            performance_df['%Arch_REV'] = (performance_df['MTD_Actual_Revenue'] / performance_df['MTD_Budget_Revenue'])
-            
-            performance_df['Projected_Footfalls']=(performance_df['Total_Footfall_Budget'] ) * (performance_df['MTD_Actual_Footfall'] / performance_df['MTD_Budget_Footfall'])           
-            performance_df['Projected_Revenue']=(performance_df['Total_Revenue_Budget'] ) * (performance_df['MTD_Actual_Revenue'] / performance_df['MTD_Budget_Revenue'])           
-            
-            performance_df["MTD_Budget_Revenue"] = performance_df["MTD_Budget_Revenue"].fillna(0).astype(int).apply(lambda x: '{:,.0f}'.format(x))
-            performance_df["MTD_Actual_Revenue"] = performance_df["MTD_Actual_Revenue"].fillna(0).astype(int).apply(lambda x: '{:,}'.format(x))
-            performance_df["%Arch_REV"] = performance_df["%Arch_REV"].fillna(0).apply(lambda x: '{:.1f}%'.format(x*100 ))
-            performance_df["Total_Revenue_Budget"] = performance_df["Total_Revenue_Budget"].fillna(0).apply(lambda x: '{:,}'.format(x))
-            performance_df["Projected_Revenue"] = performance_df["Projected_Revenue"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
-            performance_df["MTD_Actual_Footfall"] = performance_df["MTD_Actual_Footfall"].fillna(0).apply(lambda x: '{:,}'.format(x))
-            performance_df["MTD_Budget_Footfall"] = performance_df["MTD_Budget_Footfall"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
-            performance_df["%Arch_FF"] = performance_df["%Arch_FF"].fillna(0).apply(lambda x: '{:.1f}%'.format(x*100))
-            performance_df["Total_Footfall_Budget"] = performance_df["Total_Footfall_Budget"].fillna(0).apply(lambda x: '{:,}'.format(x))
-            performance_df["Projected_Footfalls"] = performance_df["Projected_Footfalls"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
-            
-            
-            
-            
-            Regionperformance_df['MTD_Budget_Revenue'] = (Regionperformance_df['MTD_Budget_Revenue'] * fraction_passed).round(0)
+                    return df
+                except APIError as e:
+                    st.error("Connection not available, check connection")
+                    st.stop()
 
-            Regionperformance_df['MTD_Budget_Footfall']=(Regionperformance_df['MTD_Budget_Footfall']*fraction_passed).round(0)
-            # Add a new column %Arch_FF as the percentage of MTD_Actual_Footfall to MTD_Budget_Footfall
-            Regionperformance_df['%Arch_FF'] = (Regionperformance_df['MTD_Actual_Footfall'] / Regionperformance_df['MTD_Budget_Footfall'])
-            # Add a new column %Arch_REV as the percentage of MTD_Actual_Revenue to MTD_Budget_Revenue
-            Regionperformance_df['%Arch_REV'] = (Regionperformance_df['MTD_Actual_Revenue'] / Regionperformance_df['MTD_Budget_Revenue'])
-
-            Regionperformance_df['Projected_Footfalls']=(Regionperformance_df['Total_Footfall_Budget'] ) * (Regionperformance_df['MTD_Actual_Footfall'] / Regionperformance_df['MTD_Budget_Footfall'])           
-            Regionperformance_df['Projected_Revenue']=(Regionperformance_df['Total_Revenue_Budget'] ) * (Regionperformance_df['MTD_Actual_Revenue'] / Regionperformance_df['MTD_Budget_Revenue'])           
-
-            Regionperformance_df["MTD_Budget_Revenue"] = Regionperformance_df["MTD_Budget_Revenue"].fillna(0).astype(int).apply(lambda x: '{:,.0f}'.format(x))
-            Regionperformance_df["MTD_Actual_Revenue"] = Regionperformance_df["MTD_Actual_Revenue"].fillna(0).astype(int).apply(lambda x: '{:,}'.format(x))
-            Regionperformance_df["%Arch_REV"] = Regionperformance_df["%Arch_REV"].fillna(0).apply(lambda x: '{:.1f}%'.format(x*100 ))
-            Regionperformance_df["Total_Revenue_Budget"] = Regionperformance_df["Total_Revenue_Budget"].fillna(0).apply(lambda x: '{:,}'.format(x))
-            Regionperformance_df["Projected_Revenue"] = Regionperformance_df["Projected_Revenue"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
-            Regionperformance_df["MTD_Actual_Footfall"] = Regionperformance_df["MTD_Actual_Footfall"].fillna(0).apply(lambda x: '{:,}'.format(x))
-            Regionperformance_df["MTD_Budget_Footfall"] = Regionperformance_df["MTD_Budget_Footfall"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
-            Regionperformance_df["%Arch_FF"] = Regionperformance_df["%Arch_FF"].fillna(0).apply(lambda x: '{:.1f}%'.format(x*100))
-            Regionperformance_df["Total_Footfall_Budget"] = Regionperformance_df["Total_Footfall_Budget"].fillna(0).apply(lambda x: '{:,}'.format(x))
-            Regionperformance_df["Projected_Footfalls"] = Regionperformance_df["Projected_Footfalls"].fillna(0).apply(lambda x: '{:,.0f}'.format(x))
-
-             
+            cycle_df = load_new()
             
-            #ALL MONRH DATA
+            #st.write(cycle_df)
             
+            # Get a list of unique values in the 'Cycle' column
+            Cycle = cycle_df['Cycle'].unique().tolist()
             
-            # Rearrange the columns
-            
-            
-           # Calculate the total values for each column
-            total_values = {
-                'Scheme': 'TOTAL',
-                'MTD_Budget_Revenue': formatted_Rev_budget ,
-                'MTD_Actual_Revenue': formatted_Actual_revenue,
-                '%Arch_REV': formatted_arch_rev,
-                'Total_Revenue_Budget': formatted_Total_revenue,
-                'Projected_Revenue': formatted_projected_reveue,
-                'MTD_Budget_Footfall': formatted_ff_budget,
-                'MTD_Actual_Footfall': formatted_Actual_footfall,
-                '%Arch_FF': formatted_arch_ff,
-                'Total_Footfall_Budget': formatted_Total_footfall,
-                'Projected_Footfalls':formatted_projected_footfall
-}
-                            # Create a DataFrame for the total row
-            total_row_df = pd.DataFrame(total_values, index=[0])
-
-                # Concatenate the total row with performance_df
-            performance_total = pd.concat([performance_df, total_row_df], ignore_index=True)
-
-            
-            
-            fig_request_by_type_Rev = go.Figure(data=[go.Table(
-                header=dict(values=['Scheme','Revenue<br>Budget','Revenue<br>Actual','%Arch<br>REV',
-                                    'Total<br>Budget','Projected<br>Revenue',
-                                    'Footfall<br>Budget','Footfall<br>Actual','%Arch<br>FF','Total<br>Budget','Projected<br>Footfalls'],
-                            fill_color='rgba(0, 84, 0, 1)',
-                            align='left',
-                            font=dict(family='Garamond', color='White', size=14),
-                            line_color='darkslategray',  # Border color
-                            line=dict(width=1)),
-                            columnwidth=[40, 30, 30,30, 30, 30, 30, 30, 30, 30,40],# Border width
-                cells=dict(values=[performance_total["Scheme"],
-                                   performance_total["MTD_Budget_Revenue"],
-                                   performance_total["MTD_Actual_Revenue"],
-                                   performance_total["%Arch_REV"],
-                                    performance_total["Total_Revenue_Budget"],
-                                    performance_total["Projected_Revenue"],
-                                     performance_total["MTD_Budget_Footfall"],
-                                    performance_total["MTD_Actual_Footfall"],
-                                    performance_total["%Arch_FF"],
-                                    performance_total["Total_Footfall_Budget"],
-                                    performance_total["Projected_Footfalls"]]
-                        ,
-                        
-                
-
-                        fill_color = ['rgba(0, 0, 82, 1)']+ ['white']+ ['white']+ ['white']+ ['white']+ ['white']+ ['lightgrey'] * (len(performance_total) - 5)
-,
-                        font_color=[
-                                ['white'],  # Blue for "Report" column
-                                ['black'] * len(performance_total)  # White for "Count" column
-                            ],
-                        align='left',
-                        font=dict(color='black', size=14),
-                        line_color='darkslategray',
-                        height=25,# Border color
-                        line=dict(width=0.3))),
-                       
-            ])
-            fig_request_by_type_Rev.update_layout(
-                    margin=dict(l=0, r=0, t=0, b=0),
-                    height=200,
-                    width=1000,# Set all margins to 0
-                    paper_bgcolor='rgba(0, 0, 0, 0)', 
-                    # Set paper background color to transparent
-                )
-            
-            
-            # The above code is formatting the columns in a DataFrame called `performance_df`. It is
-            # applying specific formatting to the numerical values in the columns to make them more
-            # readable and presentable.
-            
-            
-            
-            def generate_sales_data():
-                np.random.seed(0)  # For reproducible results
-                months = ['Jan', 'Feb', 'Mar']
-                sales = np.random.randint(1000, 5000, size=len(months))
-                return pd.DataFrame({'Month': months, 'Sales': sales})
-            
-            with card_container(key="MTDREVENUE"):
-                card_style3 = "border: 2px solid #000000; border-radius: 5px; padding: 10px; background-color:#ffffff; color:#000000; text-align: center; font-size: 15px;font-weight: bold; width: 100%; height: 30;"
+            # Map the month name back to its numeric value
+            #month_number = datetime.strptime(choice, "%B").month
+       
+            cols = st.columns([4,1])
+            with cols[0]:
                 ui.card(
-                    content=location,
-                    key="MCcard3"
-                ).render()
+                        content="Dawa Nyumbani Dashboard",
+                        key="MCcard3"
+                    ).render()
+            with cols[1]:
+                with st.container():
+                        Cycle_label = "Select Cycle"
+                        st.markdown(
+                                f"""
+                                <div style="background-color:white; padding:10px; border-radius:10px; width:270px; margin-bottom:5px;">
+                                    <div style="font-size:18px; font-weight:bold; color:black;">
+                                        {Cycle_label}
+                                    </div>
+                                </div>
+                                """, 
+                                unsafe_allow_html=True
+                            )
+                
+                        choice = ui.select(options=Cycle)
+                        
+                        if choice :
+                                
+                            AllMain_df=load_new()   
+                                
+                            Main_df=AllMain_df[AllMain_df['Cycle'] == choice]
+                    
+            with card_container(key="Main1"):
+                
+                
+                # Create a new column that indicates whether the CollectionStatus is 'Fully'
+                Main_df['Full_Collection'] = Main_df['Collection status'].isin(['Full']).astype(int)
+                
+                # Create a new column that indicates whether the CollectionStatus is 'Fully'
+                Main_df['Partial_Collection'] = Main_df['Collection status'].isin(['Partial']).astype(int)
+                
+                # Create a new column that indicates whether the CollectionStatus is 'Fully'
+                #Main_df['Returned'] = Main_df['Received'] == 'Returned'
+                
+                
+                Telesumamry_df = Main_df.rename(columns={
+                    'UHID':'UHID',
+                    'Patientname':'Patientname',
+                    'mobile':'mobile',
+                    'DoctorName': 'Doctor',
+                    'Booked By':'Cordinator',
+                    'Dispatched By':'WareHouse',
+                    'Location':'Medical Centre',
+                    'Dispensed By':'Pharmatech.',
+                    'Booking status': 'Booked',
+                    'Transfer Status':'Total',
+                    'Transfer From':'TransferOut',
+                    'Transfer To':'TransferIn',
+                    'Consultation Status': 'Consulted',
+                    'Dispatched status': 'Dispatched',
+                    'Received Status': 'Received',
+                    'Partial_Collection':'Partial',
+                    'Full_Collection':'Full',
+                    'Collection status': 'Collected',
+                    'Month': 'Month',
+                    'MVC':'MVC',
+                    "Cycle":'Cycle'
+                })
+                
+                #st.write(Telesumamry_df)
+                
+                Target=3827
+                Booked_calc = Main_df [Main_df['Booking status'] == 'Booked']
+                Booked= int(Booked_calc.shape[0])
+                Book_rate= (round(Booked/Target,2)*100)
+                Book_rate= "{:.0f}%".format(Book_rate)
+                
+                
+                Consulted_calc = Telesumamry_df [Telesumamry_df['Consulted'] == 'Consulted']
+                Consulted= int(Consulted_calc.shape[0])
+                cons_rate= (round(Consulted/Booked,2)*100)
+                cons_rate= "{:.0f}%".format(cons_rate)
+                
+                Dispatched_calc = Telesumamry_df [Telesumamry_df['Dispatched'] == 'Dispatched']
+                Dispatched= int(Dispatched_calc.shape[0])
+                dip_rate= (round(Dispatched/Consulted,2)*100)
+                dip_rate= "{:.0f}%".format(dip_rate)
+                
+                
+                Received_calc = Telesumamry_df [Telesumamry_df['Received'] == 'Received']
+                Received= int(Received_calc.shape[0])
+                rev_rate= (round(Received/Dispatched,2)*100)
+                rev_rate= "{:.0f}%".format(rev_rate)
+               
 
-                cols = st.columns(4)
-                with cols[0]:
-                    ui.card(title="MTD Revenue", content=formatted_Actual_revenue, key="Revcard1").render()
-                with cols[1]:
-                    ui.card(title="MTD Budget", content=formatted_Rev_budget, key="Revcard2").render()
-                with cols[2]:
-                    ui.card(title="MTD Archievement", content=formatted_arch_rev, key="Revcard3").render()
-                with cols[3]:
-                    ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
-                st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
+                
+                full_calc =Telesumamry_df['Full'].sum()
+                Full= full_calc
+                
+                Partial_calc = Telesumamry_df['Partial'].sum()
+                Partial= Partial_calc
+                
+                Collected=Partial_calc +full_calc
+                col_rate= (round(Collected/Received,2)*100)
+                col_rate= "{:.0f}%".format(col_rate)
+                
+                
+                #SUMMARY
+                #Group by 'Cycle' and count the occurrences for each status
+                #Group by 'Cycle' and count the occurrences for each status
+                summary_df = Telesumamry_df.groupby('Cycle').agg({
+                    'Booked': 'count',
+                    'Full':'sum',
+                    'Partial':'sum',
+                    'Consulted': 'count',
+                    'Dispatched': 'count',
+                    'Received': 'count'
+        
+                }).reset_index()
 
-                            # Use the expander widget
-        #with st.expander("MONTHWISE REVENUE SUMMARY TABLE"):
-            # Set the height of the expander
-            #st.write(RR_pivot_Actual, use_container_width=True)
-            #st.write(FF_pivot_Actual, use_container_width=True)
-        form_container.empty()
+                # Rename columns for clarity (already clear in this case)
+                summary_df.columns = [
+                    'Cycle', 'Booked', 'Consulted', 'Dispatched', 
+                    'Received', 'Full', 'Partial'
+                ]
+
+                
+                #CONSULTED
+                # Group by 'Doctor' and count the occurrences for each status
+                consulted_df = Telesumamry_df.groupby('Doctor').agg({
+                    'Booked': 'count',
+                    'Consulted': 'count'
+                    
+                   
+                }).reset_index()
+                
+                # Calculate Arch%
+                consulted_df['Arch%'] = (consulted_df['Consulted'] / consulted_df['Booked'].replace(0, pd.NA)) * 100
+                consulted_df = consulted_df.sort_values(by='Arch%', ascending=False)
+                consulted_df['Arch%'] = consulted_df['Arch%'].fillna(0)  # Replace NaN with 0
+                # Convert to string with % symbol
+                consulted_df['Arch%'] = consulted_df['Arch%'].apply(lambda x: f"{x:.0f}%")
+                
+                
+                
+                
+                #Group by 'Doctor' and count the occurrences for each status
+                Received_df = Telesumamry_df.groupby('Medical Centre').agg({
+                'Dispatched': 'count',
+                'Received': 'count'
+                    
+                }).reset_index()
+                
+                
+                # Calculate Arch%
+                Received_df['Arch%'] = (Received_df['Received'] / Received_df['Dispatched'].replace(0, pd.NA)) * 100
+                Received_df = Received_df.sort_values(by='Arch%', ascending=False)
+                Received_df['Arch%'] = Received_df['Arch%'].fillna(0)  # Replace NaN with 0
+                # Convert to string with % symbol
+                Received_df['Arch%'] = Received_df['Arch%'].apply(lambda x: f"{x:.0f}%")
+                
+                
+                #Group by 'Doctor' and count the occurrences for each status
+                Dispatch_df = Telesumamry_df.groupby('Medical Centre').agg({
+                    'Consulted': 'count',
+                    'Dispatched': 'count'
+                }).reset_index()
+                
+                # Calculate Arch%
+                Dispatch_df['Arch%'] = (Dispatch_df['Consulted'] / Dispatch_df['Dispatched'].replace(0, pd.NA)) * 100
+                Dispatch_df = Dispatch_df.sort_values(by='Arch%', ascending=False)
+                Dispatch_df['Arch%'] = Dispatch_df['Arch%'].fillna(0)  # Replace NaN with 0
+                # Convert to string with % symbol
+                Dispatch_df['Arch%'] = Dispatch_df['Arch%'].apply(lambda x: f"{x:.0f}%")
+                
+            
+                #BOOKING
+                #Group by 'Doctor' and count the occurrences for each status
+                Booking_df = Telesumamry_df.groupby('Cordinator').agg({
+                    'Booked': 'count'
+                }).reset_index()
+                
+                # Calculate Arch%
+                Booking_df['Target'] = round(3827 / 10, 0)
+                
+                # Calculate Arch%
+                Booking_df['Arch%'] =(Booking_df['Booked'] / Booking_df['Target'].replace(0, pd.NA)) * 100
+                Booking_df['Arch%'] = Booking_df['Arch%'].fillna(0)  # Replace NaN with 0
+                # Convert to string with % symbol
+                Booking_df['Arch%']= Booking_df['Arch%'].apply(lambda x: f"{x:.0f}%")
+                
+                #COLLECTION
+                #Group by 'Doctor' and count the occurrences for each status   
+                Collection_df = Telesumamry_df.groupby('Medical Centre').agg({
+                    'Received': 'count',
+                    'Collected': 'count'
+                   
+                }).reset_index()
+                
+                                # Ensure 'Collected' and 'Received' columns are numeric
+                Collection_df['Collected'] = pd.to_numeric(Collection_df['Collected'], errors='coerce')
+                Collection_df['Received'] = pd.to_numeric(Collection_df['Received'], errors='coerce')
+
+                # Calculate 'Arch%' column
+                Collection_df['Arch%'] = (Collection_df['Collected'] / Collection_df['Received']) * 100
+
+                # Handle any infinite or NaN values resulting from the division
+                Collection_df['Arch%'].replace([np.inf, -np.inf, pd.NA,np.nan], 0, inplace=True)
+                
+                # Calculate Arch%
+                Collection_df['Arch%']= Collection_df['Arch%'].apply(lambda x: f"{x:.0f}%")
+             
+             
+               #COLLECTION
+                #Group by 'Doctor' and count the occurrences for each status
+                Transfer_df = Telesumamry_df.groupby('Medical Centre').agg({
+                    'TransferOut': 'count',
+                    'TransferIn': 'count',
+                    'Total':'count'
+                   
+                }).reset_index()
+                
+
+                # This assumes you have a function ui.table to display DataFrames
+                #ui.table(data=Received_df, maxHeight=300)
+                #st.write(grouped_df)   
+            
+                coll = st.columns([1.5,3,3])
+                with coll[0]:
+                    colm=st.columns(3)
+                    with colm[0]:
+                        with st.container():
+                                Bok_label = "Booked"
+                                st.markdown(
+                                    f"""
+                                    <div style="background-color:white; padding:10px; border-radius:10px; width:200px; border: 0.5px solid grey; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); margin-bottom:5px;">
+                                        <div style="font-size:16px; font-weight:bold; color:black;">
+                                            {Bok_label}
+                                        </div>
+                                        <div style="font-size:20px; font-weight:bold; color:black;">
+                                           {Booked}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green; font-weight:bold;">{Book_rate}</span>
+                                        </div>
+                                    </div>
+                                    """, 
+                                    unsafe_allow_html=True
+                                )
+    
+                        with st.container():
+                                Con_label = "Consulted"
+                                st.markdown(
+                                    f"""
+                                    <div style="background-color:white; padding:10px; border-radius:10px; width:200px; border: 0.5px solid grey; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); margin-bottom:5px;">
+                                        <div style="font-size:16px; font-weight:bold; color:black;">
+                                            {Con_label}
+                                        </div>
+                                        <div style="font-size:20px; font-weight:bold; color:black;">
+                                            {Consulted}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green; font-weight:bold;">{cons_rate}</span>
+                                        </div>
+                                    </div>
+                                    """, 
+                                    unsafe_allow_html=True
+                                )
+    
+                        with st.container():
+                                Dis_label = "Dispatched"
+                                st.markdown(
+                                    f"""
+                                    <div style="background-color:white; padding:10px; border-radius:10px; width:200px; border: 0.5px solid grey; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); margin-bottom:5px;">
+                                        <div style="font-size:16px; font-weight:bold; color:black;">
+                                            {Dis_label}
+                                        </div>
+                                        <div style="font-size:20px; font-weight:bold; color:black;">
+                                            {Dispatched}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green; font-weight:bold;">{dip_rate}</span>
+                                        </div>
+                                    </div>
+                                    """, 
+                                    unsafe_allow_html=True
+                                )
+                        with st.container():
+                                Rec_label = "Received"
+                                st.markdown(
+                                    f"""
+                                    <div style="background-color:white; padding:10px; border-radius:10px; width:200px; border: 0.5px solid grey; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); margin-bottom:5px;">
+                                        <div style="font-size:16px; font-weight:bold; color:black;">
+                                            {Rec_label}
+                                        </div>
+                                        <div style="font-size:20px; font-weight:bold; color:black;">
+                                            {Received}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green; font-weight:bold;">{rev_rate}</span>
+                                        </div>
+                                    </div>
+                                    """, 
+                                    unsafe_allow_html=True
+                                )
+                        with st.container():
+                                Collect_label = "Collected"
+                                full_label = "Full-"
+                                Partial_label = "Partial-"
+                                st.markdown(
+                                    f"""
+                                    <div style="background-color:white; padding:10px; border-radius:10px; width:200px; border: 0.5px solid grey; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); margin-bottom:5px;">
+                                        <div style="font-size:16px; font-weight:bold; color:black;">
+                                            {Collect_label}
+                                        </div>
+                                        <div style="font-size:18px; font-weight:bold; color:black;">
+                                        {full_label} {Full}
+                                        </div>
+                                        <div style="font-size:18px; font-weight:bold; color:black;">
+                                        {Partial_label}{Partial}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green; font-weight:bold;">{col_rate}</span>
+                                        </div>
+                                    </div>
+                                    """, 
+                                    unsafe_allow_html=True
+                                )
+                        
+                with coll[1]:
+                       
+                      container = st.container(border=True, height=510)
+                                
+                      with container:
+                            
+                        selected_option = ui.tabs(options=['Booking','Consultation', 'Receiving', 'Collection','Transfers'], default_value='Collection', key="reprots")
+                        
+                        if selected_option == "Consultation":
+                            sorted_df=consulted_df
+                            st.dataframe(sorted_df, hide_index=True)
+                            
+                        elif selected_option == "Receiving":
+                            sorted_df=Received_df
+                            st.dataframe(sorted_df, hide_index=True)
+                                
+                        elif selected_option == "Collection":
+                             sorted_df=Collection_df
+                             st.dataframe(sorted_df, hide_index=True)
+                            
+                        elif selected_option == "Booking":
+                             sorted_df=Booking_df
+                             st.dataframe(sorted_df, hide_index=True)
+                             
+                        elif selected_option == "Transfers":
+                             sorted_df=Transfer_df
+                             st.dataframe(sorted_df, hide_index=True)
+                
+                with coll[2]:
+                    with card_container(key="table6"): 
+                        with st.container():
+                            koc=st.columns(2)
+                            with koc[0]:
+                                Collect_label = "FootfalLS"
+                                full_label = "Full-"
+                                Partial_label = "Partial-"
+                                ff_rate=(Full+Partial)/Target*100
+                                ff_rate="{:.0f}%".format(ff_rate)
+                                st.markdown(
+                                    f"""
+                                    <div style="background-color:white; padding:10px; border-radius:10px; width:220px; border: 0.5px solid grey; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); margin-bottom:5px;">
+                                        <div style="font-size:14px; font-weight:bold; color:black;">
+                                            {Collect_label}
+                                        </div>
+                                        <div style="font-size:19px; font-weight:bold; color:black;">
+                                        {Full+Partial}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green; font-weight:bold;">{ff_rate}</span>
+                                    </div>
+                                    """, 
+                                    unsafe_allow_html=True
+                                )
+                            with koc[1]:
+                                Collect_label = "Revenue"
+                                Rev_tt = (Full + Partial) * 3000  # Calculate total revenue
+                                Rev_fom = "{:,.0f}".format(Rev_tt)
+                                fin_rate = (Rev_tt / (Target * 3000)) * 100  # Calculate the final rate as a percentage
+                                fin_rate = "{:.0f}%".format(fin_rate)  # Format the final rate as a percentage string
+
+                                st.markdown(
+                                    f"""
+                                    <div style="background-color:white; padding:5px; border-radius:10px; width:220px; border: 0.5px solid grey; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); margin-bottom:5px;">
+                                        <div style="font-size:14px; font-weight:bold; color:black;">
+                                            {Collect_label}
+                                        </div>
+                                        <div style="font-size:19px; font-weight:bold; color:black;">
+                                        {Rev_fom}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green; font-weight:bold;">{fin_rate}</span>
+                                    </div>
+                                    """, 
+                                    unsafe_allow_html=True
+                                )
+                            cols = st.columns(1)
+                            with cols[0]:
+                                
+                                #Group by 'Doctor' and count the occurrences for each status   
+                                MVC_df = AllMain_df.groupby('Cycle').agg({
+                                    'Received Status': 'count',
+                                    'Collection status': 'count'
+                                
+                                }).reset_index()
+                                
+                                MVC_df = MVC_df.rename(columns={
+                                    'Collection status':'Footfalls'})
+                            
+                                MVC_df['Revenue']=MVC_df['Footfalls']*3000
+
+                        
+                                Revenue_df=MVC_df[['Cycle','Footfalls','Revenue']]
+                                
+                                #st.write(Revenue_df)
+                                
+                       
+            with card_container(key="mew"):  
+                
+                container = st.container(border=True, height=400)
+                with container:
+                    display_only_renderer = JsCode("""
+                        class DisplayOnlyRenderer {
+                            init(params) {
+                                this.params = params;
+                                this.eGui = document.createElement('div');
+
+                                // Set the width and height of the div
+                                this.eGui.style.width = '200px'; // Adjust the width as needed
+                                this.eGui.style.height = '20px'; // Adjust the height as needed
+
+                                this.eGui.innerText = this.params.value || '';
+                            }
+
+                            getGui() {
+                                return this.eGui;
+                            }
+                        }
+                        """)
+                    
+                    display_only_rendererView = JsCode("""
+                        class DisplayOnlyRenderer {
+                            init(params) {
+                                this.params = params;
+                                this.eGui = document.createElement('div');
+
+                                // Set the width and height of the div
+                                this.eGui.style.width = '5px'; // Adjust the width as needed
+                                this.eGui.style.height = '20px'; // Adjust the height as needed
+
+                                this.eGui.innerText = this.params.value || '';
+                            }
+
+                            getGui() {
+                                return this.eGui;
+                            }
+                        }
+                        """)
+                    
+                    
+                    # Create the DataFrame with the required columns
+                    status_df = Telesumamry_df[[
+                    "Patientname",
+                        "UHID",
+                        "mobile",
+                        "Medical Centre",
+                        'Booked', 'Consulted', 'Dispatched', 
+                        'Received',
+                        'Collected',
+                        'MVC',
+                        'TransferOut',
+                        'TransferIn'
+                    ]]
+                    
+                    with card_container(key="sel"):
+                        colsearch = st.columns(4)
+                        
+                        with colsearch [0]:
+                        
+                                Collect_label = "TRACK PATIENT PACKAGES HERE"
+                                Rev_tt = (Full + Partial) * 3000  # Calculate total revenue
+                                Rev_fom = "{:,.0f}".format(Rev_tt)
+                                fin_rate = (Rev_tt / (Target * 3000)) * 100  # Calculate the final rate as a percentage
+                                fin_rate = "{:.0f}%".format(fin_rate)  # Format the final rate as a percentage string
+
+                                st.markdown(
+                                    f"""
+                                    <div style="background-color:white; padding:5px; border-radius:10px; width:530px; border: 0.5px solid grey; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); margin-bottom:5px;">
+                                        <div style="font-size:18px; font-weight:bold; color:black;">
+                                            {Collect_label}
+                                        </div>
+                                    """, 
+                                    unsafe_allow_html=True
+                                )
+                                
+                        with colsearch [2]:
+                            
+                        # Create text input widgets for filtering
+                            patientname_filter = ui.input( key="Name", placeholder="Search Patient") 
+                            
+                        with colsearch [3]:
+                            uhid_filter =  ui.input( key="uhid", placeholder="Search UHID")
+                        
 
 
+                        
+                        if patientname_filter or uhid_filter:
+                            # Apply filters to the DataFrame
+                            
+                            filtered_df = status_df[
+                            (status_df['Patientname'].str.contains(patientname_filter, case=False, na=False)) &
+                            (status_df['mobile'].str.contains(uhid_filter, case=False, na=False))
+                            
+                        ]
+
+                            
+                        else:
+                            filtered_df = status_df
+                            
+                            
+                        # Configure the grid options
+                    gb = GridOptionsBuilder.from_dataframe(filtered_df)
+
+                    # Configure columns with custom renderers
+                    gb.configure_column('Medical Centre', editable=False, cellRenderer=display_only_renderer,minWidth=200,sort='asc', sortedAt=1,filter=True)
+                    gb.configure_column('Patientname', editable=False, cellRenderer=display_only_renderer,pinned='left',minWidth=250,filter=True)
+                    gb.configure_column('UHID', editable=False, cellRenderer=display_only_rendererView,minWidth=50,filter=True)
+                    gb.configure_column('mobile', editable=False, cellRenderer=display_only_rendererView,minWidth=50)
+                    gb.configure_column('Booked', editable=False, cellRenderer=display_only_rendererView,minWidth=50)
+                    gb.configure_column('Consulted', editable=False, cellRenderer=display_only_rendererView,minWidth=50)
+                    gb.configure_column('Dispatched', editable=False, cellRenderer=display_only_rendererView,minWidth=50)
+                    gb.configure_column('Received', editable=False, cellRenderer=display_only_rendererView,minWidth=50)
+                    gb.configure_column('Collected', editable=False, cellRenderer=display_only_rendererView,minWidth=50)
+                    gb.configure_column('TransferOut', editable=False, cellRenderer=display_only_rendererView,minWidth=50)
+                    gb.configure_column('MVC', editable=False, cellRenderer=display_only_rendererView,minWidth=50)
+
+                    # Build the grid options
+                    gridoptions = gb.build()
+                    
+                    gridoptions['defaultColDef'] = {
+                        'sortable': True  # Enable sorting on all columns by default
+                    }
+                    gridoptions['sortModel'] = [{'colId': 'Medical Centre', 'sort': 'asc'}]  # Sort 'Patientname' column in ascending order
+
+
+                    # Display the grid
+                    response = AgGrid(
+                        filtered_df,
+                        gridOptions=gridoptions,
+                        editable=False,  # Make sure the grid itself is not editable
+                        allow_unsafe_jscode=True,
+                        theme='balham',
+                        height=300,
+                        width='100%',
+                        fit_columns_on_grid_load=True
+                    )
+    
+        else:
+            st.write("You  are  not  logged  in. Click   **[Account]**  on the  side  menu to Login  or  Signup  to proceed")
+    except APIError as e:
+            st.error("Cannot connect, Kindly refresh")
+            st.stop() 
+            
+            
