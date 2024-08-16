@@ -427,68 +427,6 @@ def app():
                         elif selected_option == "Transfers":
                              sorted_df=Transfer_df
                              st.dataframe(sorted_df, hide_index=True)
-                
-                with coll[2]:
-                    with card_container(key="table6"): 
-                        with st.container():
-                            koc=st.columns(2)
-                            with koc[0]:
-                                Collect_label = "FootfalLS"
-                                full_label = "Full-"
-                                Partial_label = "Partial-"
-                                ff_rate=(Full+Partial)/Target*100
-                                ff_rate="{:.0f}%".format(ff_rate)
-                                st.markdown(
-                                    f"""
-                                    <div style="background-color:white; padding:10px; border-radius:10px; width:220px; border: 0.5px solid grey; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); margin-bottom:5px;">
-                                        <div style="font-size:14px; font-weight:bold; color:black;">
-                                            {Collect_label}
-                                        </div>
-                                        <div style="font-size:19px; font-weight:bold; color:black;">
-                                        {Full+Partial}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green; font-weight:bold;">{ff_rate}</span>
-                                    </div>
-                                    """, 
-                                    unsafe_allow_html=True
-                                )
-                            with koc[1]:
-                                Collect_label = "Revenue"
-                                Rev_tt = (Full + Partial) * 3000  # Calculate total revenue
-                                Rev_fom = "{:,.0f}".format(Rev_tt)
-                                fin_rate = (Rev_tt / (Target * 3000)) * 100  # Calculate the final rate as a percentage
-                                fin_rate = "{:.0f}%".format(fin_rate)  # Format the final rate as a percentage string
-
-                                st.markdown(
-                                    f"""
-                                    <div style="background-color:white; padding:5px; border-radius:10px; width:220px; border: 0.5px solid grey; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); margin-bottom:5px;">
-                                        <div style="font-size:14px; font-weight:bold; color:black;">
-                                            {Collect_label}
-                                        </div>
-                                        <div style="font-size:19px; font-weight:bold; color:black;">
-                                        {Rev_fom}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green; font-weight:bold;">{fin_rate}</span>
-                                    </div>
-                                    """, 
-                                    unsafe_allow_html=True
-                                )
-                            cols = st.columns(1)
-                            with cols[0]:
-                                
-                                #Group by 'Doctor' and count the occurrences for each status   
-                                MVC_df = AllMain_df.groupby('Cycle').agg({
-                                    'Received Status': 'count',
-                                    'Collection status': 'count'
-                                
-                                }).reset_index()
-                                
-                                MVC_df = MVC_df.rename(columns={
-                                    'Collection status':'Footfalls'})
-                            
-                                MVC_df['Revenue']=MVC_df['Footfalls']*3000
-
-                        
-                                Revenue_df=MVC_df[['Cycle','Footfalls','Revenue']]
-                                
-                                #st.write(Revenue_df)
-                                
                        
             with card_container(key="mew"):  
                 
