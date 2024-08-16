@@ -32,6 +32,9 @@ def app():
             
                     
         if st.session_state.is_authenticated:
+            location=st.session_state.Region
+           
+            
            
             #AllTrans_df = load_data(email_user, password_user, sharepoint_url, list_name)
             @st.cache_data(ttl=80, max_entries=2000, show_spinner=False, persist=False, experimental_allow_widgets=False)
@@ -116,7 +119,8 @@ def app():
                                 
                             AllMain_df=load_new()   
                                 
-                            Main_df=AllMain_df[AllMain_df['Cycle'] == choice]
+                            Main_df = AllMain_df[(AllMain_df['Cycle'] == choice) & (AllMain_df['Location'] == location)]
+
                     
             with card_container(key="Main1"):
                 
