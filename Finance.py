@@ -111,7 +111,7 @@ def app():
 
                 # Set the height for the iframe, width is set to 100% to make it responsive
                 iframe_width = "100%"
-                iframe_height = 1200  # You can adjust this as needed
+                iframe_height = 1250  # You can adjust this as needed
 
                 # HTML code to embed the Power BI report
                 iframe_code = f'''
