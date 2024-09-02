@@ -75,7 +75,7 @@ def app():
                 iframe_code = """
                 <div style="display: flex; justify-content: center;">
                     <iframe title="DASHBOARD - END MONTH" 
-                            width="1100" 
+                            width="1000" 
                             height="700" 
                             src="https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSection679615f8e34604a7e581&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false" 
                             frameborder="0" 
