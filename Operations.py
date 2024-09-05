@@ -70,8 +70,7 @@ def app():
                     content="MTD REVENUE AND FOOTFALLS",
                     key="MCcard3"
                 ).render()
-                   
-                # Define the iframe code with expanded width and centered alignment
+               #iframe code with expanded width and centered alignment
                 iframe_code = """
                 <div style="display: flex; justify-content: center;">
                     <iframe title="DASHBOARD - MTD | Summary" 
