@@ -77,7 +77,7 @@ def app():
                     <iframe title="DASHBOARD - MTD | Summary" 
                             width="1100" 
                             height="700" 
-                            src="https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSection679615f8e34604a7e581&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false" 
+                            src="https://app.powerbi.com/groups/7f611779-efa6-4c9c-ab94-06b504b04c23/reports/16f6496e-6f9e-4b0c-8417-9291ff93938c/ReportSection8b673c123d2245457844?ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&experience=power-bi" 
                             frameborder="0" 
                             allowFullScreen="true">
                     </iframe>
