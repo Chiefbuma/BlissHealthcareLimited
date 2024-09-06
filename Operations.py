@@ -101,16 +101,6 @@ def app():
                 # Display the iframe in Streamlit
                 st.markdown(iframe_code, unsafe_allow_html=True)
                 
-            # Checkbox to toggle the visibility of the container
-            show_container = st.checkbox("Show container", value=True)
-
-            # Conditional rendering of the container
-            if show_container:
-                with st.container():
-                    st.write("This is a container that can be hidden or shown.")
-                    st.write("Add any Streamlit components you want here.")
-            else:
-                st.write("The container is hidden.")
                 
             with st.expander("QTR"):
                 #iframe code with expanded width and centered alignment
