@@ -66,7 +66,7 @@ def app():
             fraction_passed = fraction_of_days_in_month(datetime.strptime(Lastdate, "%Y-%m-%d").date())
             
             ui.card(
-                        content="Bliss Healthcare Operation Dashboard",
+                        content="                      Bliss Healthcare Operation Dashboard",
                         key="MCcard3"
                     ).render()
             with st.expander("MTD"):   
