@@ -99,8 +99,7 @@ def app():
                 title = selected_option
                 link = dashboard_links[selected_option]
                 
-                with card_container(key=selected_option.replace(" | ", "").upper() + "REVENUE"):
-                    iframe_code = generate_iframe(title, link)
-                    st.markdown(iframe_code, unsafe_allow_html=True)
+                iframe_code = generate_iframe(title, link)
+                st.markdown(iframe_code, unsafe_allow_html=True)
     else:
         st.write("You are not logged in. Click **[Account]** on the side menu to Login or Signup to proceed")
