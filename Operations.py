@@ -67,9 +67,9 @@ def app():
             
             selected_option = ui.tabs(options=['MTD | Summary','YTD | Summary', 'QRT | Summary', 'Annual | Summary'], default_value='MTD | Summary', key="kanaries")
                             
-           
+
             # Cache the iframe HTML generation
-            @st.cache_resource
+            @st.cache_data
             def generate_iframe(title, link):
                 iframe_code = f"""
                 <div style="display: flex; justify-content: center;">
@@ -99,8 +99,12 @@ def app():
                 title = selected_option
                 link = dashboard_links[selected_option]
                 
-                with card_container(key=selected_option.replace(" | ", "").upper() + "REVENUE"):
+                # Ensure each container has a unique key
+                container_key = f"{selected_option.replace(' | ', '').upper()}_REVENUE"
+                
+                with card_container(key=container_key):
                     iframe_code = generate_iframe(title, link)
                     st.markdown(iframe_code, unsafe_allow_html=True)
+
     else:
         st.write("You are not logged in. Click **[Account]** on the side menu to Login or Signup to proceed")
