@@ -65,9 +65,7 @@ def app():
            
             fraction_passed = fraction_of_days_in_month(datetime.strptime(Lastdate, "%Y-%m-%d").date())
             
-            selected_option = ui.tabs(options=['MTD | Summary','YTD | Summary', 'QRT | Summary', 'Annual | Summary'], default_value='MTD | Summary', key="kanaries")
-                            
-
+           
             # Cache the iframe HTML generation
             @st.cache_data
             def generate_iframe(title, link):
