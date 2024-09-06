@@ -67,78 +67,40 @@ def app():
             
             selected_option = ui.tabs(options=['MTD | Summary','YTD | Summary', 'QRT | Summary', 'Annual | Summary'], default_value='MTD | Summary', key="kanaries")
                             
-            if selected_option == "MTD | Summary":
-            
-                with card_container(key="MTDREVENUE"):
-                    #iframe code with expanded width and centered alignment
-                    iframe_code = """
-                    <div style="display: flex; justify-content: center;">
-                        <iframe title="DASHBOARD - MTD | Summary" 
-                                width="1100" 
-                                height="700" 
-                                src="https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSection8b673c123d2245457844&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false" 
-                                frameborder="0" 
-                                allowFullScreen="true">
-                        </iframe>
-                    </div>
-                    """
-                    # Display the iframe in Streamlit
+           
+            # Cache the iframe HTML generation
+            @st.cache_data
+            def generate_iframe(title, link):
+                iframe_code = f"""
+                <div style="display: flex; justify-content: center;">
+                    <iframe title="{title}" 
+                            width="1100" 
+                            height="700" 
+                            src="{link}" 
+                            frameborder="0" 
+                            allowFullScreen="true">
+                    </iframe>
+                </div>
+                """
+                return iframe_code
+
+            # Define the selected option and corresponding iframe URLs
+            selected_option = ui.tabs(options=['MTD | Summary', 'YTD | Summary', 'QRT | Summary', 'Annual | Summary'], default_value='MTD | Summary', key="kanaries")
+
+            dashboard_links = {
+                "MTD | Summary": "https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSection8b673c123d2245457844&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false",
+                "YTD | Summary": "https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSection0e8045cd64049172b21e&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false",
+                "QRT | Summary": "https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSectione1f47eff2818000c1b5e&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false",
+                "Annual | Summary": "https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSectionddd49e404c5916bd387e&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false"
+            }
+
+            # Render the appropriate iframe based on the selected option
+            if selected_option in dashboard_links:
+                title = selected_option
+                link = dashboard_links[selected_option]
+                
+                with card_container(key=selected_option.replace(" | ", "").upper() + "REVENUE"):
+                    iframe_code = generate_iframe(title, link)
                     st.markdown(iframe_code, unsafe_allow_html=True)
-
-            elif selected_option == "YTD | Summary":
-                            
-                            with card_container(key="yTDREVENUE"):
-                                #iframe code with expanded width and centered alignment
-                                iframe_code = """
-                                <div style="display: flex; justify-content: center;">
-                                    <iframe title="DASHBOARD - MTD | Summary" 
-                                            width="1100" 
-                                            height="700" 
-                                            src="https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSection8b673c123d2245457844&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false" 
-                                            frameborder="0" 
-                                            allowFullScreen="true">
-                                    </iframe>
-                                </div>
-                                """
-                                # Display the iframe in Streamlit
-                                st.markdown(iframe_code, unsafe_allow_html=True)
-                
-            elif selected_option == "QRT | Summary":
-                            
-                            with card_container(key="QTDREVENUE"):
-                                #iframe code with expanded width and centered alignment
-                                iframe_code = """
-                                <div style="display: flex; justify-content: center;">
-                                    <iframe title="DASHBOARD - MTD | Summary" 
-                                            width="1100" 
-                                            height="700" 
-                                            src="https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSection8b673c123d2245457844&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false" 
-                                            frameborder="0" 
-                                            allowFullScreen="true">
-                                    </iframe>
-                                </div>
-                                """
-                                # Display the iframe in Streamlit
-                            st.markdown(iframe_code, unsafe_allow_html=True)
-                
-        
-                   
-            elif selected_option == "Annual | Summary":
-                with card_container(key="ATDREVENUE"):
-                    #iframe code with expanded width and centered alignment
-                        iframe_code = """
-                        <div style="display: flex; justify-content: center;">
-                            <iframe title="DASHBOARD - MTD | Summary" 
-                                    width="1100" 
-                                    height="700" 
-                                    src="https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSection8b673c123d2245457844&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false" 
-                                    frameborder="0" 
-                                    allowFullScreen="true">
-                            </iframe>
-                        </div>
-                        """
-                        # Display the iframe in Streamlit
-                        st.markdown(iframe_code, unsafe_allow_html=True)
-
     else:
         st.write("You are not logged in. Click **[Account]** on the side menu to Login or Signup to proceed")
