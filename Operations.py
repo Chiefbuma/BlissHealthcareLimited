@@ -86,57 +86,7 @@ def app():
                 # Display the iframe in Streamlit
                 st.markdown(iframe_code, unsafe_allow_html=True)
 
-            with st.expander("YTD"):   
-               
-                iframe_code = """
-                <div style="display: flex; justify-content: center;">
-                    <iframe title="DASHBOARD - YTD | Summary" 
-                            width="1100" 
-                            height="700" 
-                            src="https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSection0e8045cd64049172b21e&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false" 
-                            frameborder="0" 
-                            allowFullScreen="true">
-                    </iframe>
-                </div>
-                """
-                # Display the iframe in Streamlit
-                st.markdown(iframe_code, unsafe_allow_html=True)
-                
-                
-            with st.expander("QTR"):
-                #iframe code with expanded width and centered alignment
-                iframe_code = """
-                <div style="display: flex; justify-content: center;">
-                    <iframe title="DASHBOARD - QRT | Summary" 
-                            width="1100" 
-                            height="700" 
-                            src="https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSectione1f47eff2818000c1b5e&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false" 
-                            frameborder="0" 
-                            allowFullScreen="true">
-                    </iframe>
-                </div>
-                """
-                # Display the iframe in Streamlit
-                st.markdown(iframe_code, unsafe_allow_html=True)
-            
-            
-            with st.expander("Annual"):
-                #iframe code with expanded width and centered alignment
-                iframe_code = """
-                <div style="display: flex; justify-content: center;">
-                    <iframe title="DASHBOARD - Annual | Summary" 
-                            width="1100" 
-                            height="700" 
-                            src="https://app.powerbi.com/reportEmbed?reportId=16f6496e-6f9e-4b0c-8417-9291ff93938c&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63&pageName=ReportSectionddd49e404c5916bd387e&navContentPaneEnabled=false&filterPaneEnabled=false&bookmarkPaneEnabled=false&navigation=false" 
-                            frameborder="0" 
-                            allowFullScreen="true">
-                    </iframe>
-                </div>
-                """
-                # Display the iframe in Streamlit
-                st.markdown(iframe_code, unsafe_allow_html=True)
-                
-            
+           
         
             
             
