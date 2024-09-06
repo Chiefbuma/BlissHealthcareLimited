@@ -67,7 +67,7 @@ def app():
             
            
             # Cache the iframe HTML generation
-            @st.cache_data
+            @st.cache_resource
             def generate_iframe(title, link):
                 iframe_code = f"""
                 <div style="display: flex; justify-content: center;">
