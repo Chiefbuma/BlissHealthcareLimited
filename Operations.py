@@ -65,7 +65,10 @@ def app():
            
             fraction_passed = fraction_of_days_in_month(datetime.strptime(Lastdate, "%Y-%m-%d").date())
             
-            with card_container(key="NEWMTD"):   
+            
+            container = st.container(border=True, height=700)
+                                
+            with container:
                 #iframe code with expanded width and centered alignment
                 iframe_code = """
                 <div style="display: flex; justify-content: center;">
