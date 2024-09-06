@@ -69,7 +69,7 @@ def app():
                             
            
             # Cache the iframe HTML generation
-            @st.cache_data
+            @st.cache_resource
             def generate_iframe(title, link):
                 iframe_code = f"""
                 <div style="display: flex; justify-content: center;">
@@ -99,7 +99,8 @@ def app():
                 title = selected_option
                 link = dashboard_links[selected_option]
                 
-                iframe_code = generate_iframe(title, link)
-                st.markdown(iframe_code, unsafe_allow_html=True)
+                with card_container(key=selected_option.replace(" | ", "").upper() + "REVENUE"):
+                    iframe_code = generate_iframe(title, link)
+                    st.markdown(iframe_code, unsafe_allow_html=True)
     else:
         st.write("You are not logged in. Click **[Account]** on the side menu to Login or Signup to proceed")
