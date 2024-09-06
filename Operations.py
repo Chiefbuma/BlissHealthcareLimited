@@ -66,10 +66,11 @@ def app():
             fraction_passed = fraction_of_days_in_month(datetime.strptime(Lastdate, "%Y-%m-%d").date())
             
             ui.card(
-                        content="                      Bliss Healthcare Operation Dashboard",
+                        content="Bliss Healthcare Operation Dashboard",
                         key="MCcard3"
                     ).render()
-            with st.expander("MTD"):   
+           
+            with card_container(key="NEWMTD"):   
                 #iframe code with expanded width and centered alignment
                 iframe_code = """
                 <div style="display: flex; justify-content: center;">
@@ -85,7 +86,7 @@ def app():
                 # Display the iframe in Streamlit
                 st.markdown(iframe_code, unsafe_allow_html=True)
 
-            
+            with st.expander("YTD"):   
                
                 iframe_code = """
                 <div style="display: flex; justify-content: center;">
