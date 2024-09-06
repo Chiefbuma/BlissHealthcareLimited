@@ -103,7 +103,7 @@ def app():
                                 # Display the iframe in Streamlit
                                 st.markdown(iframe_code, unsafe_allow_html=True)
                 
-            elif selected_option == "QRT | Summaryy":
+            elif selected_option == "QRT | Summary":
                             
                             with card_container(key="QTDREVENUE"):
                                 #iframe code with expanded width and centered alignment
