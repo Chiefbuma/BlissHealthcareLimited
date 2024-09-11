@@ -351,23 +351,26 @@ def app():
                     ui.card(title="Last Updated on:", content=formatted_date, key="Revcard4").render()  
                 st.plotly_chart(fig_request_by_type_Rev, use_container_width=True)
                 
-                
-             
 
-                # Power BI embed URL
-                embed_url = "https://app.powerbi.com/reportEmbed?reportId=902d5299-7684-421e-a96d-03158eba6a33&autoAuth=true&ctid=e2fcf853-8bfc-47b9-812f-359fb0a13c63"
+                # Container with custom height and border
+                container = st.container()
 
-                # Set the width and height for the iframe
-                iframe_width = 1400
-                iframe_height = 1200
+                with container:
+                    # Metabase iframe code with expanded width and centered alignment
+                    iframe_code = """
+                    <div style="display: flex; justify-content: center;">
+                        <iframe title="Metabase Dashboard" 
+                                width="1100" 
+                                height="700" 
+                                src="http://localhost:3000/public/dashboard/851005ea-3fd6-4172-b6ef-7d4304b3ac18" 
+                                frameborder="0" 
+                                allowFullScreen="true">
+                        </iframe>
+                    </div>
+                    """
+                    # Display the iframe in Streamlit
+                    st.markdown(iframe_code, unsafe_allow_html=True)
 
-                # HTML code to embed the Power BI report
-                iframe_code = f'''
-                <iframe width="{iframe_width}" height="{iframe_height}" src="{embed_url}" frameborder="0" allowFullScreen="true"></iframe>
-                '''
-                
-                # Display the iframe in Streamlit
-                st.markdown(iframe_code, unsafe_allow_html=True)
 
 
                 
