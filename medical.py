@@ -355,22 +355,52 @@ def app():
                 # Container with custom height and border
                 container = st.container()
 
-                with container:
-                    # Metabase iframe code with expanded width and centered alignment
-                    iframe_code = """
-                    <div style="display: flex; justify-content: center;">
-                        <iframe title="Metabase Dashboard" 
-                                width="1100" 
-                                height="700" 
-                                src="http://localhost:3000/public/dashboard/851005ea-3fd6-4172-b6ef-7d4304b3ac18" 
-                                frameborder="0" 
-                                allowFullScreen="true">
-                        </iframe>
-                    </div>
-                    """
-                    # Display the iframe in Streamlit
-                    st.markdown(iframe_code, unsafe_allow_html=True)
+                with card_container(key="MTDclinic"):
+                    # Metabase dashboard base URL
+                    metabase_base_url = "http://localhost:3000/public/dashboard/851005ea-3fd6-4172-b6ef-7d4304b3ac18"
+                    
+                    
+                    selected_region ="AK"
+                    # Dynamically construct the URL with the selected filter
+                    # For example, adding a `region` parameter to the URL
+                    metabase_filtered_url = f"{metabase_base_url}?Location={selected_region}"
 
+                    # Container with custom height and border
+                    container = st.container()
+
+                    with card_container(key="MTDnew"):
+                        # Metabase iframe code with dynamic filter and centered alignment
+                        iframe_code = f"""
+                        <div style="display: flex; justify-content: center;">
+                            <iframe title="Metabase Dashboard" 
+                                    width="1500" 
+                                    height="700" 
+                                    src="{metabase_filtered_url}" 
+                                    frameborder="0" 
+                                    allowFullScreen="true">
+                            </iframe>
+                        </div>
+                        """
+                        # Display the iframe in Streamlit
+                        st.markdown(iframe_code, unsafe_allow_html=True)
+                                # Create a container for the iframe
+                        container = st.container()
+
+
+                        with container:
+                            # Define the iframe code for the Metabase dashboard
+                            iframe_code = """
+                            <iframe
+                                src="http://localhost:3000/public/dashboard/173a3e85-0299-4abb-8fb0-35e2fa8b1d06"
+                                frameborder="0"
+                                width="800"
+                                height="600"
+                                allowtransparency="true">
+                            </iframe>
+                            """
+
+                            # Display the iframe using Streamlit's markdown functionality
+                            st.markdown(iframe_code, unsafe_allow_html=True)
 
 
                 
