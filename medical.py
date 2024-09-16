@@ -74,10 +74,24 @@ def app():
             LastUpdate_df = pd.DataFrame(Lastdateresponse.data)
             LastUpdate_df = LastUpdate_df[['Last_Updated']]  # Assuming 'Last_Updated' is the column you want
             Lastdate = LastUpdate_df.iloc[0]['Last_Updated']
-          
+            
+            Lastdate = LastUpdate_df.iloc[0]['Last_Updated']
+            Lastdate_date = datetime.strptime(Lastdate, "%Y-%m-%d").date()
+            
+            
+            # Convert Lastdate to a datetime.date object
+            dateword = datetime.strptime(Lastdate, "%Y-%m-%d").date()
+
+            # Format the date as "Friday 24th 2024"
+            formatted_date = dateword.strftime("%A %dth %Y")
+
 
             with card_container(key="MTDclinic"):
-                            # User inputs for location and month
+                cols = st.columns(4)
+                with cols[3]:
+                   st.write(f"Last updated on {formatted_date}")
+
+                # User inputs for location and month
                 month=current_month_name
 
                 # Construct the filtered Metabase URL
