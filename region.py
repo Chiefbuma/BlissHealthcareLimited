@@ -117,27 +117,25 @@ def app():
                                     # Create a container for the iframe
                 else:
     
-                    with card_container(key="MTDclinic"):
-                
-                        # User inputs for location and month
-                        month=current_month_name
+                    # User inputs for location and month
+                    month=current_month_name
 
-                        # Construct the filtered Metabase URL
-                        metabase_url = f"http://localhost:3000/public/dashboard/628833d3-9b9e-411a-8d1c-6c6aea544e9b?region={region}&location={location}&month={month}"
+                    # Construct the filtered Metabase URL
+                    metabase_url = f"http://localhost:3000/public/dashboard/628833d3-9b9e-411a-8d1c-6c6aea544e9b?region={region}&location={location}&month={month}"
 
 
-                        # Embed in Streamlit using iframe
-                        st.markdown(f"""
-                            <iframe
-                                src="{metabase_url}"
-                                frameborder="0"
-                                width="1300"
-                                height="1000"
-                                allowtransparency
-                            ></iframe>
-                        """, unsafe_allow_html=True)
-                                        # Create a container for the iframe
-                
+                    # Embed in Streamlit using iframe
+                    st.markdown(f"""
+                        <iframe
+                            src="{metabase_url}"
+                            frameborder="0"
+                            width="1300"
+                            height="1000"
+                            allowtransparency
+                        ></iframe>
+                    """, unsafe_allow_html=True)
+                                    # Create a container for the iframe
+            
 
                
     else:
