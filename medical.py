@@ -32,7 +32,8 @@ def app():
                  
     if st.session_state.is_authenticated:
         location=st.session_state.Region
-        
+        region=st.session_state.Location
+        location=st.session_state.Region
       
         @st.cache_resource
         def init_connection():
@@ -95,7 +96,7 @@ def app():
                 month=current_month_name
 
                 # Construct the filtered Metabase URL
-                metabase_url = f"http://localhost:3000/public/dashboard/628833d3-9b9e-411a-8d1c-6c6aea544e9b?location={location}&month={month}"
+                metabase_url = f"http://localhost:3000/public/dashboard/628833d3-9b9e-411a-8d1c-6c6aea544e9b?region={region}&location={location}&month={month}"
 
 
                 # Embed in Streamlit using iframe
