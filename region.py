@@ -105,7 +105,7 @@ def app():
                         src="{metabase_url}"
                         frameborder="0"
                         width="1300"
-                        height="800"
+                        height="1000"
                         allowtransparency
                     ></iframe>
                 """, unsafe_allow_html=True)
@@ -128,7 +128,7 @@ def app():
                             src="{metabase_url}"
                             frameborder="0"
                             width="1300"
-                            height="800"
+                            height="1000"
                             allowtransparency
                         ></iframe>
                     """, unsafe_allow_html=True)
