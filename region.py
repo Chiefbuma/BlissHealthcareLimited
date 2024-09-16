@@ -91,35 +91,17 @@ def app():
                 cols = st.columns(4)
                 with cols[3]:
                    st.write(f"Last updated on {formatted_date}")
-
-                # User inputs for location and month
-                month=current_month_name
-
-                # Construct the filtered Metabase URL
-                metabase_url = f"http://localhost:3000/public/dashboard/ff460c2f-12bc-4a84-b634-9320345e66d0?region={region}&month={month}"
-
-
-                # Embed in Streamlit using iframe
-                st.markdown(f"""
-                    <iframe
-                        src="{metabase_url}"
-                        frameborder="0"
-                        width="1300"
-                        height="1000"
-                        allowtransparency
-                    ></iframe>
-                """, unsafe_allow_html=True)
-                                # Create a container for the iframe
                 
-            with st.expander('REGION MEDICAL CENTRE MTD SUMMARY'):
-                
-                with card_container(key="MTDclinic"):
-              
+                with cols[0]:
+                   choice= ui.tabs(options=['MTD | Region overall','MTD | Region centres'], default_value='MTD | Region overall', key="aries")
+                            
+                if choice == 'MTD | Region overall':
+                      
                     # User inputs for location and month
                     month=current_month_name
 
                     # Construct the filtered Metabase URL
-                    metabase_url = f"http://localhost:3000/public/dashboard/628833d3-9b9e-411a-8d1c-6c6aea544e9b?region={region}&location={location}&month={month}"
+                    metabase_url = f"http://localhost:3000/public/dashboard/ff460c2f-12bc-4a84-b634-9320345e66d0?region={region}&month={month}"
 
 
                     # Embed in Streamlit using iframe
@@ -133,6 +115,28 @@ def app():
                         ></iframe>
                     """, unsafe_allow_html=True)
                                     # Create a container for the iframe
+                else:
+    
+                    with card_container(key="MTDclinic"):
+                
+                        # User inputs for location and month
+                        month=current_month_name
+
+                        # Construct the filtered Metabase URL
+                        metabase_url = f"http://localhost:3000/public/dashboard/628833d3-9b9e-411a-8d1c-6c6aea544e9b?region={region}&location={location}&month={month}"
+
+
+                        # Embed in Streamlit using iframe
+                        st.markdown(f"""
+                            <iframe
+                                src="{metabase_url}"
+                                frameborder="0"
+                                width="1300"
+                                height="1000"
+                                allowtransparency
+                            ></iframe>
+                        """, unsafe_allow_html=True)
+                                        # Create a container for the iframe
                 
 
                
