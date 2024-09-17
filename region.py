@@ -91,7 +91,7 @@ def app():
                 
                 
                 # Define the SharePoint site URL
-                SHAREPOINT_URL = "https://blissgvske.sharepoint.com/:u:/r/SitePages/About-me---Sharepoint-Admin.aspx?csf=1&web=1&share=EX9lSJGiaIFCkklB477HCQUBsw_c2WX7eki0Mc32QS-CEA&e=u7YXyA"
+                SHAREPOINT_URL = "https://blissgvske.sharepoint.com/sites/Dashboard?market=en-US"
 
                 # Embed the SharePoint site using an iframe
                 st.markdown(
