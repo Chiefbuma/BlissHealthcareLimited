@@ -31,8 +31,8 @@ def app():
         # Initialize session state if it doesn't exist
                  
     if st.session_state.is_authenticated:
-        region=st.session_state.Region
-        location=st.session_state.Location
+        region=st.session_state.Location
+        location=st.session_state.Region
 
         @st.cache_resource
         def init_connection():

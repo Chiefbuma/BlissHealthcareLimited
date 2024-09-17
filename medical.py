@@ -31,8 +31,8 @@ def app():
         # Initialize session state if it doesn't exist
                  
     if st.session_state.is_authenticated:
-        location=st.session_state.Location
-      
+        location=st.session_state.Region
+        
         @st.cache_resource
         def init_connection():
             url = "https://effdqrpabawzgqvugxup.supabase.co"
