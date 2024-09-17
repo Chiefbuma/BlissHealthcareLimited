@@ -518,8 +518,4 @@ def app():
             #st.write(RR_pivot_Actual, use_container_width=True)
             #st.write(FF_pivot_Actual, use_container_width=True)
     else:
-       st.write("You  are  not  logged  in. Click   **[Account]**  on the  side  menu to Login  or  Signup  to proceed")
-
-    
-
-
+        st.write("You  are  not  logged  in. Click   **[Account]**  on the  side  menu to Login  or  Signup  to proceed")
