@@ -12,12 +12,21 @@ import streamlit_option_menu as option_menu
 import streamlit_shadcn_ui as ui
 from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
+from sharepoint import SharePoint
 from postgrest import APIError
 from IPython.display import HTML
 import main
 from streamlit_dynamic_filters import DynamicFilters
 from urllib.error import HTTPError
 
+
+
+
+# Path to your service account credentials file
+SERVICE_ACCOUNT_FILE = 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Streamlit/blisshealtchare-fa7b1fd01b22.json'
+
+# Scopes for Google Sheets API
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 def app():
     try:
@@ -34,67 +43,8 @@ def app():
             st.title("New Optical Order form")
             st.markdown("Enter the details of the new Order.")
 
-            with card_container(key="table1"):
-                with card_container(key="summary"):
-# Define the layout using `ui.input` for inputs and `st.write` for labels
-                    colz = st.columns([1,2,1])
-                    with colz[1]:
-                      st.markdown("### Maintenance Request")
-                    # Column layout for Patient Name
-                    cola = st.columns([2, 6,1])
-                    with cola[0]:
-                        st.write("**Department:**")
-                    with cola[1]:
-                        Department = ui.input(key="Dep")
-                    # Column layout for UHID
-                    colb = st.columns([2, 6,1])
-                    with colb[0]:
-                        st.write("**Report Type:**")
-                    with colb[1]:
-                        Report = ui.input(key="report")
-                    # Column layout for Modality
-                    colc = st.columns([2, 6,1])
-                    with colc[0]:
-                        st.write("**Item:**")
-                    with colc[1]:
-                        Item = ui.input(key="item")
+           
 
-                    # Column layout for Procedure
-                    cold = st.columns([2, 6,1])
-                    with cold[0]:
-                        st.write("**Description of works:**")
-                    with cold[1]:
-                        description = ui.input(key="works")
-
-                    # Column layout for Referred By
-                    cole = st.columns([2, 6,1])
-                    with cole[0]:
-                        st.write("**Labour:**")
-                    with cole[1]:
-                        Labor = ui.input(key="Labor")
-
-                    # Column layout for Facility
-                    colf = st.columns([2, 6,1])
-                    with colf[0]:
-                        st.write("**Total Amount:**")
-                    with colf[1]:
-                        Total = ui.input(key="Total")
-
-                    # Column layout for MPESA No
-                    colg = st.columns([2, 6,1])
-                    with colg[0]:
-                        st.write("**MPESA Number.:**")
-                    with colg[1]:
-                        MPESA_no = ui.input(key="MPESA_no")
-                    colj=st.columns(7)
-                    with colj[3]:
-                            ui_result = ui.button("Submit", key="btn2")  
-                            if ui_result: 
-                             with st.spinner('Wait! Reloading view...'):
-                                st.cache_data.clear()
-
-        else:
-            st.write("You are not logged in. Click **[Account]** on the side menu to Login or Signup to proceed")
     
     except APIError as e:
         st.error("Cannot connect, Kindly refresh")
