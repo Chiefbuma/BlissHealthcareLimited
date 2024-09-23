@@ -12,45 +12,40 @@ SHAREPOINT_SITE = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReport
 
 
 class SharePoint:
+    
     def auth(self):
+        self.authcookie = Office365(
+            SHAREPOINT_URL,
+            username=USERNAME,
+            password=PASSWORD,
+        ).GetCookies()
+        self.site = Site(
+            SHAREPOINT_SITE,
+            version=Version.v365,
+            authcookie=self.authcookie,
+        )
+        return self.site
+
+   def connect_to_list(self, ls_name, columns=None, query=None, next_page=None):
         try:
-            # Authenticate with SharePoint Online (Office 365)
-            self.authcookie = Office365(
-                SHAREPOINT_URL,
-                username=USERNAME,
-                password=PASSWORD,
-            ).GetCookies()
-
-            # Access the SharePoint site with the obtained cookie
-            self.site = Site(
-                SHAREPOINT_SITE,
-                version=Version.v365,  # Use SharePoint version 365
-                authcookie=self.authcookie,
-            )
-            return self.site
-
-        except Exception as e:
-            print(f"Authentication failed: {e}")
-            raise
-
-    def connect_to_list(self, ls_name, columns=None):
-        try:
-            # Authenticate and access the site
             self.auth_site = self.auth()
-
-            # Access the specified list and retrieve list items
-            list_data = self.auth_site.List(list_name=ls_name).GetListItems()
-
-            # Filter list data based on provided columns, if any
+            sp_list = self.auth_site.List(list_name=ls_name)
+            
+            # If next_page is provided, use it for pagination
+            if next_page:
+                list_data = sp_list.GetListItems(query=query, next_page=next_page)
+            else:
+                list_data = sp_list.GetListItems(query=query)
+            
+            # Filter the list based on the provided columns
             if columns:
                 filtered_list_data = [
                     {col: item[col] for col in columns if col in item}
-                    for item in list_data
+                    for item in list_data['results']  # assuming the result is stored under 'results'
                 ]
-                return filtered_list_data
+                return {'results': filtered_list_data, '__next': list_data.get('__next')}
             else:
-                return list_data
-
+                return {'results': list_data['results'], '__next': list_data.get('__next')}
+        
         except Exception as e:
-            print(f"Failed to retrieve list data: {e}")
-            raise
+            raise e

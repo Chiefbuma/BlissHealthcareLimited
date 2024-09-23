@@ -20,14 +20,6 @@ from streamlit_dynamic_filters import DynamicFilters
 from urllib.error import HTTPError
 
 
-
-
-# Path to your service account credentials file
-SERVICE_ACCOUNT_FILE = 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Streamlit/blisshealtchare-fa7b1fd01b22.json'
-
-# Scopes for Google Sheets API
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-
 def app():
     try:
         if 'is_authenticated' not in st.session_state:
@@ -43,25 +35,64 @@ def app():
             st.title("New Optical Order form")
             st.markdown("Enter the details of the new Order.")
 
-            # Establishing a Google Sheets connection
-            credentials = Credentials.from_service_account_file(
-                SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-            conn = GSheetsConnection(credentials=credentials,connection_name="gsheets_conn",)
+            with card_container(key="table1"):
+                with card_container(key="summary"):
+# Define the layout using `ui.input` for inputs and `st.write` for labels
+                    colz = st.columns([1,2,1])
+                    with colz[1]:
+                      st.markdown("### Maintenance Request")
+                    # Column layout for Patient Name
+                    cola = st.columns([2, 6,1])
+                    with cola[0]:
+                        st.write("**Department:**")
+                    with cola[1]:
+                        Department = ui.input(key="Dep")
+                    # Column layout for UHID
+                    colb = st.columns([2, 6,1])
+                    with colb[0]:
+                        st.write("**Report Type:**")
+                    with colb[1]:
+                        Report = ui.input(key="report")
+                    # Column layout for Modality
+                    colc = st.columns([2, 6,1])
+                    with colc[0]:
+                        st.write("**Item:**")
+                    with colc[1]:
+                        Item = ui.input(key="item")
 
-            # Fetch existing vendors data
-            spreadsheet_id = '1Gq9-Uhq-JeBNWBunkmen2-YclAxNL8gp'  # Replace with your actual spreadsheet ID
-            worksheet_name = 'Esslor'  # Replace with your actual worksheet name
+                    # Column layout for Procedure
+                    cold = st.columns([2, 6,1])
+                    with cold[0]:
+                        st.write("**Description of works:**")
+                    with cold[1]:
+                        description = ui.input(key="works")
 
-            try:
-                existing_data = conn.read(spreadsheet=spreadsheet_id, worksheet=worksheet_name, usecols=list(range(29)), ttl=5)
-                existing_data = existing_data.dropna(how="all")
-                st.dataframe(existing_data)
-            except ValueError as ve:
-                st.error(f"Value error: {ve}")
-            except HTTPError as he:
-                st.error(f"HTTP error occurred: {he.reason}")
-            except Exception as e:
-                st.error(f"An error occurred while reading the spreadsheet: {str(e)}")
+                    # Column layout for Referred By
+                    cole = st.columns([2, 6,1])
+                    with cole[0]:
+                        st.write("**Labour:**")
+                    with cole[1]:
+                        Labor = ui.input(key="Labor")
+
+                    # Column layout for Facility
+                    colf = st.columns([2, 6,1])
+                    with colf[0]:
+                        st.write("**Total Amount:**")
+                    with colf[1]:
+                        Total = ui.input(key="Total")
+
+                    # Column layout for MPESA No
+                    colg = st.columns([2, 6,1])
+                    with colg[0]:
+                        st.write("**MPESA Number.:**")
+                    with colg[1]:
+                        MPESA_no = ui.input(key="MPESA_no")
+                    colj=st.columns(7)
+                    with colj[3]:
+                            ui_result = ui.button("Submit", key="btn2")  
+                            if ui_result: 
+                             with st.spinner('Wait! Reloading view...'):
+                                st.cache_data.clear()
 
         else:
             st.write("You are not logged in. Click **[Account]** on the side menu to Login or Signup to proceed")
