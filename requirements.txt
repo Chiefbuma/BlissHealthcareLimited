@@ -18,7 +18,7 @@ streamlit_dynamic_filters
 st-gsheets-connection
 streamlit-aggrid
 
-# Add specific version constraints for the conflicting packages
-h2<5
-httpx[http2]<0.28
 gotrue<3.0
+httpx[http2]<0.28
+h2<5
+
