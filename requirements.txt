@@ -17,6 +17,6 @@ SharePlum==0.5.1
 streamlit_dynamic_filters
 st-gsheets-connection
 streamlit-aggrid
-scipy.stats 
+scipy
 
 
