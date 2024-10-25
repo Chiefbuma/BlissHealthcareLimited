@@ -142,13 +142,74 @@ def app():
                 )
 
 
-                st.write(grouped_df)
-                
-            
-                
+        st.write(grouped_df)
+        
+        
+        import pandas as pd
+        import matplotlib.pyplot as plt
+        import numpy as np
+        from scipy.stats import gaussian_kde
+        import streamlit as st
 
-            else:
-                st.write("Please upload a CSV file to proceed.")
+        # Assuming 'filtered_merged_df' is already defined and contains the 'TAT' and 'Pharmacy_Billing_Time' columns
+
+        # Extract just the time component
+        filtered_merged_df['time'] = filtered_merged_df['Pharmacy_Billing_Time'].dt.time
+
+        # Filter for times between 07:00:00 and 20:00:00
+        start_time = pd.to_datetime("07:00:00").time()
+        end_time = pd.to_datetime("20:00:00").time()
+        filtered_period_df = filtered_merged_df[
+            (filtered_merged_df['time'] >= start_time) & 
+            (filtered_merged_df['time'] <= end_time)
+        ]
+
+        # Convert time to hours for the x-axis
+        time_in_hours = (
+            filtered_period_df['Pharmacy_Billing_Time'].dt.hour + 
+            filtered_period_df['Pharmacy_Billing_Time'].dt.minute / 60
+        )
+
+        # Optional: Use a subset of data if the dataset is too large
+        sample_size = min(2000, len(filtered_period_df))  # Adjust sample size as needed
+        sampled_data = filtered_period_df.sample(n=sample_size, random_state=42)
+        time_sampled = time_in_hours.loc[sampled_data.index]
+        tat_sampled = sampled_data['TAT']
+        index_sampled = sampled_data.index
+
+        # Calculate density for color mapping
+        xy = np.vstack([time_sampled, index_sampled])
+        density = gaussian_kde(xy)(xy)
+
+        # Create scatter plot with density-based coloring and TAT-based point sizing
+        plt.figure(figsize=(12, 6))
+        scatter = plt.scatter(
+            time_sampled,
+            index_sampled,
+            s=tat_sampled,       # Size points by TAT values
+            c=density,           # Color points by density
+            cmap='viridis', 
+            alpha=0.7
+        )
+
+        # Customize the plot with 3-hour intervals
+        plt.title('Distribution of Patient Visits by Time of Day and Effect on TAT')
+        plt.xlabel('Time of Day')
+        plt.xticks(range(7, 21, 3), [f"{hour} {'AM' if hour < 12 else 'PM'}" for hour in range(7, 21, 3)], rotation=45)
+        plt.ylabel('Patient Visits')
+        plt.colorbar(scatter, label='Visit Density')  # Density color bar for interpreting color
+        plt.grid(True, linestyle='--', alpha=0.7)
+        plt.tight_layout()
+
+        # Display the plot in Streamlit
+        st.pyplot(plt)
+
+        # Clear the figure after rendering
+        plt.clf()
+      
+
+    else:
+        st.write("Please upload a CSV file to proceed.")
 
 if __name__ == "__main__":
     app()
