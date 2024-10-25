@@ -73,8 +73,89 @@ def app():
                 Consultation_df['date'] = Consultation_df['ConsultationBillingTime'].dt.date
                 Pharmacy_df['date'] = Pharmacy_df['Pharmacy_Billing_Time'].dt.date
                 
-                # Display the filtered Pharmacy DataFrame
-                st.write(Pharmacy_df)
+                                # Group by date, UHID, and FacilityName, and get the earliest Pharmacy_Billing_Time
+                TAT_pharmacy_df = Pharmacy_df.groupby(['date', 'UHID', 'PatientName','FacilityName']).agg({
+                    'Pharmacy_Billing_Time': 'min',
+                    'Department': 'first'
+                }).reset_index()
+
+
+                # Group by date, UHID, and FacilityName, and get the earliest Pharmacy_Billing_Time
+                TAT_consulation_df = Consultation_df.groupby(['date', 'UHID', 'PatientName','FacilityName']).agg({
+                    'ConsultationBillingTime': 'min',
+                    'Department': 'first'
+                }).reset_index()
+                
+                
+                                
+                                # Create a new 'Unique' column by concatenating UHID, PatientName, FacilityName, and date
+                TAT_pharmacy_df['Unique'] = TAT_pharmacy_df['UHID'].astype(str) + "_" + \
+                                            TAT_pharmacy_df['PatientName'].astype(str) + "_" + \
+                                            TAT_pharmacy_df['FacilityName'].astype(str) + "_" + \
+                                            TAT_pharmacy_df['date'].astype(str)
+
+                TAT_consulation_df['Unique'] = TAT_consulation_df['UHID'].astype(str) + "_" + \
+                                        TAT_consulation_df['PatientName'].astype(str) + "_" + \
+                                        TAT_consulation_df['FacilityName'].astype(str) + "_" + \
+                        TAT_consulation_df['date'].astype(str)
+                        
+                                # Merge TAT_Pharmacy_df onto TAT_Consultation_df on 'Unique' column
+                merged_df = TAT_consulation_df.merge(
+                    TAT_pharmacy_df[['Unique', 'Pharmacy_Billing_Time']],
+                    on='Unique',
+                    how='left'
+                )
+
+                # Filter the merged DataFrame where Pharmacy_Billing_Time is not NaT or null
+                filtered_merged_df = merged_df[merged_df['Pharmacy_Billing_Time'].notna()]
+                
+                
+                
+                # Create a copy of filtered_merged_df if needed
+                filtered_merged_df = filtered_merged_df.copy()
+
+                # Calculate the time difference in minutes and create the TAT column
+                filtered_merged_df.loc[:, 'TAT'] = (filtered_merged_df['Pharmacy_Billing_Time'] - filtered_merged_df['ConsultationBillingTime']).dt.total_seconds() / 60
+
+                import pandas as pd
+
+                # Assuming filtered_merged_df has already been created and contains Pharmacy_Billing_Time
+
+                def classify_shift(pharmacy_billing_time):
+                    if pharmacy_billing_time.hour >= 20 or pharmacy_billing_time.hour < 7:
+                        return 'Night Shift'
+                    elif 7 <= pharmacy_billing_time.hour < 12:
+                        return 'Morning'
+                    elif 12 <= pharmacy_billing_time.hour < 15:
+                        return 'Noon'
+                    elif 15 <= pharmacy_billing_time.hour < 19:
+                        return 'Evening'
+    
+
+                # Create a new column 'time' to extract only the time part
+                filtered_merged_df['time'] = filtered_merged_df['Pharmacy_Billing_Time'].dt.time
+
+
+                # Create a new column 'Shift' by applying the classify_shift function
+                filtered_merged_df['Shift'] = filtered_merged_df['Pharmacy_Billing_Time'].apply(classify_shift)
+
+                
+                # Assuming filtered_merged_df has already been created and contains the necessary columns
+
+                # Group by 'date', 'FacilityName', and 'Shift'
+                grouped_df = filtered_merged_df.groupby(['date', 'FacilityName']).agg(
+                    Unique_UHID_Count=('UHID', 'nunique'),  # Count of unique UHID
+                    Average_TAT=('TAT', 'mean')  # Average TAT
+                ).reset_index()
+
+                # Add 20 minutes to Average TAT
+                grouped_df['Average_TAT'] += 20
+                
+                
+                st.write(grouped_df)
+
+
+
 
             else:
                 st.write("Please upload a CSV file to proceed.")
