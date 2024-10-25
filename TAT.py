@@ -207,6 +207,43 @@ def app():
 
                 # Clear the figure after rendering
                 plt.clf()
+                
+                # Optional: Use a subset of data if the dataset is too large
+                sample_size = min(2000, len(filtered_period_df))  # Adjust sample size as needed
+                sampled_data = filtered_period_df.sample(n=sample_size, random_state=42)
+                time_sampled = time_in_hours.loc[sampled_data.index]
+                tat_sampled = sampled_data['TAT']
+
+                # Calculate density for color mapping
+                xy = np.vstack([time_sampled, tat_sampled])
+                density = gaussian_kde(xy)(xy)
+
+                # Create scatter plot with density-based coloring and TAT-based point sizing
+                plt.figure(figsize=(12, 6))
+                scatter = plt.scatter(
+                    time_sampled,
+                    tat_sampled,
+                    s=tat_sampled,  # Size points by TAT values
+                    c=density,      # Color points by density
+                    cmap='viridis', 
+                    alpha=0.7,
+                    edgecolor='w'  # Optional: add edge color for better visibility
+                )
+
+                # Customize the plot with 3-hour intervals
+                plt.title('TAT Distribution by Time of Day', fontsize=14)
+                plt.xlabel('Time of Day', fontsize=12)
+                plt.xticks(range(7, 21, 3), [f"{hour} {'AM' if hour < 12 else 'PM'}" for hour in range(7, 21, 3)], rotation=45)
+                plt.ylabel('Average TAT (minutes)', fontsize=12)
+                plt.colorbar(scatter, label='Point Density')  # Density color bar for interpreting color
+                plt.grid(True, linestyle='--', alpha=0.7)
+                plt.tight_layout()
+
+                # Display the plot in Streamlit
+                st.pyplot(plt)
+
+                # Clear the figure after rendering (optional)
+                plt.clf()
 
         
         
