@@ -82,6 +82,9 @@ def app():
                 # Add a new 'date' column by extracting the date from the billing time columns
                 Consultation_df['date'] = Consultation_df['ConsultationBillingTime'].dt.date
                 Pharmacy_df['date'] = Pharmacy_df['Pharmacy_Billing_Time'].dt.date
+                
+                
+                st.write(Pharmacy_df)
 
             else:
                 st.write("Please upload an Excel file to proceed.")
