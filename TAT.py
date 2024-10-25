@@ -124,6 +124,9 @@ def app():
                 # Create a new column 'Shift' by applying the classify_shift function
                 filtered_merged_df['Shift'] = filtered_merged_df['Pharmacy_Billing_Time'].apply(classify_shift)
 
+                
+                
+
                 # Group by 'date', 'FacilityName', and 'Shift'
                 grouped_df = filtered_merged_df.groupby(['date', 'FacilityName']).agg(
                     Unique_UHID_Count=('UHID', 'nunique'),  # Count of unique UHID
@@ -132,8 +135,17 @@ def app():
 
                 # Add 20 minutes to Average TAT
                 grouped_df['Average_TAT'] += 20
-                
+
+                #Convert TAT from minutes to hours and minutes in the format "X hr Y min"
+                grouped_df['Average_TAT_Hours'] = grouped_df['Average_TAT'].apply(
+                    lambda x: f"{int(x // 60)} hr {int(x % 60)} min"
+                )
+
+
                 st.write(grouped_df)
+                
+            
+                
 
             else:
                 st.write("Please upload a CSV file to proceed.")
