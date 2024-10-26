@@ -144,26 +144,21 @@ def app():
                 # Add 20 minutes to Average TAT
                 grouped_df['Average_TAT'] += 20
 
-                #Convert TAT from minutes to hours and minutes in the format "X hr Y min"
-                grouped_df['Average_TAT_Hours'] = grouped_df['Average_TAT'].apply(
-                    lambda x: f"{int(x // 60)} hr {int(x % 60)} min"
-                )
                 
-                # Step 2: Pivot the DataFrame to make 'Shift' values the columns, and 'FacilityName' the rows
+                # Assuming 'grouped_df' is already defined as in your previous code
                 pivoted_df = grouped_df.pivot_table(
-                    index='FacilityName',           # Rows as medical centers
-                    columns='Shift',                # Columns as shifts
-                    values='Average_TAT',           # Values as Average TAT
-                    aggfunc='mean'                  # Average in case of multiple entries
+                    index='FacilityName',    # Rows as medical centers
+                    columns='Shift',         # Columns as shifts
+                    values='Average_TAT',    # Values as Average TAT
+                    aggfunc='mean'           # Average in case of multiple entries
                 )
-                
-                 #Convert TAT from minutes to hours and minutes in the format "X hr Y min"
-                pivoted_df['Average_TAT'] = pivoted_df['Average_TAT'].apply(
-                    lambda x: f"{int(x // 60)} hr {int(x % 60)} min")
+
+                # Convert TAT from minutes to hours and minutes in the format "X hr Y min"
+                pivoted_df = pivoted_df.applymap(lambda x: f"{int(x // 60)} hr {int(x % 60)} min" if pd.notnull(x) else "N/A")
 
                 # Optional: Reset the column names to avoid MultiIndex
-                pivoted_df.columns.name = None  # Remove the name for columns index
-                pivoted_df.reset_index(inplace=True)  # Reset index if you want 'FacilityName' as a column
+                pivoted_df.columns.name = None
+                pivoted_df.reset_index(inplace=True)
 
             
 
