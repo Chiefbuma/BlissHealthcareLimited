@@ -162,14 +162,16 @@ def app():
                 # Convert TAT from minutes to hours and minutes in the format "X hr Y min"
                 pivoted_df = pivoted_df.applymap(lambda x: f"{int(x // 60)} hr {int(x % 60)} min" if pd.notnull(x) else "")
                 
-                # Optional: Reset the column names to avoid MultiIndex
-                pivoted_df.columns.name = None
-               # Reorder columns based on preferred shift order
-                preferred_order = ["Morning", "Afternoon", "Evening", "Night"]
-                existing_columns = [col for col in preferred_order if col in pivoted_df.columns]  # Retain only columns that exist in DataFrame
-                pivoted_df = pivoted_df[["FacilityName"] + existing_columns]
+                                # Reset index to make 'FacilityName' a column
+                pivoted_df = pivoted_df.reset_index()
 
-            
+                # Optional: Remove MultiIndex column names
+                pivoted_df.columns.name = None
+
+                # Reorder columns based on preferred shift order
+                preferred_order = ["Morning", "Afternoon", "Evening", "Night"]
+                existing_columns = [col for col in preferred_order if col in pivoted_df.columns]  # Retain only existing columns
+                pivoted_df = pivoted_df[["FacilityName"] + existing_columns]
 
                 st.write(pivoted_df)
                 
