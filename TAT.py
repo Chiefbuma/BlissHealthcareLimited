@@ -150,32 +150,30 @@ def app():
                 # Add 20 minutes to Average TAT
                 grouped_df['Average_TAT'] += 20
 
-                
-                # Assuming 'grouped_df' is already defined as in your previous code
+                # Pivot the DataFrame
                 pivoted_df = grouped_df.pivot_table(
                     index='FacilityName',    # Rows as medical centers
                     columns='Shift',         # Columns as shifts
                     values='Average_TAT',    # Values as Average TAT
                     aggfunc='mean'           # Average in case of multiple entries
                 )
-                
-                
-                pivoted_df ['Day Avg']=pivoted_df['Average_TAT']
-                
-                
-                # Convert TAT from minutes to hours and minutes in the format "X hr Y min"
+
+                # Calculate the daily average across shift columns and add it as a new column
+                pivoted_df['Day Avg'] = pivoted_df.mean(axis=1)
+
+                # Convert TAT from minutes to "X hr Y min" format for each column
                 pivoted_df = pivoted_df.applymap(lambda x: f"{int(x // 60)} hr {int(x % 60)} min" if pd.notnull(x) else "")
-                
-                                # Reset index to make 'FacilityName' a column
+
+                # Reset index to make 'FacilityName' a column
                 pivoted_df = pivoted_df.reset_index()
 
                 # Optional: Remove MultiIndex column names
                 pivoted_df.columns.name = None
 
                 # Reorder columns based on preferred shift order
-                preferred_order = ["Morning","Mid Morning", "Afternoon", "Evening", "Night Shift","Day Avg"]
+                preferred_order = ["FacilityName", "Morning", "Mid Morning", "Afternoon", "Evening", "Night Shift", "Day Avg"]
                 existing_columns = [col for col in preferred_order if col in pivoted_df.columns]  # Retain only existing columns
-                pivoted_df = pivoted_df[["FacilityName"] + existing_columns]
+                pivoted_df = pivoted_df[existing_columns]
 
                 st.write(pivoted_df)
                 
