@@ -140,6 +140,12 @@ def app():
                     Unique_UHID_Count=('UHID', 'nunique'),  # Count of unique UHID
                     Average_TAT=('TAT', 'mean')  # Average TAT
                 ).reset_index()
+                
+                
+                # Convert TAT from minutes to hours and minutes in the format "X hr Y min"
+                grouped_df['Average_TAT_Hours'] = grouped_df['Average_TAT'].apply(
+                    lambda x: f"{int(x // 60)} hr {int(x % 60)} min"
+)
 
                 # Add 20 minutes to Average TAT
                 grouped_df['Average_TAT'] += 20
