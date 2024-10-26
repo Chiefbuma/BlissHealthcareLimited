@@ -117,11 +117,13 @@ def app():
                 def classify_shift(pharmacy_billing_time):
                     if pharmacy_billing_time.hour >= 20 or pharmacy_billing_time.hour < 7:
                         return 'Night Shift'
-                    elif 7 <= pharmacy_billing_time.hour < 12:
+                    elif 7 <= pharmacy_billing_time.hour < 10:
                         return 'Morning'
-                    elif 12 <= pharmacy_billing_time.hour < 15:
-                        return 'Noon'
-                    elif 15 <= pharmacy_billing_time.hour < 20:
+                    elif 10 <= pharmacy_billing_time.hour < 13:
+                        return 'Mid Morning'
+                    elif 13 <= pharmacy_billing_time.hour < 16:
+                        return 'Afternoon'
+                    elif 16 <= pharmacy_billing_time.hour < 19:
                         return 'Evening'
 
                 # Create a new column 'time' to extract only the time part
@@ -146,9 +148,23 @@ def app():
                 grouped_df['Average_TAT_Hours'] = grouped_df['Average_TAT'].apply(
                     lambda x: f"{int(x // 60)} hr {int(x % 60)} min"
                 )
+                
+                # Step 2: Pivot the DataFrame to make 'Shift' values the columns, and 'FacilityName' the rows
+                pivoted_df = grouped_df.pivot_table(
+                    index='FacilityName',           # Rows as medical centers
+                    columns='Shift',                # Columns as shifts
+                    values='Average_TAT_Hours',           # Values as Average TAT
+                    aggfunc='mean'                  # Average in case of multiple entries
+                )
+
+                # Optional: Reset the column names to avoid MultiIndex
+                pivoted_df.columns.name = None  # Remove the name for columns index
+                pivoted_df.reset_index(inplace=True)  # Reset index if you want 'FacilityName' as a column
+
+              
 
 
-                st.write(grouped_df)
+                st.write(pivoted_df)
                 
                 
 
