@@ -158,7 +158,11 @@ def app():
                     values='Average_TAT',    # Values as Average TAT
                     aggfunc='mean'           # Average in case of multiple entries
                 )
-
+                
+                
+                pivoted_df ['Day Avg']=pivoted_df['Average_TAT']
+                
+                
                 # Convert TAT from minutes to hours and minutes in the format "X hr Y min"
                 pivoted_df = pivoted_df.applymap(lambda x: f"{int(x // 60)} hr {int(x % 60)} min" if pd.notnull(x) else "")
                 
@@ -169,7 +173,7 @@ def app():
                 pivoted_df.columns.name = None
 
                 # Reorder columns based on preferred shift order
-                preferred_order = ["Morning","Mid Morning", "Afternoon", "Evening", "Night Shift'"]
+                preferred_order = ["Morning","Mid Morning", "Afternoon", "Evening", "Night Shift","Day Avg"]
                 existing_columns = [col for col in preferred_order if col in pivoted_df.columns]  # Retain only existing columns
                 pivoted_df = pivoted_df[["FacilityName"] + existing_columns]
 
