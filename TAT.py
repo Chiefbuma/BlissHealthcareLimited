@@ -153,7 +153,7 @@ def app():
                 pivoted_df = grouped_df.pivot_table(
                     index='FacilityName',           # Rows as medical centers
                     columns='Shift',                # Columns as shifts
-                    values='Average_TAT_Hours',           # Values as Average TAT
+                    values='Average_TAT',           # Values as Average TAT
                     aggfunc='mean'                  # Average in case of multiple entries
                 )
 
