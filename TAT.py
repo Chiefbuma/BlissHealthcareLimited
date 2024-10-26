@@ -44,7 +44,7 @@ def app():
         
     if st.session_state.is_authenticated:
 
-        with card_container("Upload"):
+       
             st.header('Dispatch Packages🔖')
 
             # Upload CSV file
