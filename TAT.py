@@ -156,6 +156,10 @@ def app():
                     values='Average_TAT',           # Values as Average TAT
                     aggfunc='mean'                  # Average in case of multiple entries
                 )
+                
+                 #Convert TAT from minutes to hours and minutes in the format "X hr Y min"
+                pivoted_df['Average_TAT_Hours'] = pivoted_df['Average_TAT'].apply(
+                    lambda x: f"{int(x // 60)} hr {int(x % 60)} min")
 
                 # Optional: Reset the column names to avoid MultiIndex
                 pivoted_df.columns.name = None  # Remove the name for columns index
