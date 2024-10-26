@@ -116,7 +116,7 @@ def app():
                 # Classify shifts based on Pharmacy_Billing_Time
                 def classify_shift(pharmacy_billing_time):
                     if pharmacy_billing_time.hour >= 20 or pharmacy_billing_time.hour < 7:
-                        return 'Night'
+                        return 'Night Shift'
                     elif 7 <= pharmacy_billing_time.hour < 10:
                         return 'Morning'
                     elif 10 <= pharmacy_billing_time.hour < 13:
@@ -169,7 +169,7 @@ def app():
                 pivoted_df.columns.name = None
 
                 # Reorder columns based on preferred shift order
-                preferred_order = ["Morning","Mid Morning", "Afternoon", "Evening", "Night"]
+                preferred_order = ["Morning","Mid Morning", "Afternoon", "Evening", "Night Shift'"]
                 existing_columns = [col for col in preferred_order if col in pivoted_df.columns]  # Retain only existing columns
                 pivoted_df = pivoted_df[["FacilityName"] + existing_columns]
 
