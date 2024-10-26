@@ -160,8 +160,8 @@ def app():
                 )
 
                 # Convert TAT from minutes to hours and minutes in the format "X hr Y min"
-                pivoted_df = pivoted_df.applymap(lambda x: f"{int(x // 60)} hr {int(x % 60)} min" if pd.notnull(x) else "N/A")
-
+                pivoted_df = pivoted_df.applymap(lambda x: f"{int(x // 60)} hr {int(x % 60)} min" if pd.notnull(x) else "")
+                
                 # Optional: Reset the column names to avoid MultiIndex
                 pivoted_df.columns.name = None
                 pivoted_df.reset_index(inplace=True)
