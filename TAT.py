@@ -164,7 +164,10 @@ def app():
                 
                 # Optional: Reset the column names to avoid MultiIndex
                 pivoted_df.columns.name = None
-                pivoted_df.reset_index(inplace=True)
+               # Reorder columns based on preferred shift order
+                preferred_order = ["Morning", "Afternoon", "Evening", "Night"]
+                existing_columns = [col for col in preferred_order if col in pivoted_df.columns]  # Retain only columns that exist in DataFrame
+                pivoted_df = pivoted_df[["FacilityName"] + existing_columns]
 
             
 
