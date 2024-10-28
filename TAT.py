@@ -141,8 +141,6 @@ def app():
                 ).reset_index()
                 
                 
-                # Add 20 minutes to Average TAT
-                grouped_df['Average_TAT'] += 20
                 
                
                 
