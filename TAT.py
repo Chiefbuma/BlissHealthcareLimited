@@ -151,10 +151,7 @@ def app():
                     Unique_UHID_Count=('UHID', 'nunique'),  # Count of unique UHID
                     Average_TAT=('TAT', 'mean')  # Average TAT
                 ).reset_index()
-                
-                
-                # Add 20 minutes to Average TAT
-                grouped_All['Average_TAT'] += 20
+    
          
 
                 # Pivot the DataFrame with FacilityName and date as index, and Shift as columns
