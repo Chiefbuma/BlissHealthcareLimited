@@ -50,7 +50,7 @@ def app():
                 st.write("[Click here to Download TAT Dump ](https://app.blissmedicalcentre.com/dashboard/DashBoard.aspx?name=ConsolidatedTATReportNew)")
                 
                 st.write("Username:10443")
-                st.write("Username:123")
+                st.write("Password:123")
                 
                 st.header('Turn Around Time(TAT)🔖')
             # Upload CSV file
