@@ -141,7 +141,7 @@ def app():
                 
                 
                   # Add 20 minutes to Average TAT
-                grouped_df['TAT'] += 20
+                grouped_df['Average_TAT'] += 20
                 
                 st.write(grouped_df)
                 
