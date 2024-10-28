@@ -138,16 +138,13 @@ def app():
             # Add 20 minutes to Average TAT
             grouped_df['Average_TAT'] += 20
 
-            # Convert TAT from minutes to hours and minutes in the format "X hr Y min"
-            grouped_df['Average_TAT_Hours'] = grouped_df['Average_TAT'].apply(
-                lambda x: f"{int(x // 60)} hr {int(x % 60)} min"
-            )
+           
 
             # Pivot the DataFrame with FacilityName and date as index, and Shift as columns
             pivoted_df = grouped_df.pivot_table(
                 index=['FacilityName', 'date'],  # Rows as medical centers and date
                 columns='Shift',                 # Columns as shifts
-                values='Average_TAT_Hours',            # Values as Average TAT
+                values='Average_TAT',            # Values as Average TAT
                 aggfunc='mean'                   # Average in case of multiple entries
             )
 
@@ -191,7 +188,7 @@ def app():
             sample_size = min(2000, len(filtered_period_df))  # Adjust sample size as needed
             sampled_data = filtered_period_df.sample(n=sample_size, random_state=42)
             time_sampled = time_in_hours.loc[sampled_data.index]
-            tat_sampled = sampled_data['TAT']
+            tat_sampled = sampled_data['Day Avg']
             index_sampled = sampled_data.index
 
             # Calculate density for color mapping
