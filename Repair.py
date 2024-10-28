@@ -161,6 +161,18 @@ def app():
                         })
                         # Fill NaN/NA values with an empty string
                         
+                        # Get unique month values from the 'month' column
+                        month_options = data_df['Month'].unique().tolist()
+                        
+                         # Get the current month
+                        current_month = datetime.now().strftime("%B")
+
+                        # Set the default index to the current month
+                        default_index = month_options.index(current_month)
+
+                        # Create the select box with the default value set to the current month
+                        choice = st.selectbox("Select Month", options=month_options, index=default_index)
+                  
                         data_df.fillna('', inplace=True)
                         
                         # Define the columns to filter
@@ -172,6 +184,7 @@ def app():
                         
                         # Create a dictionary to store filter values
                         filters = {column: '' for column in filter_columns}
+                        
                         
 
                         # Create text input widgets for each filter column and arrange them horizontally
@@ -186,7 +199,7 @@ def app():
                         with col5:
                             filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
                         with col6:
-                            filters[filter_columns[5]] = st.text_input(f"Filter {filter_columns[5]}", filters[filter_columns[5]])
+                            filters[filter_columns[5]] = choice
                         # Apply filters to the DataFrame
                         filtered_df = data_df
                         for column, filter_value in filters.items():
