@@ -47,7 +47,8 @@ def app():
       
             with card_container("Upload"):
                 
-                st.write("[Click here to visit OpenAI](https://app.blissmedicalcentre.com/dashboard/DashBoard.aspx?name=ConsolidatedTATReportNew)")
+                st.write("[Click here to Download TAT Dump ](https://app.blissmedicalcentre.com/dashboard/DashBoard.aspx?name=ConsolidatedTATReportNew)")
+                
                 st.write("Username:10443")
                 st.write("Username:123")
                 
@@ -152,7 +153,6 @@ def app():
                 
                  # Group by 'date', 'FacilityName', and 'Shift'
                 grouped_All = filtered_merged_df.groupby(['date', 'FacilityName']).agg(
-                    Unique_UHID_Count=('UHID', 'nunique'),  # Count of unique UHID
                     Average_TAT=('TAT', 'mean')  # Average TAT
                 ).reset_index()
                 
