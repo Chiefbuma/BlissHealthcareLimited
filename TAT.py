@@ -144,8 +144,19 @@ def app():
                 # Add 20 minutes to Average TAT
                 grouped_df['Average_TAT'] += 20
                 
-                st.write(grouped_df)
+               
                 
+                 # Group by 'date', 'FacilityName', and 'Shift'
+                grouped_All = filtered_merged_df.groupby(['date', 'FacilityName']).agg(
+                    Unique_UHID_Count=('UHID', 'nunique'),  # Count of unique UHID
+                    Average_TAT=('TAT', 'mean')  # Average TAT
+                ).reset_index()
+                
+                
+                # Add 20 minutes to Average TAT
+                grouped_All['Average_TAT'] += 20
+                
+                st.write(grouped_All)
 
                 # Pivot the DataFrame with FacilityName and date as index, and Shift as columns
                 pivoted_df = grouped_df.pivot_table(
@@ -154,6 +165,7 @@ def app():
                     values='Average_TAT',            # Values as Average TAT
                     aggfunc='mean'                   # Average in case of multiple entries
                 )
+
 
                 # Calculate the daily average (across shift columns) and add it as a new column
                 pivoted_df['Day Avg'] = pivoted_df.mean(axis=1)
