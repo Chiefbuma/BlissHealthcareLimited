@@ -155,8 +155,7 @@ def app():
                 
                 # Add 20 minutes to Average TAT
                 grouped_All['Average_TAT'] += 20
-                
-                st.write(grouped_All)
+         
 
                 # Pivot the DataFrame with FacilityName and date as index, and Shift as columns
                 pivoted_df = grouped_df.pivot_table(
@@ -184,9 +183,18 @@ def app():
                 existing_columns = [col for col in preferred_order if col in pivoted_df.columns]  # Retain only existing columns
                 pivoted_df = pivoted_df[existing_columns]
 
-
-                st.write(pivoted_df)
                 
+                
+                
+         
+    
+                cols = st.columns([1,1])
+                with cols[1]:
+                    st.write(pivoted_df)
+                    
+                with cols[0]:
+                          
+                   st.write(grouped_All)
                 
 
                 # Assuming 'filtered_merged_df' is already defined and contains the 'TAT' and 'Pharmacy_Billing_Time' columns
