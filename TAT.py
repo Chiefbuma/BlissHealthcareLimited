@@ -146,7 +146,7 @@ def app():
                 st.write(grouped_df)
                 
                 # Convert TAT from minutes to hours and minutes in the format "X hr Y min"
-                grouped_df['Average_TAT_Hours'] = grouped_df['TAT'].apply(
+                grouped_df['Average_TAT_Hours'] = grouped_df['Average_TAT'].apply(
                     lambda x: f"{int(x // 60)} hr {int(x % 60)} min"
 )
 
