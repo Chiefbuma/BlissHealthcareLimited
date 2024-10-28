@@ -34,257 +34,187 @@ from scipy.stats import gaussian_kde
 import streamlit as st
 
 def app():
-    
     # Check if user is authenticated
     if 'is_authenticated' not in st.session_state:
         st.session_state.is_authenticated = False
         st.write("""<span style="color:red;">
                     You are not Logged in, click account to Log in/Sign up to proceed.
                 </span>""", unsafe_allow_html=True)
-        
+
     if st.session_state.is_authenticated:
+        st.header('Dispatch Packages🔖')
 
-       
-            st.header('Dispatch Packages🔖')
+        # Upload CSV file
+        uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
-            # Upload CSV file
-            uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+        if uploaded_file is not None:
+            # Define the columns to import and parse as datetime
+            columns_to_import = [
+                'UHID', 'PatientName', 'Department', 'FacilityName',
+                'ConsultationBillingTime', 'Pharmacy_Billing_Time',
+            ]
 
-            if uploaded_file is not None:
-                # Define the columns to import and parse as datetime
-                columns_to_import = [
-                    'UHID', 'PatientName', 'Department', 'FacilityName',
-                    'ConsultationBillingTime', 'Pharmacy_Billing_Time',
-                ]
+            try:
+                # Load the CSV file into a DataFrame with specified encoding and columns
+                TAT_df = pd.read_csv(uploaded_file, encoding='utf-8', usecols=columns_to_import, parse_dates=columns_to_import)
+            except (UnicodeDecodeError, ValueError):
+                # Handle encoding issues or missing columns gracefully
+                st.error("Error reading the CSV file. Please check the file format and content.")
+                return
 
-                try:
-                    # Load the CSV file into a DataFrame with specified encoding and columns
-                    TAT_df = pd.read_csv(uploaded_file, encoding='utf-8', usecols=columns_to_import, parse_dates=columns_to_import)
-                except (UnicodeDecodeError, ValueError):
-                    # Handle encoding issues or missing columns gracefully
-                    st.error("Error reading the CSV file. Please check the file format and content.")
-                    return
+            # Filter rows where UHID is not blank and FacilityName is not "Bliss Medical Centre HomeCare"
+            filtered_TAT_df = TAT_df.dropna(subset=['UHID'])
+            filtered_TAT_df = filtered_TAT_df[filtered_TAT_df['FacilityName'] != "Bliss Medical Centre HomeCare"]
 
-                # Filter rows where UHID is not blank and FacilityName is not "Bliss Medical Centre HomeCare"
-                filtered_TAT_df = TAT_df.dropna(subset=['UHID'])
-                filtered_TAT_df = filtered_TAT_df[filtered_TAT_df['FacilityName'] != "Bliss Medical Centre HomeCare"]
+            # Create separate DataFrames based on the Department column
+            Consultation_df = filtered_TAT_df[filtered_TAT_df['Department'] == 'GENERAL OPD'].drop(columns=['Pharmacy_Billing_Time'])
+            Pharmacy_df = filtered_TAT_df[filtered_TAT_df['Department'] == 'Pharmacy'].drop(columns=['ConsultationBillingTime'])
 
-                # Create separate DataFrames based on the Department column
-                Consultation_df = filtered_TAT_df[filtered_TAT_df['Department'] == 'GENERAL OPD'].drop(columns=['Pharmacy_Billing_Time'])
-                Pharmacy_df = filtered_TAT_df[filtered_TAT_df['Department'] == 'Pharmacy'].drop(columns=['ConsultationBillingTime'])
+            # Add a new 'date' column by extracting the date from the billing time columns
+            Consultation_df['date'] = Consultation_df['ConsultationBillingTime'].dt.date
+            Pharmacy_df['date'] = Pharmacy_df['Pharmacy_Billing_Time'].dt.date
 
-                # Add a new 'date' column by extracting the date from the billing time columns
-                Consultation_df['date'] = Consultation_df['ConsultationBillingTime'].dt.date
-                Pharmacy_df['date'] = Pharmacy_df['Pharmacy_Billing_Time'].dt.date
+            # Group by date, UHID, and FacilityName, and get the earliest Pharmacy_Billing_Time
+            TAT_pharmacy_df = Pharmacy_df.groupby(['date', 'UHID', 'PatientName', 'FacilityName']).agg({
+                'Pharmacy_Billing_Time': 'min',
+                'Department': 'first'
+            }).reset_index()
 
-                # Group by date, UHID, and FacilityName, and get the earliest Pharmacy_Billing_Time
-                TAT_pharmacy_df = Pharmacy_df.groupby(['date', 'UHID', 'PatientName', 'FacilityName']).agg({
-                    'Pharmacy_Billing_Time': 'min',
-                    'Department': 'first'
-                }).reset_index()
+            # Group by date, UHID, and FacilityName, and get the earliest ConsultationBillingTime
+            TAT_consultation_df = Consultation_df.groupby(['date', 'UHID', 'PatientName', 'FacilityName']).agg({
+                'ConsultationBillingTime': 'min',
+                'Department': 'first'
+            }).reset_index()
 
-                # Group by date, UHID, and FacilityName, and get the earliest ConsultationBillingTime
-                TAT_consultation_df = Consultation_df.groupby(['date', 'UHID', 'PatientName', 'FacilityName']).agg({
-                    'ConsultationBillingTime': 'min',
-                    'Department': 'first'
-                }).reset_index()
+            # Create a new 'Unique' column by concatenating UHID, PatientName, FacilityName, and date
+            TAT_pharmacy_df['Unique'] = TAT_pharmacy_df['UHID'].astype(str) + "_" + \
+                                        TAT_pharmacy_df['PatientName'].astype(str) + "_" + \
+                                        TAT_pharmacy_df['FacilityName'].astype(str) + "_" + \
+                                        TAT_pharmacy_df['date'].astype(str)
 
-                # Create a new 'Unique' column by concatenating UHID, PatientName, FacilityName, and date
-                TAT_pharmacy_df['Unique'] = TAT_pharmacy_df['UHID'].astype(str) + "_" + \
-                                            TAT_pharmacy_df['PatientName'].astype(str) + "_" + \
-                                            TAT_pharmacy_df['FacilityName'].astype(str) + "_" + \
-                                            TAT_pharmacy_df['date'].astype(str)
+            TAT_consultation_df['Unique'] = TAT_consultation_df['UHID'].astype(str) + "_" + \
+                                            TAT_consultation_df['PatientName'].astype(str) + "_" + \
+                                            TAT_consultation_df['FacilityName'].astype(str) + "_" + \
+                                            TAT_consultation_df['date'].astype(str)
 
-                TAT_consultation_df['Unique'] = TAT_consultation_df['UHID'].astype(str) + "_" + \
-                                                TAT_consultation_df['PatientName'].astype(str) + "_" + \
-                                                TAT_consultation_df['FacilityName'].astype(str) + "_" + \
-                                                TAT_consultation_df['date'].astype(str)
+            # Merge TAT_Pharmacy_df onto TAT_Consultation_df on 'Unique' column
+            merged_df = TAT_consultation_df.merge(
+                TAT_pharmacy_df[['Unique', 'Pharmacy_Billing_Time']],
+                on='Unique',
+                how='left'
+            )
 
-                # Merge TAT_Pharmacy_df onto TAT_Consultation_df on 'Unique' column
-                merged_df = TAT_consultation_df.merge(
-                    TAT_pharmacy_df[['Unique', 'Pharmacy_Billing_Time']],
-                    on='Unique',
-                    how='left'
-                )
+            # Filter the merged DataFrame where Pharmacy_Billing_Time is not NaT or null
+            filtered_merged_df = merged_df[merged_df['Pharmacy_Billing_Time'].notna()]
 
-                # Filter the merged DataFrame where Pharmacy_Billing_Time is not NaT or null
-                filtered_merged_df = merged_df[merged_df['Pharmacy_Billing_Time'].notna()]
+            # Calculate the time difference in minutes and create the TAT column
+            filtered_merged_df['TAT'] = (filtered_merged_df['Pharmacy_Billing_Time'] - filtered_merged_df['ConsultationBillingTime']).dt.total_seconds() / 60
 
-                # Calculate the time difference in minutes and create the TAT column
-                filtered_merged_df['TAT'] = (filtered_merged_df['Pharmacy_Billing_Time'] - filtered_merged_df['ConsultationBillingTime']).dt.total_seconds() / 60
+            # Classify shifts based on Pharmacy_Billing_Time
+            def classify_shift(pharmacy_billing_time):
+                if pharmacy_billing_time.hour >= 20 or pharmacy_billing_time.hour < 7:
+                    return 'Night Shift'
+                elif 7 <= pharmacy_billing_time.hour < 10:
+                    return 'Morning'
+                elif 10 <= pharmacy_billing_time.hour < 13:
+                    return 'Mid Morning'
+                elif 13 <= pharmacy_billing_time.hour < 16:
+                    return 'Afternoon'
+                elif 16 <= pharmacy_billing_time.hour < 19:
+                    return 'Evening'
 
-                # Classify shifts based on Pharmacy_Billing_Time
-                def classify_shift(pharmacy_billing_time):
-                    if pharmacy_billing_time.hour >= 20 or pharmacy_billing_time.hour < 7:
-                        return 'Night Shift'
-                    elif 7 <= pharmacy_billing_time.hour < 10:
-                        return 'Morning'
-                    elif 10 <= pharmacy_billing_time.hour < 13:
-                        return 'Mid Morning'
-                    elif 13 <= pharmacy_billing_time.hour < 16:
-                        return 'Afternoon'
-                    elif 16 <= pharmacy_billing_time.hour < 19:
-                        return 'Evening'
+            # Create a new column 'time' to extract only the time part
+            filtered_merged_df['time'] = filtered_merged_df['Pharmacy_Billing_Time'].dt.time
 
-                # Create a new column 'time' to extract only the time part
-                filtered_merged_df['time'] = filtered_merged_df['Pharmacy_Billing_Time'].dt.time
+            # Create a new column 'Shift' by applying the classify_shift function
+            filtered_merged_df['Shift'] = filtered_merged_df['Pharmacy_Billing_Time'].apply(classify_shift)
 
-                # Create a new column 'Shift' by applying the classify_shift function
-                filtered_merged_df['Shift'] = filtered_merged_df['Pharmacy_Billing_Time'].apply(classify_shift)
+            # Group by 'date', 'FacilityName', and 'Shift'
+            grouped_df = filtered_merged_df.groupby(['date', 'FacilityName']).agg(
+                Unique_UHID_Count=('UHID', 'nunique'),  # Count of unique UHID
+                Average_TAT=('TAT', 'mean')  # Average TAT
+            ).reset_index()
 
-                
-                # Group by 'date', 'FacilityName', and 'Shift'
-                grouped_df = filtered_merged_df.groupby(['date', 'FacilityName']).agg(
-                    Unique_UHID_Count=('UHID', 'nunique'),  # Count of unique UHID
-                    Average_TAT=('TAT', 'mean')  # Average TAT
-                ).reset_index()
-                
-                
-                  # Add 20 minutes to Average TAT
-                grouped_df['Average_TAT'] += 20
-                
-                st.write(grouped_df)
-                
-                # Convert TAT from minutes to hours and minutes in the format "X hr Y min"
-                grouped_df['Average_TAT_Hours'] = grouped_df['Average_TAT'].apply(
-                    lambda x: f"{int(x // 60)} hr {int(x % 60)} min"
-)
+            # Add 20 minutes to Average TAT
+            grouped_df['Average_TAT'] += 20
 
-                # Add 20 minutes to Average TAT
-                grouped_df['Average_TAT'] += 20
+            # Convert TAT from minutes to hours and minutes in the format "X hr Y min"
+            grouped_df['Average_TAT_Hours'] = grouped_df['Average_TAT'].apply(
+                lambda x: f"{int(x // 60)} hr {int(x % 60)} min"
+            )
 
-                # Pivot the DataFrame with FacilityName and date as index, and Shift as columns
-                pivoted_df = grouped_df.pivot_table(
-                    index=['FacilityName', 'date'],  # Rows as medical centers and date
-                    columns='Shift',                 # Columns as shifts
-                    values='Average_TAT_Hours',            # Values as Average TAT
-                    aggfunc='mean'                   # Average in case of multiple entries
-                )
+            # Pivot the DataFrame with FacilityName and date as index, and Shift as columns
+            pivoted_df = grouped_df.pivot_table(
+                index=['FacilityName', 'date'],  # Rows as medical centers and date
+                columns='Shift',                 # Columns as shifts
+                values='Average_TAT_Hours',            # Values as Average TAT
+                aggfunc='mean'                   # Average in case of multiple entries
+            )
 
-                # Calculate the daily average (across shift columns) and add it as a new column
-                pivoted_df['Day Avg'] = pivoted_df.mean(axis=1)
+            # Calculate the daily average (across shift columns) and add it as a new column
+            pivoted_df['Day Avg'] = pivoted_df.mean(axis=1)
 
-                # Convert TAT from minutes to "X hr Y min" format for each column, including 'Day Avg'
-                pivoted_df = pivoted_df.applymap(lambda x: f"{int(x // 60)} hr {int(x % 60)} min" if pd.notnull(x) else "")
+            # Convert TAT from minutes to "X hr Y min" format for each column, including 'Day Avg'
+            pivoted_df = pivoted_df.applymap(lambda x: f"{int(x // 60)} hr {int(x % 60)} min" if pd.notnull(x) else "")
 
-                # Reset index to make 'FacilityName' and 'date' columns
-                pivoted_df = pivoted_df.reset_index()
+            # Reset index to make 'FacilityName' and 'date' columns
+            pivoted_df = pivoted_df.reset_index()
 
-                # Optional: Remove MultiIndex column names
-                pivoted_df.columns.name = None
+            # Optional: Remove MultiIndex column names
+            pivoted_df.columns.name = None
 
-                # Reorder columns based on preferred shift order, including 'Day Avg'
-                preferred_order = ["FacilityName", "date", "Morning", "Mid Morning", "Afternoon", "Evening", "Night Shift", "Day Avg"]
-                existing_columns = [col for col in preferred_order if col in pivoted_df.columns]  # Retain only existing columns
-                pivoted_df = pivoted_df[existing_columns]
+            # Reorder columns based on preferred shift order, including 'Day Avg'
+            preferred_order = ["FacilityName", "date", "Morning", "Mid Morning", "Afternoon", "Evening", "Night Shift", "Day Avg"]
+            existing_columns = [col for col in preferred_order if col in pivoted_df.columns]  # Retain only existing columns
+            pivoted_df = pivoted_df[existing_columns]
 
+            st.write(pivoted_df)
 
-                st.write(pivoted_df)
-                
-                
+            # Extract just the time component
+            filtered_merged_df['time'] = filtered_merged_df['Pharmacy_Billing_Time'].dt.time
 
-                # Assuming 'filtered_merged_df' is already defined and contains the 'TAT' and 'Pharmacy_Billing_Time' columns
+            # Filter for times between 07:00:00 and 20:00:00
+            start_time = pd.to_datetime("07:00:00").time()
+            end_time = pd.to_datetime("20:00:00").time()
+            filtered_period_df = filtered_merged_df[
+                (filtered_merged_df['time'] >= start_time) & 
+                (filtered_merged_df['time'] <= end_time)
+            ]
 
-                # Extract just the time component
-                filtered_merged_df['time'] = filtered_merged_df['Pharmacy_Billing_Time'].dt.time
+            # Convert time to hours for the x-axis
+            time_in_hours = (
+                filtered_period_df['Pharmacy_Billing_Time'].dt.hour + 
+                filtered_period_df['Pharmacy_Billing_Time'].dt.minute / 60
+            )
 
-                # Filter for times between 07:00:00 and 20:00:00
-                start_time = pd.to_datetime("07:00:00").time()
-                end_time = pd.to_datetime("20:00:00").time()
-                filtered_period_df = filtered_merged_df[
-                    (filtered_merged_df['time'] >= start_time) & 
-                    (filtered_merged_df['time'] <= end_time)
-                ]
+            # Optional: Use a subset of data if the dataset is too large
+            sample_size = min(2000, len(filtered_period_df))  # Adjust sample size as needed
+            sampled_data = filtered_period_df.sample(n=sample_size, random_state=42)
+            time_sampled = time_in_hours.loc[sampled_data.index]
+            tat_sampled = sampled_data['TAT']
+            index_sampled = sampled_data.index
 
-                # Convert time to hours for the x-axis
-                time_in_hours = (
-                    filtered_period_df['Pharmacy_Billing_Time'].dt.hour + 
-                    filtered_period_df['Pharmacy_Billing_Time'].dt.minute / 60
-                )
+            # Calculate density for color mapping
+            xy = np.vstack([time_sampled, index_sampled])
+            density = gaussian_kde(xy)(xy)
 
-                # Optional: Use a subset of data if the dataset is too large
-                sample_size = min(2000, len(filtered_period_df))  # Adjust sample size as needed
-                sampled_data = filtered_period_df.sample(n=sample_size, random_state=42)
-                time_sampled = time_in_hours.loc[sampled_data.index]
-                tat_sampled = sampled_data['TAT']
-                index_sampled = sampled_data.index
+            # Create scatter plot with density-based coloring and TAT-based point sizing
+            plt.figure(figsize=(12, 6))
+            scatter = plt.scatter(
+                time_sampled,
+                index_sampled,
+                c=density,
+                s=tat_sampled,
+                cmap='viridis',
+                alpha=0.5
+            )
+            plt.colorbar(scatter, label='Density')
+            plt.title('TAT Distribution by Time')
+            plt.xlabel('Time (Hours)')
+            plt.ylabel('Sample Index')
+            plt.grid()
+            st.pyplot(plt)
 
-                # Calculate density for color mapping
-                xy = np.vstack([time_sampled, index_sampled])
-                density = gaussian_kde(xy)(xy)
-
-                # Create scatter plot with density-based coloring and TAT-based point sizing
-                plt.figure(figsize=(12, 6))
-                scatter = plt.scatter(
-                    time_sampled,
-                    index_sampled,
-                    s=tat_sampled,       # Size points by TAT values
-                    c=density,           # Color points by density
-                    cmap='viridis', 
-                    alpha=0.7
-                )
-
-                # Customize the plot with 3-hour intervals
-                plt.title('Distribution of Patient Visits by Time of Day and Effect on TAT')
-                plt.xlabel('Time of Day')
-                plt.xticks(range(7, 21, 3), [f"{hour} {'AM' if hour < 12 else 'PM'}" for hour in range(7, 21, 3)], rotation=45)
-                plt.ylabel('Patient Visits')
-                plt.colorbar(scatter, label='Visit Density')  # Density color bar for interpreting color
-                plt.grid(True, linestyle='--', alpha=0.7)
-                plt.tight_layout()
-
-                # Display the plot in Streamlit
-                st.pyplot(plt)
-
-                # Clear the figure after rendering
-                plt.clf()
-                
-                # Optional: Use a subset of data if the dataset is too large
-                sample_size = min(2000, len(filtered_period_df))  # Adjust sample size as needed
-                sampled_data = filtered_period_df.sample(n=sample_size, random_state=42)
-                time_sampled = time_in_hours.loc[sampled_data.index]
-                tat_sampled = sampled_data['TAT']
-
-                # Calculate density for color mapping
-                xy = np.vstack([time_sampled, tat_sampled])
-                density = gaussian_kde(xy)(xy)
-
-                # Create scatter plot with density-based coloring and TAT-based point sizing
-                plt.figure(figsize=(12, 6))
-                scatter = plt.scatter(
-                    time_sampled,
-                    tat_sampled,
-                    s=tat_sampled,  # Size points by TAT values
-                    c=density,      # Color points by density
-                    cmap='viridis', 
-                    alpha=0.7,
-                    edgecolor='w'  # Optional: add edge color for better visibility
-                )
-
-                # Customize the plot with 3-hour intervals
-                plt.title('TAT Distribution by Time of Day', fontsize=14)
-                plt.xlabel('Time of Day', fontsize=12)
-                plt.xticks(range(7, 21, 3), [f"{hour} {'AM' if hour < 12 else 'PM'}" for hour in range(7, 21, 3)], rotation=45)
-                plt.ylabel('Average TAT (minutes)', fontsize=12)
-                plt.colorbar(scatter, label='Point Density')  # Density color bar for interpreting color
-                plt.grid(True, linestyle='--', alpha=0.7)
-                plt.tight_layout()
-
-                # Display the plot in Streamlit
-                st.pyplot(plt)
-
-                # Clear the figure after rendering (optional)
-                plt.clf()
-
-        
-        
-        
-                
-            
-                
-
-    else:
-        st.write("Please upload a CSV file to proceed.")
-
+# Call the app function to run the Streamlit app
 if __name__ == "__main__":
     app()
