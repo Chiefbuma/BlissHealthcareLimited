@@ -136,11 +136,14 @@ def app():
                 
 
                 # Group by 'date', 'FacilityName', and 'Shift'
-                grouped_df = filtered_merged_df.groupby(['date', 'FacilityName']).agg(
+                grouped_df = filtered_merged_df.groupby(['date', 'FacilityName', 'Shift']).agg(
                     Unique_UHID_Count=('UHID', 'nunique'),  # Count of unique UHID
                     Average_TAT=('TAT', 'mean')  # Average TAT
                 ).reset_index()
                 
+                
+                  # Add 20 minutes to Average TAT
+                grouped_df['TAT'] += 20
                 
                 st.write(grouped_df)
                 
