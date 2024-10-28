@@ -132,7 +132,7 @@ def app():
                 # Create a new column 'Shift' by applying the classify_shift function
                 filtered_merged_df['Shift'] = filtered_merged_df['Pharmacy_Billing_Time'].apply(classify_shift)
 
-                 
+                
 
                 # Group by 'date', 'FacilityName', and 'Shift'
                 grouped_df = filtered_merged_df.groupby(['date', 'FacilityName','Shift']).agg(
@@ -141,6 +141,11 @@ def app():
                 ).reset_index()
                 
                 
+                # Add 20 minutes to Average TAT
+                grouped_df['Average_TAT'] += 20
+                
+               
+                
                  # Group by 'date', 'FacilityName', and 'Shift'
                 grouped_All = filtered_merged_df.groupby(['date', 'FacilityName']).agg(
                     Unique_UHID_Count=('UHID', 'nunique'),  # Count of unique UHID
@@ -148,7 +153,8 @@ def app():
                 ).reset_index()
                 
                 
-                
+                # Add 20 minutes to Average TAT
+                grouped_All['Average_TAT'] += 20
          
 
                 # Pivot the DataFrame with FacilityName and date as index, and Shift as columns
@@ -183,10 +189,10 @@ def app():
          
     
                 cols = st.columns([1,1])
-                with cols[1]:
+                with cols[0]:
                     st.write(pivoted_df)
                     
-                with cols[0]:
+                with cols[1]:
                           
                    st.write(grouped_All)
                 
