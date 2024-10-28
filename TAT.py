@@ -153,8 +153,7 @@ def app():
                 ).reset_index()
                 
                 
-                # Add 20 minutes to Average TAT
-                grouped_All['Average_TAT'] += 20
+                
          
 
                 # Pivot the DataFrame with FacilityName and date as index, and Shift as columns
