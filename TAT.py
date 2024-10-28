@@ -44,11 +44,17 @@ def app():
         
     if st.session_state.is_authenticated:
 
-       
-            st.header('Dispatch Packages🔖')
-
+      
+            with card_container("Upload"):
+                
+                st.write("[Click here to visit OpenAI](https://app.blissmedicalcentre.com/dashboard/DashBoard.aspx?name=ConsolidatedTATReportNew)")
+                st.write("Username:10443")
+                st.write("Username:123")
+                
+                st.header('Turn Around Time(TAT)🔖')
             # Upload CSV file
-            uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+                uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+                
 
             if uploaded_file is not None:
                 # Define the columns to import and parse as datetime
