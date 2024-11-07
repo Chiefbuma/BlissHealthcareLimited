@@ -83,7 +83,6 @@ def app():
                 'Clinic': 'Facility',
                 'Department': 'Dep',
                 'Amount on the Quotation': 'Amount',
-                'MainStatus': 'Status',
                 'MonthName': 'Month',
                 'Approver': 'Approver',
                 'LinkEdit': 'Link'
