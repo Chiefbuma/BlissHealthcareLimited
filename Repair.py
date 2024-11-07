@@ -94,32 +94,33 @@ def app():
             cols = st.columns([1,4])
             
             with cols[0]:
-
-                # Get unique month values
-                month_options = data_df['Month'].unique().tolist()
-                current_month = datetime.now().strftime("%B")
-                default_selection = [current_month] if current_month in month_options else []
-
-                # Display filter selection widgets
-                selected_months = st.multiselect("Select Month", options=month_options, default=default_selection)
-
-                # Define columns to filter and create text input widgets
-                filter_columns = ["Tkt", "Approver", "Facility", "Issue"]
-                # Create five columnss for arranging widgets horizontally
-
-                filters = {column: st.text_input(f"Filter {column}", "") for column in filter_columns}
-                filters["Month"] = selected_months
-
-            # Add a button to apply filters after selection
-            if st.button("Apply Filters"):
-                # Filter the data
-                filtered_df = data_df[data_df['Month'].isin(filters["Month"])] if filters["Month"] else data_df
                 
-                for column, filter_value in filters.items():
-                    if isinstance(filter_value, str) and filter_value:  # Handle text input filters
-                        filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False, na=False)]
-            else:
-                filtered_df = data_df  
+                with card_container:
+                    # Get unique month values
+                    month_options = data_df['Month'].unique().tolist()
+                    current_month = datetime.now().strftime("%B")
+                    default_selection = [current_month] if current_month in month_options else []
+
+                    # Display filter selection widgets
+                    selected_months = st.multiselect("Select Month", options=month_options, default=default_selection)
+
+                    # Define columns to filter and create text input widgets
+                    filter_columns = ["Tkt", "Approver", "Facility", "Issue"]
+                    # Create five columnss for arranging widgets horizontally
+
+                    filters = {column: st.text_input(f"Filter {column}", "") for column in filter_columns}
+                    filters["Month"] = selected_months
+
+                    # Add a button to apply filters after selection
+                    if st.button("Apply Filters"):
+                        # Filter the data
+                        filtered_df = data_df[data_df['Month'].isin(filters["Month"])] if filters["Month"] else data_df
+                        
+                        for column, filter_value in filters.items():
+                            if isinstance(filter_value, str) and filter_value:  # Handle text input filters
+                                filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False, na=False)]
+                    else:
+                        filtered_df = data_df  
               
                     
             with cols [1]:
