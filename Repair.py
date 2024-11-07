@@ -100,37 +100,41 @@ def app():
             selected_months = st.multiselect("Select Month", options=month_options, default=default_selection)
 
             # Define columns to filter and create text input widgets
-            filter_columns = ["Tkt", "Approver", "Facility", "Issue", "Status"]
-            filters = {column: st.text_input(f"Filter {column}", "") for column in filter_columns}
-            filters["Month"] = selected_months
+            filter_columns = ["Tkt", "Approver", "Facility", "Issue"]
+            # Create five columnss for arranging widgets horizontally
+            cols = st.columns([1,4])
+            with cols[0]:
+                filters = {column: st.text_input(f"Filter {column}", "") for column in filter_columns}
+                filters["Month"] = selected_months
 
-            # Add a button to apply filters after selection
-            if st.button("Apply Filters"):
-                # Filter the data
-                filtered_df = data_df[data_df['Month'].isin(filters["Month"])] if filters["Month"] else data_df
-                
-                for column, filter_value in filters.items():
-                    if isinstance(filter_value, str) and filter_value:  # Handle text input filters
-                        filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False, na=False)]
-                
-                # Display the filtered DataFrame
-                st.data_editor(
-                    filtered_df,
-                    column_config={
-                        "Link": st.column_config.LinkColumn(
-                            "Link",
-                            display_text="View"
-                        )
-                    },
-                    hide_index=True,
-                    use_container_width=True
-                )                       
+                # Add a button to apply filters after selection
+                if st.button("Apply Filters"):
+                    # Filter the data
+                    filtered_df = data_df[data_df['Month'].isin(filters["Month"])] if filters["Month"] else data_df
+                    
+                    for column, filter_value in filters.items():
+                        if isinstance(filter_value, str) and filter_value:  # Handle text input filters
+                            filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False, na=False)]
+                    
+                with cols [1]:
+                    # Display the filtered DataFrame
+                    st.data_editor(
+                        filtered_df,
+                        column_config={
+                            "Link": st.column_config.LinkColumn(
+                                "Link",
+                                display_text="View"
+                            )
+                        },
+                        hide_index=True,
+                        use_container_width=True
+                    )                       
                                                             
                             
                         
-            else:
-                st.write("You  are  not  logged  in. Click   **[Account]**  on the  side  menu to Login  or  Signup  to proceed")
-        
+        else:
+            st.write("You  are  not  logged  in. Click   **[Account]**  on the  side  menu to Login  or  Signup  to proceed")
+    
     
     except APIError as e:
             st.error("Cannot connect, Kindly refresh")
