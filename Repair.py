@@ -161,79 +161,55 @@ def app():
                         })
                         # Fill NaN/NA values with an empty string
                         
-                       # Get unique month values from the 'Month' column
+                        # Get unique month values from the 'month' column
                         month_options = data_df['Month'].unique().tolist()
-
-                        # Get the current month
+                        
+                         # Get the current month
                         current_month = datetime.now().strftime("%B")
 
-                        # Ensure the current month is in the options to avoid errors
-                        if current_month in month_options:
-                            default_selection = [current_month]  # `default` expects a list for multi-selection
-                        else:
-                            default_selection = []  # No default if current month isn't in options
-
-
-                        from datetime import datetime
-                        import streamlit as st
-
-                        # Assuming data_df is already defined and includes the 'Month' column
-                        data_df.fillna('', inplace=True)
-
-                        # Get unique month values from the 'Month' column, if present
-                        month_options = data_df['Month'].unique().tolist() if 'Month' in data_df.columns else []
-
-                        # Get the current month
-                        current_month = datetime.now().strftime("%B")
-
+                        # Set the default index to the current month
+                        default_index = month_options.index(current_month)
+                        
                         # Ensure the current month is in the options to avoid errors
                         default_selection = [current_month] if current_month in month_options else []
 
-                        # Create a multi-select box with the default value set to the current month
-                        selected_months = st.multiselect("Select Month", options=month_options, default=default_selection)
 
+                        # Create the select box with the default value set to the current month
+                        choice = s= st.multiselect("Select Month", options=month_options, default=default_selection)
+                  
+                        data_df.fillna('', inplace=True)
+                        
                         # Define the columns to filter
-                        filter_columns = ["Tkt", "Approver", "Facility", "Issue", "Month"]
+                        filter_columns = ["Tkt", "Approver", "Facility","Issue","Status","Month"]
 
-                        # Create filter options only for existing columns
-                        filter_options = {col: data_df[col].unique().tolist() for col in filter_columns if col in data_df.columns}
+                        # Create five columnss for arranging widgets horizontally
+                        col1, col2, col3, col4, col5, col6 = st.columns(6)
+                        
+                        
+                        # Create a dictionary to store filter values
+                        filters = {column: '' for column in filter_columns}
+                        
+                        
 
-                        # Initialize filter dictionary only for columns that exist in data_df
-                        filters = {col: [] for col in filter_columns if col in data_df.columns}
-
-                        # Create columns to arrange widgets horizontally
-                        col1, col2, col3, col4, col5 = st.columns(5)
-
-                        # Create dropdowns or multiselects for each filter column
-                        if "Tkt" in filters:
-                            with col1:
-                                filters["Tkt"] = st.multiselect("Filter Tkt", options=filter_options["Tkt"])
-
-                        if "Approver" in filters:
-                            with col2:
-                                filters["Approver"] = st.multiselect("Filter Approver", options=filter_options["Approver"])
-
-                        if "Facility" in filters:
-                            with col3:
-                                filters["Facility"] = st.multiselect("Filter Facility", options=filter_options["Facility"])
-
-                        if "Issue" in filters:
-                            with col4:
-                                filters["Issue"] = st.multiselect("Filter Issue", options=filter_options["Issue"])
-
-                        if "Month" in filters:
-                            with col5:
-                                # Use the selected months from the previous multiselect as a filter for the 'Month' column
-                                filters["Month"] = selected_months
-
+                        # Create text input widgets for each filter column and arrange them horizontally
+                        with col1:
+                            filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", filters[filter_columns[0]])
+                        with col2:
+                            filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", filters[filter_columns[1]])
+                        with col3:
+                            filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
+                        with col4:
+                            filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
+                        with col5:
+                            filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
+                        with col6:
+                            filters[filter_columns[5]] = choice
+                        
                         # Apply filters to the DataFrame
                         filtered_df = data_df
-                        for column, filter_values in filters.items():
-                            if filter_values:  # Only filter if there are selected values
-                                filtered_df = filtered_df[filtered_df[column].isin(filter_values)]
-
-                        st.write(filtered_df)
-
+                        for column, filter_value in filters.items():
+                            if filter_value:
+                                filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False)]
 
                         # Display the filtered DataFrame using st.data_editor
                         with card_container(key="gallery4"):
