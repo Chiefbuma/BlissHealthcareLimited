@@ -110,9 +110,8 @@ def app():
                     filters = {column: st.text_input(f"Filter {column}", "") for column in filter_columns}
                     # Create five columnss for arranging widgets horizontally
 
-                    filters = {column: st.text_input(f"Filter {column}", "") for column in filter_columns}
                     
-                                        # Predefined options for "Approver"
+                    # Predefined options for "Approver"
                     approver_options = ["Pending by Approver", "FACILITY", "PROJECTS", "DIRECTOR"]
 
                     # Use selectbox for "Approver" filter with predefined options
