@@ -173,8 +173,10 @@ def app():
                         else:
                             default_selection = []  # No default if current month isn't in options
 
-                        # Create the multi-select box with the default value set to the current month
-                        choice = st.multiselect("Select Month", options=month_options, default=default_selection)
+                        
+                        with st.sidebar:
+                            # Create the multi-select box with the default value set to the current month
+                            choice = st.multiselect("Select Month", options=month_options, default=default_selection)
                   
                         data_df.fillna('', inplace=True)
                         
