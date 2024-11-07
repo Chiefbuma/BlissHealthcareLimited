@@ -171,7 +171,9 @@ def app():
                         default_index = month_options.index(current_month)
 
                         # Create the select box with the default value set to the current month
-                        choice = st.selectbox("Select Month", options=month_options, index=default_index)
+                        #choice = st.selectbox("Select Month", options=month_options, index=default_index)
+                        
+                        choice = st.multiselect("Select Month", options=month_options, index=default_index)
                   
                         data_df.fillna('', inplace=True)
                         
