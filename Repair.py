@@ -174,11 +174,14 @@ def app():
                             default_selection = []  # No default if current month isn't in options
 
 
+                        from datetime import datetime
+                        import streamlit as st
+
                         # Assuming data_df is already defined and includes the 'Month' column
                         data_df.fillna('', inplace=True)
 
-                        # Get unique month values from the 'Month' column
-                        month_options = data_df['Month'].unique().tolist()
+                        # Get unique month values from the 'Month' column, if present
+                        month_options = data_df['Month'].unique().tolist() if 'Month' in data_df.columns else []
 
                         # Get the current month
                         current_month = datetime.now().strftime("%B")
@@ -189,32 +192,39 @@ def app():
                         # Create a multi-select box with the default value set to the current month
                         selected_months = st.multiselect("Select Month", options=month_options, default=default_selection)
 
-                        # Define the columns to filter and their unique options
+                        # Define the columns to filter
                         filter_columns = ["Tkt", "Approver", "Facility", "Issue", "Month"]
-                        filter_options = {col: data_df[col].unique().tolist() for col in filter_columns}
+
+                        # Create filter options only for existing columns
+                        filter_options = {col: data_df[col].unique().tolist() for col in filter_columns if col in data_df.columns}
+
+                        # Initialize filter dictionary only for columns that exist in data_df
+                        filters = {col: [] for col in filter_columns if col in data_df.columns}
 
                         # Create columns to arrange widgets horizontally
                         col1, col2, col3, col4, col5 = st.columns(5)
 
-                        # Store filter values in a dictionary
-                        filters = {}
-
                         # Create dropdowns or multiselects for each filter column
-                        with col1:
-                            filters["Tkt"] = st.multiselect("Filter Tkt", options=filter_options["Tkt"])
+                        if "Tkt" in filters:
+                            with col1:
+                                filters["Tkt"] = st.multiselect("Filter Tkt", options=filter_options["Tkt"])
 
-                        with col2:
-                            filters["Approver"] = st.multiselect("Filter Approver", options=filter_options["Approver"])
+                        if "Approver" in filters:
+                            with col2:
+                                filters["Approver"] = st.multiselect("Filter Approver", options=filter_options["Approver"])
 
-                        with col3:
-                            filters["Facility"] = st.multiselect("Filter Facility", options=filter_options["Facility"])
+                        if "Facility" in filters:
+                            with col3:
+                                filters["Facility"] = st.multiselect("Filter Facility", options=filter_options["Facility"])
 
-                        with col4:
-                            filters["Issue"] = st.multiselect("Filter Issue", options=filter_options["Issue"])
+                        if "Issue" in filters:
+                            with col4:
+                                filters["Issue"] = st.multiselect("Filter Issue", options=filter_options["Issue"])
 
-                        with col5:
-                            # Use the selected months from the previous multiselect as a filter for the 'Month' column
-                            filters["Month"] = selected_months
+                        if "Month" in filters:
+                            with col5:
+                                # Use the selected months from the previous multiselect as a filter for the 'Month' column
+                                filters["Month"] = selected_months
 
                         # Apply filters to the DataFrame
                         filtered_df = data_df
