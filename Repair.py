@@ -124,6 +124,10 @@ def app():
               
                     
             with cols [1]:
+                ui.card(
+                        content="Bliss Healthcare Maintenance Dashboard",
+                        key="MCcard34"
+                    ).render()
                 # Display the filtered DataFrame
                 st.data_editor(
                     filtered_df,
