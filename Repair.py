@@ -95,6 +95,8 @@ def app():
             with cols[0]:
                 
                 with card_container(key="sum"):
+                    
+                    st.write("Click  button to pply filters")
 
                     # Get unique month values
                     month_options = data_df['Month'].unique().tolist()
