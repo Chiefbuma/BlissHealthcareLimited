@@ -445,8 +445,7 @@ def app():
                             filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
                         with col4:
                             filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
-                        with col5:
-                            filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
+                        
                 
                         # Apply filters to the DataFrame
                         filtered_df = data_df
