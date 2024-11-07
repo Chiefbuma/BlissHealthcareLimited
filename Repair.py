@@ -161,21 +161,22 @@ def app():
                         })
                         # Fill NaN/NA values with an empty string
                         
-                        # Get unique month values from the 'month' column
+                        # Get unique month values from the 'Month' column
                         month_options = data_df['Month'].unique().tolist()
-                        
-                         # Get the current month
+
+                        # Get the current month
                         current_month = datetime.now().strftime("%B")
 
-                        # Set the default index to the current month
-                        default_index = month_options.index(current_month)
-                        
-                        # Ensure the current month is in the options to avoid errors
+                        # Set the default selection to the current month if it's in the list
                         default_selection = [current_month] if current_month in month_options else []
 
+                        # Create the multi-select box with the default value set to the current month
+                        choice = st.multiselect("Select Month", options=month_options, default=default_selection)
 
-                        # Create the select box with the default value set to the current month
-                        choice = s= st.multiselect("Select Month", options=month_options, default=default_selection)
+                        # Now `selected_months` is a list of selected months, which you can use for filtering
+                        filtered_df = data_df[data_df['Month'].isin(choice)] if choice else data_df
+
+                        #st.write(filtered_df)
                   
                         data_df.fillna('', inplace=True)
                         
@@ -206,15 +207,15 @@ def app():
                             filters[filter_columns[5]] = choice
                         
                         # Apply filters to the DataFrame
-                        filtered_df = data_df
+                        filtered_All = filtered_df
                         for column, filter_value in filters.items():
                             if filter_value:
-                                filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False)]
+                                filtered_All = filtered_All[filtered_All[column].str.contains(filter_value, case=False)]
 
                         # Display the filtered DataFrame using st.data_editor
                         with card_container(key="gallery4"):
                             st.data_editor(
-                                filtered_df,
+                                filtered_All,
                                 column_config={
                                     "Link": st.column_config.LinkColumn(
                                         "Link",
