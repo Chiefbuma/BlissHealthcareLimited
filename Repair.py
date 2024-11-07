@@ -104,7 +104,7 @@ def app():
                     default_selection = [current_month] if current_month in month_options else []
 
                     # Display filter selection widgets
-                    selected_months = st.multiselect("Select Month", options=month_options, default=default_selection)
+                    selected_months = st.multiselect("Select Month(s)", options=month_options, default=default_selection)
 
                     
                     # Define columns to filter and create filter widgets
