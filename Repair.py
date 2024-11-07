@@ -161,6 +161,9 @@ def app():
                         })
                         # Fill NaN/NA values with an empty string
                         
+                        # Assuming data_df is already defined and includes the 'Month' column
+                        data_df.fillna('', inplace=True)
+
                         # Get unique month values from the 'Month' column
                         month_options = data_df['Month'].unique().tolist()
 
@@ -171,26 +174,20 @@ def app():
                         default_selection = [current_month] if current_month in month_options else []
 
                         # Create the multi-select box with the default value set to the current month
-                        choice = st.multiselect("Select Month", options=month_options, default=default_selection)
+                        selected_months = st.multiselect("Select Month", options=month_options, default=default_selection)
 
                         # Now `selected_months` is a list of selected months, which you can use for filtering
-                        filtered_df = data_df[data_df['Month'].isin(choice)] if choice else data_df
+                        filtered_df = data_df[data_df['Month'].isin(selected_months)] if selected_months else data_df
 
-                        #st.write(filtered_df)
-                  
-                        filtered_df.fillna('', inplace=True)
-                        
                         # Define the columns to filter
-                        filter_columns = ["Tkt", "Approver", "Facility","Issue","Status","Month"]
+                        filter_columns = ["Tkt", "Approver", "Facility", "Issue", "Status", "Month"]
 
-                        # Create five columnss for arranging widgets horizontally
+                        # Create six columns for arranging widgets horizontally
                         col1, col2, col3, col4, col5, col6 = st.columns(6)
-                        
-                        
+
                         # Create a dictionary to store filter values
                         filters = {column: '' for column in filter_columns}
-                        
-                        
+                        filters["Month"] = selected_months  # Set the month filter to the selected months
 
                         # Create text input widgets for each filter column and arrange them horizontally
                         with col1:
@@ -203,27 +200,29 @@ def app():
                             filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
                         with col5:
                             filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
-                        with col6:
-                            filters[filter_columns[5]] = choice
-                        
-                        
+                        # Month filter is already set in filters["Month"]
+
+                        # Apply filters to the DataFrame
                         for column, filter_value in filters.items():
-                            if filter_value:
-                                filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False)]
+                            if isinstance(filter_value, list) and column == "Month":  # Handle list filter for "Month"
+                                if filter_value:
+                                    filtered_df = filtered_df[filtered_df[column].isin(filter_value)]
+                            elif isinstance(filter_value, str) and filter_value:  # Handle text input filters
+                                filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False, na=False)]
 
                         # Display the filtered DataFrame using st.data_editor
-                        with card_container(key="gallery4"):
-                            st.data_editor(
-                                filtered_df,
-                                column_config={
-                                    "Link": st.column_config.LinkColumn(
-                                        "Link",
-                                        display_text="View"
-                                    )
-                                },
-                                hide_index=True
-                            , use_container_width=True)
-                                            
+                        st.data_editor(
+                            filtered_df,
+                            column_config={
+                                "Link": st.column_config.LinkColumn(
+                                    "Link",
+                                    display_text="View"
+                                )
+                            },
+                            hide_index=True,
+                            use_container_width=True
+                        )
+                                                                    
                                                        
                     
                   
