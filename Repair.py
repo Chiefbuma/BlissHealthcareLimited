@@ -112,10 +112,10 @@ def app():
 
                     
                     # Predefined options for "Approver"
-                    approver_options = ["Pending by Approver", "FACILITY", "PROJECTS", "DIRECTOR"]
+                    approver_options = ["", "FACILITY", "PROJECTS", "DIRECTOR"]
 
                     # Use selectbox for "Approver" filter with predefined options
-                    filters["Approver"] = st.selectbox("Filter Approver", options=approver_options)
+                    filters["Approver"] = st.selectbox("Pending Approver", options=approver_options)
                     
                     filters["Month"] = selected_months
 
