@@ -104,11 +104,20 @@ def app():
                     # Display filter selection widgets
                     selected_months = st.multiselect("Select Month", options=month_options, default=default_selection)
 
-                    # Define columns to filter and create text input widgets
-                    filter_columns = ["Tkt", "Approver", "Facility", "Issue"]
+                    
+                    # Define columns to filter and create filter widgets
+                    filter_columns = ["Tkt", "Facility", "Issue", "Status"]
+                    filters = {column: st.text_input(f"Filter {column}", "") for column in filter_columns}
                     # Create five columnss for arranging widgets horizontally
 
                     filters = {column: st.text_input(f"Filter {column}", "") for column in filter_columns}
+                    
+                                        # Predefined options for "Approver"
+                    approver_options = ["Pending by Approver", "FACILITY", "PROJECTS", "DIRECTOR"]
+
+                    # Use selectbox for "Approver" filter with predefined options
+                    filters["Approver"] = st.selectbox("Filter Approver", options=approver_options)
+                    
                     filters["Month"] = selected_months
 
                     # Add a button to apply filters after selection
