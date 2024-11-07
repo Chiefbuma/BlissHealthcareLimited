@@ -96,7 +96,7 @@ def app():
                 
                 with card_container(key="sum"):
                     
-                    st.write("Click APPLY FILLTER  button to apply your filters")
+                    st.write("Click button below to apply filters")
 
                     # Get unique month values
                     month_options = data_df['Month'].unique().tolist()
