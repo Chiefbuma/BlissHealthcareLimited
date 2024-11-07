@@ -178,7 +178,7 @@ def app():
 
                         #st.write(filtered_df)
                   
-                        data_df.fillna('', inplace=True)
+                        filtered_df.fillna('', inplace=True)
                         
                         # Define the columns to filter
                         filter_columns = ["Tkt", "Approver", "Facility","Issue","Status","Month"]
@@ -206,16 +206,15 @@ def app():
                         with col6:
                             filters[filter_columns[5]] = choice
                         
-                        # Apply filters to the DataFrame
-                        filtered_All = filtered_df
+                        
                         for column, filter_value in filters.items():
                             if filter_value:
-                                filtered_All = filtered_All[filtered_All[column].str.contains(filter_value, case=False)]
+                                filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False)]
 
                         # Display the filtered DataFrame using st.data_editor
                         with card_container(key="gallery4"):
                             st.data_editor(
-                                filtered_All,
+                                filtered_df,
                                 column_config={
                                     "Link": st.column_config.LinkColumn(
                                         "Link",
