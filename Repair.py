@@ -69,7 +69,7 @@ def app():
                 # Load the data and save it in session state
                 df_main = load_data()
                 st.session_state.data_df = df_main[['ID', 'Date of report', 'Clinic', 'Department', 
-                                                    'Amount on the Quotation', 'MainStatus', 'Approver', 
+                                                    'Amount on the Quotation', 'Approver', 
                                                     'MonthName', 'LinkEdit']]
 
             # Rename and preprocess data for filtering
