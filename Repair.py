@@ -95,7 +95,7 @@ def app():
             
             with cols[0]:
                 
-                with card_container:
+                with card_container(key="sum"):
 
                     # Get unique month values
                     month_options = data_df['Month'].unique().tolist()
