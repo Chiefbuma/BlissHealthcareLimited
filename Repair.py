@@ -108,9 +108,6 @@ def app():
                     
             Main_df = load_new()
             
-           
-    
-
             def get_month_options():
                 current_year = datetime.now().year
                 current_month = datetime.now().month
@@ -130,13 +127,6 @@ def app():
                     ).render()
             
             with card_container(key="gallery1"):
-
-                        
-                        st.markdown('<div style="height: 0px; overflow-y: scroll;">', unsafe_allow_html=True)
-                        @st.cache_data(ttl=600, max_entries=100, show_spinner=False, persist=False, experimental_allow_widgets=False)
-                        def load_new():
-                                New = SharePoint().connect_to_list(ls_name='Maintenance Report')
-                                return pd.DataFrame(  New )
                             
                         df_main=load_new()
                         
