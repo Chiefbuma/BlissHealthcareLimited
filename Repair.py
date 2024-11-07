@@ -161,19 +161,20 @@ def app():
                         })
                         # Fill NaN/NA values with an empty string
                         
-                        # Get unique month values from the 'month' column
+                       # Get unique month values from the 'Month' column
                         month_options = data_df['Month'].unique().tolist()
-                        
-                         # Get the current month
+
+                        # Get the current month
                         current_month = datetime.now().strftime("%B")
 
-                        # Set the default index to the current month
-                        default_index = month_options.index(current_month)
+                        # Ensure the current month is in the options to avoid errors
+                        if current_month in month_options:
+                            default_selection = [current_month]  # `default` expects a list for multi-selection
+                        else:
+                            default_selection = []  # No default if current month isn't in options
 
-                        # Create the select box with the default value set to the current month
-                        #choice = st.selectbox("Select Month", options=month_options, index=default_index)
-                        
-                        choice = st.multiselect("Select Month", options=month_options, index=default_index)
+                        # Create the multi-select box with the default value set to the current month
+                        choice = st.multiselect("Select Month", options=month_options, default=default_selection)
                   
                         data_df.fillna('', inplace=True)
                         
