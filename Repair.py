@@ -33,192 +33,104 @@ def app():
             # Initialize session state if it doesn't exist
                     
         if st.session_state.is_authenticated:
-            
-            # get clients sharepoint list
-            st.cache_data(ttl=80, max_entries=2000, show_spinner=False, persist=False, experimental_allow_widgets=False)
-            def load_new():
-                columns = [
-                    "Date of report",
-                    "Name of Staff",
-                    "Department",
-                    "Month",
-                    "Date Number ",
-                    "Clinic",
-                    "Departmental report",
-                    "Details",
-                    "Report",
-                    "MainLink flow",
-                    "ATTACHED",
-                    "MainLINK",
-                    "MainItem",
-                    "Labor",
-                    "Amount on the Quotation",
-                    "RIT Approval",
-                    "RIT Comment",
-                    "RIT labour",
-                    "Facility Approval",
-                    "Facility comments",
-                    "Facility Labor",
-                    "Time Line",
-                    "Projects Approval",
-                    "Project Comments",
-                    "Project Labor",
-                    "Admin Approval",
-                    "Admin Comments",
-                    "Admin labor",
-                    "Approved amount",
-                    "Finance Amount",
-                    "STATUS",
-                    "Approver",
-                    "TYPE",
-                    "Days",
-                    "Disbursement",
-                    "MainStatus",
-                    "Modified",
-                    "Modified By",
-                    "Created By",
-                    "ID",
-                    "Email",
-                    "MAINTYPE",
-                    "Attachments",
-                    "LinkEdit",
-                    "UpdateLink",
-                    "PHOTOS",
-                    "QUOTES",
-                    "Title",
-                    "MonthName",
-                    "Centre Manager Approval",
-                    "Biomedical Head Approval"
-
-                ]
+            # Load the data once and store it in session state
+            if 'data_df' not in st.session_state:
+                st.cache_data(ttl=80, max_entries=2000, show_spinner=False, persist=False, experimental_allow_widgets=False)
                 
-                try:
-                    clients = SharePoint().connect_to_list(ls_name='Maintenance Report', columns=columns)
-                    df = pd.DataFrame(clients)
+                # Load data from SharePoint
+                def load_data():
+                    columns = [
+                        "Date of report", "Name of Staff", "Department", "Month", "Date Number ", "Clinic",
+                        "Departmental report", "Details", "Report", "MainLink flow", "ATTACHED", "MainLINK", 
+                        "MainItem", "Labor", "Amount on the Quotation", "RIT Approval", "RIT Comment", 
+                        "RIT labour", "Facility Approval", "Facility comments", "Facility Labor", "Time Line", 
+                        "Projects Approval", "Project Comments", "Project Labor", "Admin Approval", 
+                        "Admin Comments", "Admin labor", "Approved amount", "Finance Amount", "STATUS", 
+                        "Approver", "TYPE", "Days", "Disbursement", "MainStatus", "Modified", "Modified By", 
+                        "Created By", "ID", "Email", "MAINTYPE", "Attachments", "LinkEdit", "UpdateLink", 
+                        "PHOTOS", "QUOTES", "Title", "MonthName", "Centre Manager Approval", 
+                        "Biomedical Head Approval"
+                    ]
                     
-                    # Ensure all specified columns are in the DataFrame, even if empty
-                    for col in columns:
-                        if col not in df.columns:
-                            df[col] = None
+                    try:
+                        clients = SharePoint().connect_to_list(ls_name='Maintenance Report', columns=columns)
+                        df = pd.DataFrame(clients)
+                        
+                        # Ensure all specified columns are in the DataFrame, even if empty
+                        for col in columns:
+                            if col not in df.columns:
+                                df[col] = None
 
-                    return df
-                except APIError as e:
-                    st.error("Connection not available, check connection")
-                    st.stop()
-                    
-            Main_df = load_new()
+                        return df
+                    except APIError:
+                        st.error("Connection not available, check connection")
+                        st.stop()
+
+                # Load the data and save it in session state
+                df_main = load_data()
+                st.session_state.data_df = df_main[['ID', 'Date of report', 'Clinic', 'Department', 
+                                                    'Amount on the Quotation', 'MainStatus', 'Approver', 
+                                                    'MonthName', 'LinkEdit']]
+
+            # Rename and preprocess data for filtering
+            data_df = st.session_state.data_df.copy()
+            data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
+            data_df['MonthName'] = data_df['MonthName'].str.split(';#').str[1]
             
-            def get_month_options():
-                current_year = datetime.now().year
-                current_month = datetime.now().month
-                month_names = [
-                    datetime(current_year, month, 3).strftime('%B')
-                    for month in range(3, current_month + 1)
-                ]
-                month_names.insert(0, "Select Month")
-                return month_names
-
-            month_options = get_month_options()
-            cols = st.columns(2)
-            with cols[0]:
-                ui.card(
-                        content="Bliss Healthcare Maintenance Dashboard",
-                        key="MCcard3"
-                    ).render()
+            data_df = data_df.rename(columns={
+                'ID': 'Tkt',
+                'Date of report': 'Date',
+                'Clinic': 'Facility',
+                'Department': 'Dep',
+                'Amount on the Quotation': 'Amount',
+                'MainStatus': 'Status',
+                'MonthName': 'Month',
+                'Approver': 'Approver',
+                'LinkEdit': 'Link'
+            })
             
-            with card_container(key="gallery1"):
-                            
-                        df_main=load_new()
-                        
-                        data_df= df_main[['ID','Date of report','Clinic','Department','Amount on the Quotation','MainStatus','Approver','MonthName','LinkEdit']]
-                        
-                        # Convert 'bill_date' to datetime type
-                        data_df['Date of report'] = pd.to_datetime(data_df['Date of report']).dt.date
-                                            
-                        # Extract just the month name
-                        data_df['MonthName'] = data_df['MonthName'].str.split(';#').str[1]
-                    
-                        data_df = data_df.rename(columns={
-                            'ID': 'Tkt',
-                            'Date of report':'Date',
-                            'Clinic': 'Facility',
-                            'Department':'Dep',
-                            'Amount on the Quotation': 'Amount',
-                            'MainStatus': 'Status',
-                            'MonthName':'Month',
-                            'Approver': 'Approver',
-                            'LinkEdit': 'Link'
-                        })
-                        # Fill NaN/NA values with an empty string
-                        
-                        # Assuming data_df is already defined and includes the 'Month' column
-                        data_df.fillna('', inplace=True)
+            data_df.fillna('', inplace=True)
 
-                        # Get unique month values from the 'Month' column
-                        month_options = data_df['Month'].unique().tolist()
+            # Get unique month values
+            month_options = data_df['Month'].unique().tolist()
+            current_month = datetime.now().strftime("%B")
+            default_selection = [current_month] if current_month in month_options else []
 
-                        # Get the current month
-                        current_month = datetime.now().strftime("%B")
+            # Display filter selection widgets
+            selected_months = st.multiselect("Select Month", options=month_options, default=default_selection)
 
-                        # Set the default selection to the current month if it's in the list
-                        default_selection = [current_month] if current_month in month_options else []
+            # Define columns to filter and create text input widgets
+            filter_columns = ["Tkt", "Approver", "Facility", "Issue", "Status"]
+            filters = {column: st.text_input(f"Filter {column}", "") for column in filter_columns}
+            filters["Month"] = selected_months
 
-                        # Create the multi-select box with the default value set to the current month
-                        selected_months = st.multiselect("Select Month", options=month_options, default=default_selection)
-
-                        # Now `selected_months` is a list of selected months, which you can use for filtering
-                        filtered_df = data_df[data_df['Month'].isin(selected_months)] if selected_months else data_df
-
-                        # Define the columns to filter
-                        filter_columns = ["Tkt", "Approver", "Facility", "Issue", "Status", "Month"]
-
-                        # Create six columns for arranging widgets horizontally
-                        col1, col2, col3, col4, col5, col6 = st.columns(6)
-
-                        # Create a dictionary to store filter values
-                        filters = {column: '' for column in filter_columns}
-                        filters["Month"] = selected_months  # Set the month filter to the selected months
-
-                        # Create text input widgets for each filter column and arrange them horizontally
-                        with col1:
-                            filters[filter_columns[0]] = st.text_input(f"Filter {filter_columns[0]}", filters[filter_columns[0]])
-                        with col2:
-                            filters[filter_columns[1]] = st.text_input(f"Filter {filter_columns[1]}", filters[filter_columns[1]])
-                        with col3:
-                            filters[filter_columns[2]] = st.text_input(f"Filter {filter_columns[2]}", filters[filter_columns[2]])
-                        with col4:
-                            filters[filter_columns[3]] = st.text_input(f"Filter {filter_columns[3]}", filters[filter_columns[3]])
-                        with col5:
-                            filters[filter_columns[4]] = st.text_input(f"Filter {filter_columns[4]}", filters[filter_columns[4]])
-                        # Month filter is already set in filters["Month"]
-
-                        # Apply filters to the DataFrame
-                        for column, filter_value in filters.items():
-                            if isinstance(filter_value, list) and column == "Month":  # Handle list filter for "Month"
-                                if filter_value:
-                                    filtered_df = filtered_df[filtered_df[column].isin(filter_value)]
-                            elif isinstance(filter_value, str) and filter_value:  # Handle text input filters
-                                filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False, na=False)]
-
-                        # Display the filtered DataFrame using st.data_editor
-                        st.data_editor(
-                            filtered_df,
-                            column_config={
-                                "Link": st.column_config.LinkColumn(
-                                    "Link",
-                                    display_text="View"
-                                )
-                            },
-                            hide_index=True,
-                            use_container_width=True
+            # Add a button to apply filters after selection
+            if st.button("Apply Filters"):
+                # Filter the data
+                filtered_df = data_df[data_df['Month'].isin(filters["Month"])] if filters["Month"] else data_df
+                
+                for column, filter_value in filters.items():
+                    if isinstance(filter_value, str) and filter_value:  # Handle text input filters
+                        filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False, na=False)]
+                
+                # Display the filtered DataFrame
+                st.data_editor(
+                    filtered_df,
+                    column_config={
+                        "Link": st.column_config.LinkColumn(
+                            "Link",
+                            display_text="View"
                         )
-                                                                    
-                                                       
-                    
-                  
-        else:
-            st.write("You  are  not  logged  in. Click   **[Account]**  on the  side  menu to Login  or  Signup  to proceed")
-    
+                    },
+                    hide_index=True,
+                    use_container_width=True
+                )                       
+                                                            
+                            
+                        
+            else:
+                st.write("You  are  not  logged  in. Click   **[Account]**  on the  side  menu to Login  or  Signup  to proceed")
+        
     
     except APIError as e:
             st.error("Cannot connect, Kindly refresh")
