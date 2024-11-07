@@ -96,6 +96,7 @@ def app():
             with cols[0]:
                 
                 with card_container:
+
                     # Get unique month values
                     month_options = data_df['Month'].unique().tolist()
                     current_month = datetime.now().strftime("%B")
@@ -111,16 +112,16 @@ def app():
                     filters = {column: st.text_input(f"Filter {column}", "") for column in filter_columns}
                     filters["Month"] = selected_months
 
-                    # Add a button to apply filters after selection
-                    if st.button("Apply Filters"):
-                        # Filter the data
-                        filtered_df = data_df[data_df['Month'].isin(filters["Month"])] if filters["Month"] else data_df
-                        
-                        for column, filter_value in filters.items():
-                            if isinstance(filter_value, str) and filter_value:  # Handle text input filters
-                                filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False, na=False)]
-                    else:
-                        filtered_df = data_df  
+            # Add a button to apply filters after selection
+            if st.button("Apply Filters"):
+                # Filter the data
+                filtered_df = data_df[data_df['Month'].isin(filters["Month"])] if filters["Month"] else data_df
+                
+                for column, filter_value in filters.items():
+                    if isinstance(filter_value, str) and filter_value:  # Handle text input filters
+                        filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False, na=False)]
+            else:
+                filtered_df = data_df  
               
                     
             with cols [1]:
