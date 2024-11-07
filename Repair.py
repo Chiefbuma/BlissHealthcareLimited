@@ -128,7 +128,7 @@ def app():
                             if isinstance(filter_value, str) and filter_value:  # Handle text input filters
                                 filtered_df = filtered_df[filtered_df[column].str.contains(filter_value, case=False, na=False)]
                     else:
-                        filtered_df = data_df  
+                        filtered_df = data_df(data_df['Month']==default_selection)
               
                     
             with cols [1]:
