@@ -157,8 +157,6 @@ def app():
                 
                 
                 
-               
-                
                  # Group by 'date', 'FacilityName', and 'Shift'
                 grouped_All = filtered_merged_df.groupby(['date', 'FacilityName']).agg(
                     Average_TAT=('TAT', 'mean')  # Average TAT
@@ -202,7 +200,7 @@ def app():
     
                 cols = st.columns([1,1])
                 with cols[0]:
-                    st.write(pivoted_df)
+    
                     
                     st.write(patient_df)
                     
