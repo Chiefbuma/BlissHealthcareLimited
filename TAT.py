@@ -198,7 +198,7 @@ def app():
                 
          
     
-                cols = st.columns([1,1])
+                cols = st.columns([2,1])
                 with cols[0]:
                     st.write(pivoted_df)
                     
@@ -240,7 +240,7 @@ def app():
                 density = gaussian_kde(xy)(xy)
 
                 # Create scatter plot with density-based coloring and TAT-based point sizing
-                plt.figure(figsize=(12, 6))
+                plt.figure(figsize=(6, 3))
                 scatter = plt.scatter(
                     time_sampled,
                     index_sampled,
@@ -276,7 +276,7 @@ def app():
                 density = gaussian_kde(xy)(xy)
 
                 # Create scatter plot with density-based coloring and TAT-based point sizing
-                plt.figure(figsize=(12, 6))
+                plt.figure(figsize=(6, 3))
                 scatter = plt.scatter(
                     time_sampled,
                     tat_sampled,
