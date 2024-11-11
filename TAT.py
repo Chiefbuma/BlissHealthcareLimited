@@ -209,10 +209,6 @@ def app():
                     
                     
                 with cols[1]:
-                        ui.card(
-                        content="AVERAGE TAT MEDICAL CENTRE",
-                        key="MCcard7"
-                ).render()
                           
                    st.write(grouped_All)
                 
