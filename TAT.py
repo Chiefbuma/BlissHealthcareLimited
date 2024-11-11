@@ -149,6 +149,14 @@ def app():
                 
                 
                 
+                   # Group by 'date', 'FacilityName', and 'Shift'
+                patient_df = filtered_merged_df.groupby(['date','PatientName','ConsultationBillingTime','Pharmacy_Billing_Time', 'FacilityName','Shift']).agg(
+                    Unique_UHID_Count=('UHID', 'nunique'),  # Count of unique UHID
+                    Average_TAT=('TAT', 'mean')  # Average TAT
+                ).reset_index()
+                
+                
+                
                
                 
                  # Group by 'date', 'FacilityName', and 'Shift'
@@ -195,6 +203,8 @@ def app():
                 cols = st.columns([1,1])
                 with cols[0]:
                     st.write(pivoted_df)
+                    
+                    st.write(patient_df)
                     
                 with cols[1]:
                           
