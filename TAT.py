@@ -156,6 +156,10 @@ def app():
                     Average_TAT=('TAT', 'mean')  # Average TAT
                 ).reset_index()
                 
+                # Add 20 minutes to Average TAT
+                patient_df['Average_TAT'] += 20
+                
+                
                 cols = st.columns([2,1])
                 with cols[0]:
                     #Select box for TAT filter
