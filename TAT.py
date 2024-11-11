@@ -213,6 +213,8 @@ def app():
                     
                     
                 with cols[1]:
+                    
+                   tat_filter_2 = st.selectbox("Select", ["All", "TAT above 1 hour (60)"])
                           
                    st.write(grouped_All)
                 
