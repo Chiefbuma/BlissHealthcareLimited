@@ -193,21 +193,14 @@ def app():
                 existing_columns = [col for col in preferred_order if col in pivoted_df.columns]  # Retain only existing columns
                 pivoted_df = pivoted_df[existing_columns]
 
-                
-                
-                
          
     
                 cols = st.columns([2,1])
                 with cols[0]:
-    
-                    
                     st.write(patient_df)
-                    
                 with cols[1]:
                           
                    st.write(grouped_All)
-                
 
                 # Assuming 'filtered_merged_df' is already defined and contains the 'TAT' and 'Pharmacy_Billing_Time' columns
 
@@ -240,7 +233,7 @@ def app():
                 density = gaussian_kde(xy)(xy)
 
                 # Create scatter plot with density-based coloring and TAT-based point sizing
-                plt.figure(figsize=(12, 6))
+                plt.figure(figsize=(6, 3))
                 scatter = plt.scatter(
                     time_sampled,
                     index_sampled,
@@ -276,7 +269,7 @@ def app():
                 density = gaussian_kde(xy)(xy)
 
                 # Create scatter plot with density-based coloring and TAT-based point sizing
-                plt.figure(figsize=(12, 6))
+                plt.figure(figsize=(6, 3))
                 scatter = plt.scatter(
                     time_sampled,
                     tat_sampled,
