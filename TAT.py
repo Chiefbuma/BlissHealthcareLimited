@@ -213,111 +213,112 @@ def app():
                     
                     
                 with cols[1]:
+                 with card_container(key="tt"):
                     
-                   tat_filter_2 = st.selectbox("Select", ["All", "TAT above 1 hour (60)"])
-                          
-                   st.write(grouped_All)
+                    tat_filter_2 = st.selectbox("Select", ["All", "TAT above 1 hour (60)"])
+                            
+                    st.write(grouped_All)
                 
 
-                # Assuming 'filtered_merged_df' is already defined and contains the 'TAT' and 'Pharmacy_Billing_Time' columns
+                    # Assuming 'filtered_merged_df' is already defined and contains the 'TAT' and 'Pharmacy_Billing_Time' columns
 
-                # Extract just the time component
-                filtered_merged_df['time'] = filtered_merged_df['Pharmacy_Billing_Time'].dt.time
+                    # Extract just the time component
+                    filtered_merged_df['time'] = filtered_merged_df['Pharmacy_Billing_Time'].dt.time
 
-                # Filter for times between 07:00:00 and 20:00:00
-                start_time = pd.to_datetime("07:00:00").time()
-                end_time = pd.to_datetime("20:00:00").time()
-                filtered_period_df = filtered_merged_df[
-                    (filtered_merged_df['time'] >= start_time) & 
-                    (filtered_merged_df['time'] <= end_time)
-                ]
+                    # Filter for times between 07:00:00 and 20:00:00
+                    start_time = pd.to_datetime("07:00:00").time()
+                    end_time = pd.to_datetime("20:00:00").time()
+                    filtered_period_df = filtered_merged_df[
+                        (filtered_merged_df['time'] >= start_time) & 
+                        (filtered_merged_df['time'] <= end_time)
+                    ]
 
-                # Convert time to hours for the x-axis
-                time_in_hours = (
-                    filtered_period_df['Pharmacy_Billing_Time'].dt.hour + 
-                    filtered_period_df['Pharmacy_Billing_Time'].dt.minute / 60
-                )
+                    # Convert time to hours for the x-axis
+                    time_in_hours = (
+                        filtered_period_df['Pharmacy_Billing_Time'].dt.hour + 
+                        filtered_period_df['Pharmacy_Billing_Time'].dt.minute / 60
+                    )
 
-                # Optional: Use a subset of data if the dataset is too large
-                sample_size = min(2000, len(filtered_period_df))  # Adjust sample size as needed
-                sampled_data = filtered_period_df.sample(n=sample_size, random_state=42)
-                time_sampled = time_in_hours.loc[sampled_data.index]
-                tat_sampled = sampled_data['TAT']
-                index_sampled = sampled_data.index
+                    # Optional: Use a subset of data if the dataset is too large
+                    sample_size = min(2000, len(filtered_period_df))  # Adjust sample size as needed
+                    sampled_data = filtered_period_df.sample(n=sample_size, random_state=42)
+                    time_sampled = time_in_hours.loc[sampled_data.index]
+                    tat_sampled = sampled_data['TAT']
+                    index_sampled = sampled_data.index
 
-                # Calculate density for color mapping
-                xy = np.vstack([time_sampled, index_sampled])
-                density = gaussian_kde(xy)(xy)
+                    # Calculate density for color mapping
+                    xy = np.vstack([time_sampled, index_sampled])
+                    density = gaussian_kde(xy)(xy)
 
-                # Create scatter plot with density-based coloring and TAT-based point sizing
-                plt.figure(figsize=(6, 3))
-                scatter = plt.scatter(
-                    time_sampled,
-                    index_sampled,
-                    s=tat_sampled,       # Size points by TAT values
-                    c=density,           # Color points by density
-                    cmap='viridis', 
-                    alpha=0.7
-                )
+                    # Create scatter plot with density-based coloring and TAT-based point sizing
+                    plt.figure(figsize=(6, 3))
+                    scatter = plt.scatter(
+                        time_sampled,
+                        index_sampled,
+                        s=tat_sampled,       # Size points by TAT values
+                        c=density,           # Color points by density
+                        cmap='viridis', 
+                        alpha=0.7
+                    )
 
-                # Customize the plot with 3-hour intervals
-                plt.title('Distribution of Patient Visits by Time of Day and Effect on TAT')
-                plt.xlabel('Time of Day')
-                plt.xticks(range(7, 21, 3), [f"{hour} {'AM' if hour < 12 else 'PM'}" for hour in range(7, 21, 3)], rotation=45)
-                plt.ylabel('Patient Visits')
-                plt.colorbar(scatter, label='Visit Density')  # Density color bar for interpreting color
-                plt.grid(True, linestyle='--', alpha=0.7)
-                plt.tight_layout()
+                    # Customize the plot with 3-hour intervals
+                    plt.title('Distribution of Patient Visits by Time of Day and Effect on TAT')
+                    plt.xlabel('Time of Day')
+                    plt.xticks(range(7, 21, 3), [f"{hour} {'AM' if hour < 12 else 'PM'}" for hour in range(7, 21, 3)], rotation=45)
+                    plt.ylabel('Patient Visits')
+                    plt.colorbar(scatter, label='Visit Density')  # Density color bar for interpreting color
+                    plt.grid(True, linestyle='--', alpha=0.7)
+                    plt.tight_layout()
 
+                    
                 
+                    
+                    # Display the plot in Streamlit
+                    st.pyplot(plt)
+
+                    # Clear the figure after rendering
+                    plt.clf()
+                    
+                    # Optional: Use a subset of data if the dataset is too large
+                    sample_size = min(2000, len(filtered_period_df))  # Adjust sample size as needed
+                    sampled_data = filtered_period_df.sample(n=sample_size, random_state=42)
+                    time_sampled = time_in_hours.loc[sampled_data.index]
+                    tat_sampled = sampled_data['TAT']
+
+                    # Calculate density for color mapping
+                    xy = np.vstack([time_sampled, tat_sampled])
+                    density = gaussian_kde(xy)(xy)
+
+                    # Create scatter plot with density-based coloring and TAT-based point sizing
+                    plt.figure(figsize=(6, 3))
+                    scatter = plt.scatter(
+                        time_sampled,
+                        tat_sampled,
+                        s=tat_sampled,  # Size points by TAT values
+                        c=density,      # Color points by density
+                        cmap='viridis', 
+                        alpha=0.7,
+                        edgecolor='w'  # Optional: add edge color for better visibility
+                    )
+
+                    # Customize the plot with 3-hour intervals
+                    plt.title('TAT Distribution by Time of Day', fontsize=14)
+                    plt.xlabel('Time of Day', fontsize=12)
+                    plt.xticks(range(7, 21, 3), [f"{hour} {'AM' if hour < 12 else 'PM'}" for hour in range(7, 21, 3)], rotation=45)
+                    plt.ylabel('Average TAT (minutes)', fontsize=12)
+                    plt.colorbar(scatter, label='Point Density')  # Density color bar for interpreting color
+                    plt.grid(True, linestyle='--', alpha=0.7)
+                    plt.tight_layout()
+
+                    # Display the plot in Streamlit
+                    st.pyplot(plt)
+
+                    # Clear the figure after rendering (optional)
+                    plt.clf()
+
             
-                
-                # Display the plot in Streamlit
-                st.pyplot(plt)
-
-                # Clear the figure after rendering
-                plt.clf()
-                
-                # Optional: Use a subset of data if the dataset is too large
-                sample_size = min(2000, len(filtered_period_df))  # Adjust sample size as needed
-                sampled_data = filtered_period_df.sample(n=sample_size, random_state=42)
-                time_sampled = time_in_hours.loc[sampled_data.index]
-                tat_sampled = sampled_data['TAT']
-
-                # Calculate density for color mapping
-                xy = np.vstack([time_sampled, tat_sampled])
-                density = gaussian_kde(xy)(xy)
-
-                # Create scatter plot with density-based coloring and TAT-based point sizing
-                plt.figure(figsize=(6, 3))
-                scatter = plt.scatter(
-                    time_sampled,
-                    tat_sampled,
-                    s=tat_sampled,  # Size points by TAT values
-                    c=density,      # Color points by density
-                    cmap='viridis', 
-                    alpha=0.7,
-                    edgecolor='w'  # Optional: add edge color for better visibility
-                )
-
-                # Customize the plot with 3-hour intervals
-                plt.title('TAT Distribution by Time of Day', fontsize=14)
-                plt.xlabel('Time of Day', fontsize=12)
-                plt.xticks(range(7, 21, 3), [f"{hour} {'AM' if hour < 12 else 'PM'}" for hour in range(7, 21, 3)], rotation=45)
-                plt.ylabel('Average TAT (minutes)', fontsize=12)
-                plt.colorbar(scatter, label='Point Density')  # Density color bar for interpreting color
-                plt.grid(True, linestyle='--', alpha=0.7)
-                plt.tight_layout()
-
-                # Display the plot in Streamlit
-                st.pyplot(plt)
-
-                # Clear the figure after rendering (optional)
-                plt.clf()
-
-        
-        
-        
+            
+            
                 
             
                 
