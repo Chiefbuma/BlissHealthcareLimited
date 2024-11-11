@@ -1,6 +1,6 @@
 import streamlit as st
 from st_supabase_connection import SupabaseConnection
-from supabase import create_client, Client
+from supabase import create_client
 import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
@@ -40,20 +40,15 @@ def app():
             st.session_state.staffname= ''
             
             
-        # Initialize session state if it doesn't exist
-        
-        def init_connection():
-            try:
-                url = "https://jxdfovectoeugyeixnnf.supabase.co"
-                key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4ZGZvdmVjdG9ldWd5ZWl4bm5mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzEzMDc3MTUsImV4cCI6MjA0Njg4MzcxNX0.eanuttDhkje4q43yyicxEEJMUnDO5aGaIyJYtKFUu3Y"
-                return create_client(url, key)
-            
-            except APIError as e:
-                st.error("No connection, check connection")
-                st.stop() 
+            # Initialize session state if it doesn't exist
+        url = "https://jxdfovectoeugyeixnnf.supabase.co"
+        key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4ZGZvdmVjdG9ldWd5ZWl4bm5mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzEzMDc3MTUsImV4cCI6MjA0Njg4MzcxNX0.eanuttDhkje4q43yyicxEEJMUnDO5aGaIyJYtKFUu3Y"
 
-        supabase = init_connection()
+            # Initialize without a proxy
+        supabase = create_client(url, key)
         
+        
+            
         response = supabase.table('facilities').select("*").execute()
 
         location_df = pd.DataFrame(response.data)
