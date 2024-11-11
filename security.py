@@ -37,7 +37,7 @@ def app():
         def init_connection():
            url = "https://jxdfovectoeugyeixnnf.supabase.co"
            key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4ZGZvdmVjdG9ldWd5ZWl4bm5mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzEzMDc3MTUsImV4cCI6MjA0Njg4MzcxNX0.eanuttDhkje4q43yyicxEEJMUnDO5aGaIyJYtKFUu3Y"
-            return create_client(url, key)
+           return create_client(url, key)
 
         supabase = init_connection()
         
