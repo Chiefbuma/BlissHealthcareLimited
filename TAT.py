@@ -198,7 +198,7 @@ def app():
                 
          
     
-                cols = st.columns([1,1])
+                cols = st.columns([2,1])
                 with cols[0]:
     
                     
