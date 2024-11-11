@@ -260,7 +260,7 @@ def app():
                 plt.tight_layout()
 
                 
-            with card_container(key="MTDTAT"):
+            
                 
                 # Display the plot in Streamlit
                 st.pyplot(plt)
