@@ -162,7 +162,7 @@ def app():
 
                 # Apply filter based on the selected option
                 if tat_filter == "TAT above 1 hour (60)":
-                    filtered_df = patient_df[patient_df['TAT'] > 59]
+                    filtered_df = patient_df[patient_df['Average_TAT'] > 59]
                 else:
                     filtered_df = patient_df
                 
