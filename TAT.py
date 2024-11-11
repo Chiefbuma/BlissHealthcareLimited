@@ -233,7 +233,7 @@ def app():
                 density = gaussian_kde(xy)(xy)
 
                 # Create scatter plot with density-based coloring and TAT-based point sizing
-                plt.figure(figsize=(6, 3))
+                plt.figure(figsize=(12, 6))
                 scatter = plt.scatter(
                     time_sampled,
                     index_sampled,
@@ -269,7 +269,7 @@ def app():
                 density = gaussian_kde(xy)(xy)
 
                 # Create scatter plot with density-based coloring and TAT-based point sizing
-                plt.figure(figsize=(6, 3))
+                plt.figure(figsize=(12, 6))
                 scatter = plt.scatter(
                     time_sampled,
                     tat_sampled,
