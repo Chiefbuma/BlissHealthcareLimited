@@ -148,12 +148,23 @@ def app():
                 ).reset_index()
                 
                 
+            #
                 
                    # Group by 'date', 'FacilityName', and 'Shift'
                 patient_df = filtered_merged_df.groupby(['date','PatientName','FacilityName','ConsultationBillingTime','Pharmacy_Billing_Time']).agg(
                     # Count of unique UHID
                     Average_TAT=('TAT', 'mean')  # Average TAT
                 ).reset_index()
+                
+                
+                #Select box for TAT filter
+                tat_filter = st.selectbox("Select TAT Filter", ["All", "TAT above 1 hour (60)"])
+
+                # Apply filter based on the selected option
+                if tat_filter == "TAT above 1 hour (60)":
+                    filtered_df = patient_df[patient_df['TAT'] > 59]
+                else:
+                    filtered_df = patient_df
                 
                 
                 
@@ -202,7 +213,7 @@ def app():
                 with cols[0]:
                     
                     
-                    st.write(patient_df)
+                    st.write(filtered_df)
                     
                 with cols[1]:
                           
