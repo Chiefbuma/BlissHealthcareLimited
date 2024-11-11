@@ -150,12 +150,12 @@ def app():
                 
                 
                    # Group by 'date', 'FacilityName', and 'Shift'
-                patient_df = filtered_merged_df.groupby(['date','PatientName','FacilityName','ConsultationBillingTime','Pharmacy_Billing_Time']).agg(
+                patient_df = filtered_merged_df.groupby(['PatientName','FacilityName','ConsultationBillingTime','Pharmacy_Billing_Time']).agg(
                     # Count of unique UHID
                     Average_TAT=('TAT', 'mean')  # Average TAT
                 ).reset_index()
                 
-                
+                 
                 
                
                 
