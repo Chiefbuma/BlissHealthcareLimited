@@ -149,14 +149,17 @@ def app():
                 
                 
                 
-                   # Group by 'date', 'FacilityName', and 'Shift'
-                patient_df = filtered_merged_df.groupby(['date','PatientName','FacilityName','ConsultationBillingTime','Pharmacy_Billing_Time']).agg(
-                  # Count of unique UHID
-                    Average_TAT=('TAT', 'mean')  # Average TAT
+                import pandas as pd
+
+                # Group by 'date', 'PatientName', 'FacilityName', and 'Shift'
+                patient_df = filtered_merged_df.groupby(['date', 'PatientName', 'FacilityName', 'ConsultationBillingTime', 'Pharmacy_Billing_Time']).agg(
+                    Average_TAT=('TAT', 'mean')  # Calculate the average TAT in minutes
                 ).reset_index()
-                
-                # Convert TAT from minutes to "X hr Y min" format for each column, including 'Day Avg'
-                patient_df = patient_df.applymap(lambda x: f"{int(x // 60)} hr {int(x % 60)} min" if pd.notnull(x) else "")
+
+                # Convert TAT from minutes to "X hr Y min" format
+                patient_df['Average_TAT'] = patient_df['Average_TAT'].apply(
+                    lambda x: f"{int(x // 60)} hr {int(x % 60)} min" if pd.notnull(x) else ""
+                )
 
                 
                 
