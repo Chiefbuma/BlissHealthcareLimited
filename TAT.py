@@ -156,64 +156,57 @@ def app():
                     Average_TAT=('TAT', 'mean')  # Average TAT
                 ).reset_index()
                 
-                
-                #Select box for TAT filter
-                tat_filter = st.selectbox("Select TAT Filter", ["All", "TAT above 1 hour (60)"])
-
-                # Apply filter based on the selected option
-                if tat_filter == "TAT above 1 hour (60)":
-                    filtered_df = patient_df[patient_df['Average_TAT'] > 59]
-                else:
-                    filtered_df = patient_df
-                
-                
-                
-                 # Group by 'date', 'FacilityName', and 'Shift'
-                grouped_All = filtered_merged_df.groupby(['date', 'FacilityName']).agg(
-                    Average_TAT=('TAT', 'mean')  # Average TAT
-                ).reset_index()
-                
-                
-                # Add 20 minutes to Average TAT
-                grouped_All['Average_TAT'] += 20
-         
-
-                # Pivot the DataFrame with FacilityName and date as index, and Shift as columns
-                pivoted_df = grouped_df.pivot_table(
-                    index=['FacilityName', 'date'],  # Rows as medical centers and date
-                    columns='Shift',                 # Columns as shifts
-                    values='Average_TAT',            # Values as Average TAT
-                    aggfunc='mean'                   # Average in case of multiple entries
-                )
-
-
-                # Calculate the daily average (across shift columns) and add it as a new column
-                pivoted_df['Day Avg'] = pivoted_df.mean(axis=1)
-
-                # Convert TAT from minutes to "X hr Y min" format for each column, including 'Day Avg'
-                pivoted_df = pivoted_df.applymap(lambda x: f"{int(x // 60)} hr {int(x % 60)} min" if pd.notnull(x) else "")
-
-                # Reset index to make 'FacilityName' and 'date' columns
-                pivoted_df = pivoted_df.reset_index()
-
-                # Optional: Remove MultiIndex column names
-                pivoted_df.columns.name = None
-
-                # Reorder columns based on preferred shift order, including 'Day Avg'
-                preferred_order = ["FacilityName", "date", "Morning", "Mid Morning", "Afternoon", "Evening", "Night Shift", "Day Avg"]
-                existing_columns = [col for col in preferred_order if col in pivoted_df.columns]  # Retain only existing columns
-                pivoted_df = pivoted_df[existing_columns]
-
-                
-                
-                
-         
-    
                 cols = st.columns([2,1])
                 with cols[0]:
+                    #Select box for TAT filter
+                    tat_filter = st.selectbox("Select TAT Filter", ["All", "TAT above 1 hour (60)"])
+
+                    # Apply filter based on the selected option
+                    if tat_filter == "TAT above 1 hour (60)":
+                        filtered_df = patient_df[patient_df['Average_TAT'] > 59]
+                    else:
+                        filtered_df = patient_df
                     
+                    
+                    
+                    # Group by 'date', 'FacilityName', and 'Shift'
+                    grouped_All = filtered_merged_df.groupby(['date', 'FacilityName']).agg(
+                        Average_TAT=('TAT', 'mean')  # Average TAT
+                    ).reset_index()
+                    
+                    
+                    # Add 20 minutes to Average TAT
+                    grouped_All['Average_TAT'] += 20
+            
+
+                    # Pivot the DataFrame with FacilityName and date as index, and Shift as columns
+                    pivoted_df = grouped_df.pivot_table(
+                        index=['FacilityName', 'date'],  # Rows as medical centers and date
+                        columns='Shift',                 # Columns as shifts
+                        values='Average_TAT',            # Values as Average TAT
+                        aggfunc='mean'                   # Average in case of multiple entries
+                    )
+
+
+                    # Calculate the daily average (across shift columns) and add it as a new column
+                    pivoted_df['Day Avg'] = pivoted_df.mean(axis=1)
+
+                    # Convert TAT from minutes to "X hr Y min" format for each column, including 'Day Avg'
+                    pivoted_df = pivoted_df.applymap(lambda x: f"{int(x // 60)} hr {int(x % 60)} min" if pd.notnull(x) else "")
+
+                    # Reset index to make 'FacilityName' and 'date' columns
+                    pivoted_df = pivoted_df.reset_index()
+
+                    # Optional: Remove MultiIndex column names
+                    pivoted_df.columns.name = None
+
+                    # Reorder columns based on preferred shift order, including 'Day Avg'
+                    preferred_order = ["FacilityName", "date", "Morning", "Mid Morning", "Afternoon", "Evening", "Night Shift", "Day Avg"]
+                    existing_columns = [col for col in preferred_order if col in pivoted_df.columns]  # Retain only existing columns
+                    pivoted_df = pivoted_df[existing_columns]
                     
                     st.write(filtered_df)
+                    
                     
                 with cols[1]:
                           
