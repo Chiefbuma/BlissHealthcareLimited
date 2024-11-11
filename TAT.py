@@ -200,7 +200,7 @@ def app():
     
                 cols = st.columns([2,1])
                 with cols[0]:
-                    st.write(pivoted_df)
+                    
                     
                     st.write(patient_df)
                     
