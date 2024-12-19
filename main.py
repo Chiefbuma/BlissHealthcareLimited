@@ -41,8 +41,8 @@ def app():
             
             
             # Initialize session state if it doesn't exist
-        url = "https://jxdfovectoeugyeixnnf.supabase.co"
-        key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4ZGZvdmVjdG9ldWd5ZWl4bm5mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzEzMDc3MTUsImV4cCI6MjA0Njg4MzcxNX0.eanuttDhkje4q43yyicxEEJMUnDO5aGaIyJYtKFUu3Y"
+        url = "https://effdqrpabawzgqvugxup.supabase.co"
+        key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmZmRxcnBhYmF3emdxdnVneHVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA1MTQ1NDYsImV4cCI6MjAyNjA5MDU0Nn0.Dkxicm9oaLR5rm-SWlvGfV5OSZxFrim6x8-QNnc2Ua8"
 
             # Initialize without a proxy
         supabase = create_client(url, key)
@@ -58,9 +58,7 @@ def app():
             login_df = pd.DataFrame(response.data)
             return login_df
         
-            response = supabase.from_('usersD').select('*').eq('staffnumber', staffnumber).execute()
-            login_df = pd.DataFrame(response.data)
-            return login_df
+           
 
         def add_userdata(staffnumber, password, location, region,department,staffname):
             data = {
@@ -225,3 +223,4 @@ def app():
             st.stop() 
 
            
+
