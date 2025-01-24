@@ -20,7 +20,6 @@ import main
 import region
 import medical
 import nyumbani
-import maintenance
 import Radiology
 import Repair
 import Finance
@@ -41,10 +40,14 @@ class MultiApp:
         with st.sidebar:
             app = option_menu.option_menu(key="main_key",
                                           menu_title='DEPARTMENTS',
-                                          options=['Account', 'Medical centre', 'Region', 'Dawa Nyumbani',
-                                                   'Maintenance', 'Optical', 'Finance', 'Operations', 'TAT Report'],
-                                          icons=['house-fill', 'receipt', 'receipt', 'receipt', 'receipt',
-                                                 'receipt', 'receipt', 'receipt', 'person-circle', 'receipt'],
+                                          options=[
+                                              'Account', 'Medical centre', 'Region', 'Dawa Nyumbani',
+                                              'Maintenance', 'Optical', 'Finance', 'Operations', 'TAT Report'
+                                          ],
+                                          icons=[
+                                              'house-fill', 'receipt', 'receipt', 'receipt', 'receipt',
+                                              'receipt', 'receipt', 'receipt', 'person-circle', 'receipt'
+                                          ],
                                           menu_icon='house-fill',
                                           default_index=0,
                                           styles={
