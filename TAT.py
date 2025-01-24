@@ -90,14 +90,16 @@ def app():
             Pharmacy_df['date'] = Pharmacy_df['Pharmacy_Billing_Time'].dt.date
 
             # Group by date, UHID, and FacilityName, and get the earliest Pharmacy_Billing_Time
-            TAT_pharmacy_df = Pharmacy_df('Pharmacy_Billing_Time').drop_duplicates(
-                subset=['date', 'Department', 'UHID', 'PatientName', 'FacilityName'], keep='first'
-            )
+            TAT_pharmacy_df = Pharmacy_df.groupby(['date', 'UHID', 'PatientName', 'FacilityName']).agg({
+                'Pharmacy_Billing_Time': 'min',
+                'Department': 'first'
+            }).reset_index()
 
             # Group by date, UHID, and FacilityName, and get the earliest ConsultationBillingTime
-            TAT_consultation_df = Consultation_df('ConsultationBillingTime').drop_duplicates(
-                subset=['date', 'Department', 'UHID', 'PatientName', 'FacilityName'], keep='first'
-            )
+            TAT_consultation_df = Consultation_df.groupby(['date', 'UHID', 'PatientName', 'FacilityName']).agg({
+                'ConsultationBillingTime': 'min',
+                'Department': 'first'
+            }).reset_index()
 
             # Create a new 'Unique' column by concatenating UHID, PatientName, FacilityName, and date
             TAT_pharmacy_df['Unique'] = TAT_pharmacy_df['UHID'].astype(str) + "_" + \
