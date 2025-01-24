@@ -26,7 +26,6 @@ import Repair
 import Finance
 import Operations
 import Optical
-import TAT
 # Set the page configuration
 st.set_page_config(page_title="Bliss Healthcare limited", layout="wide")
 
@@ -70,7 +69,5 @@ class MultiApp:
             Finance.app()
         if app == "Operations":
             Operations.app()
-        if app == "TAT Report":
-            TAT.app()
 
     run()
