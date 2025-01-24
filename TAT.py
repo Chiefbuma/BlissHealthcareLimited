@@ -148,7 +148,9 @@ def app():
                 classify_shift)
 
             # Group by 'date', 'FacilityName', and 'Shift'
-            grouped_df = filtered_merged_df.groupby(['date', 'FacilityName', 'Shift']).agg(
+            grouped_df = filtered_merged_df.groupby(
+                ['date', 'FacilityName', 'Shift']
+            ).agg(
                 Unique_UHID_Count=('UHID', 'nunique'),  # Count of unique UHID
                 Average_TAT=('TAT', 'mean')  # Average TAT
             ).reset_index()
@@ -156,8 +158,12 @@ def app():
         #
 
             # Group by 'date', 'FacilityName', and 'Shift'
-            patient_df = filtered_merged_df.groupby(['date', 'PatientName', 'FacilityName', 'ConsultationBillingTime', 'Pharmacy_Billing_Time']).agg(
-                # Count of unique UHID
+            patient_df = filtered_merged_df.groupby(
+                [
+                    'date', 'PatientName', 'FacilityName',
+                    'ConsultationBillingTime', 'Pharmacy_Billing_Time'
+                ]
+            ).agg(
                 Average_TAT=('TAT', 'mean')  # Average TAT
             ).reset_index()
 
