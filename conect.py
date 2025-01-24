@@ -26,7 +26,7 @@ import Repair
 import Finance
 import Operations
 import Optical
-import TAT  # Set the page configuration
+import TAT  # TAT Report
 st.set_page_config(page_title="Bliss Healthcare limited", layout="wide")
 
 
