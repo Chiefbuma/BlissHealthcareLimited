@@ -16,7 +16,17 @@ import supabase
 import streamlit_shadcn_ui as ui
 from local_components import card_container
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
-import main, region,medical,nyumbani,maintenance,Radiology,Repair,Finance,Operations,Optical,TAT
+import main
+import region
+import medical
+import nyumbani
+import maintenance
+import Radiology
+import Repair
+import Finance
+import Operations
+import Optical
+import TAT
 # Set the page configuration
 st.set_page_config(page_title="Bliss Healthcare limited", layout="wide")
 
@@ -28,41 +38,39 @@ class MultiApp:
 
     def run():
         # app = st.sidebar(
-        with st.sidebar: 
+        with st.sidebar:
             app = option_menu.option_menu(key="main_key",
-            menu_title='DEPARTMENTS',
-            options=['Account','Medical centre', 'Region','Dawa Nyumbani','Maintenance','Optical','Finance','Operations','TAT Report'],
-            icons=['house-fill', 'receipt', 'receipt', 'receipt', 'receipt','receipt','receipt','receipt','person-circle','receipt'],
-            menu_icon='house-fill',
-            default_index=0,
-            styles={
-                "container": {"padding": "15", "background-color": {"grey": "black", "font-size": "10px"}},
-                "nav-link": {"color": "Blck", "font-size": "13px", "text-align": "left"},
-                "nav-link-selected": {"background-color": "Black"}
-            }
-        )       
-            
+                                          menu_title='DEPARTMENTS',
+                                          options=['Account', 'Medical centre', 'Region', 'Dawa Nyumbani',
+                                                   'Maintenance', 'Optical', 'Finance', 'Operations', 'TAT Report'],
+                                          icons=['house-fill', 'receipt', 'receipt', 'receipt', 'receipt',
+                                                 'receipt', 'receipt', 'receipt', 'person-circle', 'receipt'],
+                                          menu_icon='house-fill',
+                                          default_index=0,
+                                          styles={
+                                              "container": {"padding": "15", "background-color": {"grey": "black", "font-size": "10px"}},
+                                              "nav-link": {"color": "Blck", "font-size": "13px", "text-align": "left"},
+                                              "nav-link-selected": {"background-color": "Black"}
+                                          }
+                                          )
 
         if app == "Medical centre":
             medical.app()
         if app == "Region":
-            region.app()  
+            region.app()
         if app == "Dawa Nyumbani":
-            nyumbani.app()  
+            nyumbani.app()
         if app == "Maintenance":
-           Repair.app()
+            Repair.app()
         if app == "Optical":
-           Optical.app()
+            Optical.app()
         if app == "Account":
-            main.app()  
+            main.app()
         if app == "Finance":
-            Finance.app()    
+            Finance.app()
         if app == "Operations":
-            Operations.app()     
+            Operations.app()
         if app == "TAT Report":
-            TAT.app()     
-    
-    
+            TAT.app()
 
-    run()            
-        
+    run()
