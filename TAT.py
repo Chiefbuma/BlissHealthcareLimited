@@ -10,6 +10,39 @@ import base64
 warnings.filterwarnings('ignore', category=UserWarning, message='.*tight_layout.*')
 
 def app():
+    # Apply CSS styling (this can stay here as it's not a page config command)
+    st.markdown("""
+        <style>
+            body {
+                background-color: black;
+                color: white;
+            }
+            .stApp {
+                background-color: black;
+                color: white;
+            }
+            .stSelectbox, .stSelectbox div, .stSelectbox label, .stSelectbox select {
+                background-color: #000000 !important;
+                color: white !important;
+                border: 1px solid white !important;
+            }
+            .stButton button {
+                background-color: #333333;
+                color: white;
+                border: 1px solid white;
+            }
+            .stTable {
+                color: white;
+            }
+            table, th, td {
+                border: 1px solid white;
+                border-collapse: collapse;
+                background-color: #333333;
+                color: white;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
     # Check if user is authenticated
     if 'is_authenticated' not in st.session_state:
         st.session_state.is_authenticated = False
@@ -18,40 +51,6 @@ def app():
                 </span>""", unsafe_allow_html=True)
 
     if st.session_state.is_authenticated:
-        # Set page configuration with a black background
-        st.set_page_config(page_title="TAT Analysis Dashboard", layout="wide")
-        st.markdown("""
-            <style>
-                body {
-                    background-color: black;
-                    color: white;
-                }
-                .stApp {
-                    background-color: black;
-                    color: white;
-                }
-                .stSelectbox, .stSelectbox div, .stSelectbox label, .stSelectbox select {
-                    background-color: #000000 !important;
-                    color: white !important;
-                    border: 1px solid white !important;
-                }
-                .stButton button {
-                    background-color: #333333;
-                    color: white;
-                    border: 1px solid white;
-                }
-                .stTable {
-                    color: white;
-                }
-                table, th, td {
-                    border: 1px solid white;
-                    border-collapse: collapse;
-                    background-color: #333333;
-                    color: white;
-                }
-            </style>
-        """, unsafe_allow_html=True)
-
         # Function to classify shifts based on time of day (24-hour operation)
         def classify_shift(time):
             if pd.isna(time):
@@ -409,7 +408,3 @@ def app():
                         )
         else:
             st.error("Failed to load data. Please check the CSV file path.")
-
-# Run the app
-if __name__ == "__main__":
-    app()
