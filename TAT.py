@@ -54,8 +54,8 @@ def app():
             # Upload CSV file
             uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
-             st.write(
-                "[Click here to Download TAT Dump ](https://app.blissmedicalcentre.com/dashboard/DashBoard.aspx?name=ConsolidatedTATReportNew)")
+            st.write(
+            "[Click here to Download TAT Dump ](https://app.blissmedicalcentre.com/dashboard/DashBoard.aspx?name=ConsolidatedTATReportNew)")
 
             if uploaded_file is not None:
                 # Define the columns to import and parse as datetime
