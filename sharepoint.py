@@ -5,7 +5,7 @@ import json
 import os
 
 USERNAME = "biosafety@blisshealthcare.co.ke"
-PASSWORD = "P^0738974965100z"
+PASSWORD = "P^073897496510oz"
 SHAREPOINT_URL = "https://blissgvske.sharepoint.com"
 SHAREPOINT_SITE = "https://blissgvske.sharepoint.com/sites/BlissHealthcareReports/"
 
